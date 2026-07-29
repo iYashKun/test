@@ -141,33 +141,28 @@
     }
 
     /* Submit */
+    /* ===== SUBMIT BAR ===== */
     #submit-area {
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-      transform: translateY(20px);
+      transform: translateY(110%);
       opacity: 0;
-      pointer-events: none;
+      transition: all 0.4s cubic-bezier(0.32, 0.72, 0, 1);
     }
 
     #submit-area.visible {
       transform: translateY(0);
       opacity: 1;
-      pointer-events: auto;
+    }
+
+    .submit-card {
+      transition: all 0.3s ease;
     }
 
     .submit-btn {
-      background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
-      box-shadow: 0 4px 20px -4px rgba(34, 197, 94, 0.5);
-      transition: all 0.25s ease;
+      box-shadow: 0 4px 16px -2px rgba(34, 197, 94, 0.45);
     }
 
     .submit-btn:hover {
-      background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
-      box-shadow: 0 6px 28px -4px rgba(34, 197, 94, 0.6);
-      transform: translateY(-1px);
-    }
-
-    .submit-btn:active {
-      transform: scale(0.98);
+      box-shadow: 0 6px 24px -2px rgba(34, 197, 94, 0.55);
     }
 
     /* Header glow */
@@ -579,17 +574,34 @@
   </div>
 
   <!-- Sticky Submit Bar -->
-  <div id="submit-area" class="fixed bottom-0 left-0 right-0 z-50">
-    <div class="bg-gradient-to-t from-black via-black/95 to-transparent pt-8 pb-5 px-4 sm:px-6">
-      <div class="max-w-lg mx-auto">
-        <button id="submit-btn" class="submit-btn w-full text-black font-semibold text-[14px] sm:text-[15px] py-3.5 rounded-2xl flex items-center justify-center gap-2">
-          <svg class="w-4.5 h-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M5 13l4 4L19 7"/>
-          </svg>
-          Submit Report
-        </button>
-        <p class="text-center text-[11px] text-zinc-600 mt-2.5">Your report is anonymous</p>
+  <!-- ========== MODERN SUBMIT BAR ========== -->
+  <div id="submit-area" class="fixed bottom-0 left-0 right-0 z-50 pointer-events-none">
+    <div class="max-w-lg mx-auto px-4 pb-5 pt-3 sm:px-6">
+    
+      <!-- Glass card -->
+      <div class="submit-card pointer-events-auto rounded-2xl border border-zinc-800/80 bg-zinc-950/90 backdrop-blur-xl shadow-2xl shadow-black/50 overflow-hidden">
+        
+        <!-- Selected reason preview -->
+        <div id="selected-preview" class="px-4 pt-3.5 pb-2 flex items-center gap-2.5 border-b border-zinc-800/60">
+          <div class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></div>
+          <p class="text-[12.5px] text-zinc-400 truncate">
+            <span class="text-zinc-500">Selected:</span>
+            <span id="preview-text" class="text-zinc-200 font-medium ml-1">—</span>
+          </p>
+        </div>
+  
+        <!-- Button -->
+        <div class="p-3">
+          <button id="submit-btn" class="submit-btn w-full h-12 rounded-xl bg-green-500 hover:bg-green-400 active:scale-[0.98] text-black font-semibold text-[14.5px] flex items-center justify-center gap-2 transition-all duration-200">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+            </svg>
+            Submit Report
+          </button>
+        </div>
       </div>
+  
+      <p class="text-center text-[11px] text-zinc-600 mt-2.5">Your report is completely anonymous</p>
     </div>
   </div>
 
@@ -597,41 +609,42 @@
     const options = document.querySelectorAll('.option-card');
     const submitArea = document.getElementById('submit-area');
     const selectedCount = document.getElementById('selected-count');
+    const previewText = document.getElementById('preview-text');
     let activeOption = null;
-
+    
     options.forEach(option => {
       option.addEventListener('click', () => {
-        // Reset previous
         if (activeOption) {
           activeOption.classList.remove('selected');
         }
-
-        // Set new
+    
         activeOption = option;
         option.classList.add('selected');
 
-        // Update UI
+        // Update counter + preview
+        const title = option.querySelector('.font-medium').textContent.trim();
         selectedCount.textContent = '1 selected';
+        previewText.textContent = title;
+    
         submitArea.classList.add('visible');
-
-        // Smooth scroll selected into view a bit
+    
         setTimeout(() => {
           option.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        }, 100);
+        }, 80);
       });
     });
 
     document.getElementById('submit-btn').addEventListener('click', () => {
       if (!activeOption) return;
-
+    
       const reportId = activeOption.getAttribute('data-option');
       const title = activeOption.querySelector('.font-medium').textContent.trim();
-
+    
       console.log('Report ID:', reportId);
       console.log('Reason:', title);
-
+    
       // Backend yahan
-      // fetch('/api/report', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ id: reportId, reason: title }) })
+      // fetch('/api/report', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ id: reportId, reason: title }) })    });
     });
   </script>
 </body>
