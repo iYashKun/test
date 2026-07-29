@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Report Message</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Signika+Negative:wght@300..700&display=swap');
+    
+    body {
+      font-family: 'Signika Negative', sans-serif;
+    }
+
+    .option-item {
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .option-item:hover {
+      background-color: rgba(255, 255, 255, 0.05);
+    }
+
+    .option-item.selected {
+      background-color: rgba(34, 197, 94, 0.1);
+      border-color: rgba(34, 197, 94, 0.35);
+    }
+
+    /* Chevron default */
+    .chevron {
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      color: #64748b;
+    }
+
+    .option-item.selected .chevron {
+      transform: rotate(90deg);
+      color: #22c55e;
+    }
+
+    /* Description expand */
+    .desc {
+      max-height: 0;
+      opacity: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease, opacity 0.25s ease, margin 0.25s ease;
+      margin-top: 0;
+    }
+
+    .option-item.selected .desc {
+      max-height: 80px;
+      opacity: 1;
+      margin-top: 8px;
+    }
+
+    /* Submit button */
+    #submit-btn {
+      transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      transform: translateY(12px);
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    #submit-btn.visible {
+      transform: translateY(0);
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    /* Report ID badge */
+    .report-id {
+      font-size: 10px;
+      letter-spacing: 0.04em;
+      opacity: 0.45;
+    }
+  </style>
+</head>
+<body class="bg-black text-white min-h-screen">
+  <div class="max-w-lg mx-auto px-4 py-5 sm:px-6 sm:py-7">
+
+    <!-- Header -->
+    <div class="mb-5">
+      <h1 class="text-xl sm:text-2xl font-bold tracking-tight">Report</h1>
+      <p class="text-xs sm:text-sm text-gray-400 mt-1">What is wrong with this message?</p>
+    </div>
+
+    <!-- Report Options -->
+    <ul id="report-options" class="space-y-2">
+
+      <!-- 1 -->
+      <li class="option-item rounded-xl border border-transparent cursor-pointer select-none px-3.5 py-3" data-option="RPT-001">
+        <div class="flex justify-between items-center">
+          <div class="flex flex-col">
+            <span class="text-sm sm:text-[15px] font-medium">I don’t like it</span>
+            <span class="report-id mt-0.5">ID: RPT-001</span>
+          </div>
+          <svg class="chevron w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+          </svg>
+        </div>
+        <p class="desc text-xs text-gray-400 leading-relaxed pr-6">
+          Content that is annoying, irrelevant or simply not interesting to you.
+        </p>
+      </li>
+
+      <!-- 2 -->
+      <li class="option-item rounded-xl border border-transparent cursor-pointer select-none px-3.5 py-3" data-option="RPT-002">
+        <div class="flex justify-between items-center">
+          <div class="flex flex-col">
+            <span class="text-sm sm:text-[15px] font-medium">Child abuse / exploitation</span>
+            <span class="report-id mt-0.5">ID: RPT-002</span>
+          </div>
+          <svg class="chevron w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+          </svg>
+        </div>
+        <p class="desc text-xs text-gray-400 leading-relaxed pr-6">
+          Any content involving the sexual exploitation or abuse of minors.
+        </p>
+      </li>
+
+      <!-- 3 -->
+      <li class="option-item rounded-xl border border-transparent cursor-pointer select-none px-3.5 py-3" data-option="RPT-003">
+        <div class="flex justify-between items-center">
+          <div class="flex flex-col">
+            <span class="text-sm sm:text-[15px] font-medium">Violence or threats</span>
+            <span class="report-id mt-0.5">ID: RPT-003</span>
+          </div>
+          <svg class="chevron w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+          </svg>
+        </div>
+        <p class="desc text-xs text-gray-400 leading-relaxed pr-6">
+          Graphic violence, credible threats of harm, or glorification of violence.
+        </p>
+      </li>
+
+      <!-- 4 -->
+      <li class="option-item rounded-xl border border-transparent cursor-pointer select-none px-3.5 py-3" data-option="RPT-004">
+        <div class="flex justify-between items-center">
+          <div class="flex flex-col">
+            <span class="text-sm sm:text-[15px] font-medium">Illegal goods or services</span>
+            <span class="report-id mt-0.5">ID: RPT-004</span>
+          </div>
+          <svg class="chevron w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+          </svg>
+        </div>
+        <p class="desc text-xs text-gray-400 leading-relaxed pr-6">
+          Selling or promoting drugs, weapons, counterfeit goods or other illegal items.
+        </p>
+      </li>
+
+      <!-- 5 -->
+      <li class="option-item rounded-xl border border-transparent cursor-pointer select-none px-3.5 py-3" data-option="RPT-005">
+        <div class="flex justify-between items-center">
+          <div class="flex flex-col">
+            <span class="text-sm sm:text-[15px] font-medium">Illegal adult content</span>
+            <span class="report-id mt-0.5">ID: RPT-005</span>
+          </div>
+          <svg class="chevron w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+          </svg>
+        </div>
+        <p class="desc text-xs text-gray-400 leading-relaxed pr-6">
+          Non-consensual intimate imagery, extreme pornography or illegal sexual content.
+        </p>
+      </li>
+
+      <!-- 6 -->
+      <li class="option-item rounded-xl border border-transparent cursor-pointer select-none px-3.5 py-3" data-option="RPT-006">
+        <div class="flex justify-between items-center">
+          <div class="flex flex-col">
+            <span class="text-sm sm:text-[15px] font-medium">Personal data / privacy</span>
+            <span class="report-id mt-0.5">ID: RPT-006</span>
+          </div>
+          <svg class="chevron w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+          </svg>
+        </div>
+        <p class="desc text-xs text-gray-400 leading-relaxed pr-6">
+          Sharing private information, doxxing or unauthorized personal data.
+        </p>
+      </li>
+
+      <!-- 7 -->
+      <li class="option-item rounded-xl border border-transparent cursor-pointer select-none px-3.5 py-3" data-option="RPT-007">
+        <div class="flex justify-between items-center">
+          <div class="flex flex-col">
+            <span class="text-sm sm:text-[15px] font-medium">Terrorism or extremism</span>
+            <span class="report-id mt-0.5">ID: RPT-007</span>
+          </div>
+          <svg class="chevron w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+          </svg>
+        </div>
+        <p class="desc text-xs text-gray-400 leading-relaxed pr-6">
+          Content promoting terrorist organizations or extremist ideologies.
+        </p>
+      </li>
+
+      <!-- 8 -->
+      <li class="option-item rounded-xl border border-transparent cursor-pointer select-none px-3.5 py-3" data-option="RPT-008">
+        <div class="flex justify-between items-center">
+          <div class="flex flex-col">
+            <span class="text-sm sm:text-[15px] font-medium">Scam, spam or phishing</span>
+            <span class="report-id mt-0.5">ID: RPT-008</span>
+          </div>
+          <svg class="chevron w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+          </svg>
+        </div>
+        <p class="desc text-xs text-gray-400 leading-relaxed pr-6">
+          Fraudulent schemes, unsolicited spam or attempts to steal credentials.
+        </p>
+      </li>
+
+      <!-- 9 -->
+      <li class="option-item rounded-xl border border-transparent cursor-pointer select-none px-3.5 py-3" data-option="RPT-009">
+        <div class="flex justify-between items-center">
+          <div class="flex flex-col">
+            <span class="text-sm sm:text-[15px] font-medium">Copyright infringement</span>
+            <span class="report-id mt-0.5">ID: RPT-009</span>
+          </div>
+          <svg class="chevron w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+          </svg>
+        </div>
+        <p class="desc text-xs text-gray-400 leading-relaxed pr-6">
+          Unauthorized use of copyrighted material, music, videos or images.
+        </p>
+      </li>
+
+      <!-- 10 -->
+      <li class="option-item rounded-xl border border-transparent cursor-pointer select-none px-3.5 py-3" data-option="RPT-010">
+        <div class="flex justify-between items-center">
+          <div class="flex flex-col">
+            <span class="text-sm sm:text-[15px] font-medium">Hate speech</span>
+            <span class="report-id mt-0.5">ID: RPT-010</span>
+          </div>
+          <svg class="chevron w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+          </svg>
+        </div>
+        <p class="desc text-xs text-gray-400 leading-relaxed pr-6">
+          Attacks or slurs based on race, religion, gender, sexuality or other protected traits.
+        </p>
+      </li>
+
+      <!-- 11 -->
+      <li class="option-item rounded-xl border border-transparent cursor-pointer select-none px-3.5 py-3" data-option="RPT-011">
+        <div class="flex justify-between items-center">
+          <div class="flex flex-col">
+            <span class="text-sm sm:text-[15px] font-medium">Harassment or bullying</span>
+            <span class="report-id mt-0.5">ID: RPT-011</span>
+          </div>
+          <svg class="chevron w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+          </svg>
+        </div>
+        <p class="desc text-xs text-gray-400 leading-relaxed pr-6">
+          Targeted harassment, repeated unwanted contact or bullying behavior.
+        </p>
+      </li>
+
+      <!-- 12 -->
+      <li class="option-item rounded-xl border border-transparent cursor-pointer select-none px-3.5 py-3" data-option="RPT-012">
+        <div class="flex justify-between items-center">
+          <div class="flex flex-col">
+            <span class="text-sm sm:text-[15px] font-medium">Misinformation</span>
+            <span class="report-id mt-0.5">ID: RPT-012</span>
+          </div>
+          <svg class="chevron w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+          </svg>
+        </div>
+        <p class="desc text-xs text-gray-400 leading-relaxed pr-6">
+          False or misleading information that can cause real-world harm.
+        </p>
+      </li>
+
+      <!-- 13 -->
+      <li class="option-item rounded-xl border border-transparent cursor-pointer select-none px-3.5 py-3" data-option="RPT-013">
+        <div class="flex justify-between items-center">
+          <div class="flex flex-col">
+            <span class="text-sm sm:text-[15px] font-medium">Self-harm or suicide</span>
+            <span class="report-id mt-0.5">ID: RPT-013</span>
+          </div>
+          <svg class="chevron w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+          </svg>
+        </div>
+        <p class="desc text-xs text-gray-400 leading-relaxed pr-6">
+          Content that promotes, encourages or provides methods for self-harm.
+        </p>
+      </li>
+
+      <!-- 14 -->
+      <li class="option-item rounded-xl border border-transparent cursor-pointer select-none px-3.5 py-3" data-option="RPT-014">
+        <div class="flex justify-between items-center">
+          <div class="flex flex-col">
+            <span class="text-sm sm:text-[15px] font-medium">Impersonation</span>
+            <span class="report-id mt-0.5">ID: RPT-014</span>
+          </div>
+          <svg class="chevron w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+          </svg>
+        </div>
+        <p class="desc text-xs text-gray-400 leading-relaxed pr-6">
+          Pretending to be someone else in a way that is misleading or harmful.
+        </p>
+      </li>
+
+      <!-- 15 -->
+      <li class="option-item rounded-xl border border-transparent cursor-pointer select-none px-3.5 py-3" data-option="RPT-015">
+        <div class="flex justify-between items-center">
+          <div class="flex flex-col">
+            <span class="text-sm sm:text-[15px] font-medium">Not illegal, but must be removed</span>
+            <span class="report-id mt-0.5">ID: RPT-015</span>
+          </div>
+          <svg class="chevron w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+          </svg>
+        </div>
+        <p class="desc text-xs text-gray-400 leading-relaxed pr-6">
+          Content that violates community guidelines even if not strictly illegal.
+        </p>
+      </li>
+
+      <!-- 16 -->
+      <li class="option-item rounded-xl border border-transparent cursor-pointer select-none px-3.5 py-3" data-option="RPT-016">
+        <div class="flex justify-between items-center">
+          <div class="flex flex-col">
+            <span class="text-sm sm:text-[15px] font-medium">Other</span>
+            <span class="report-id mt-0.5">ID: RPT-016</span>
+          </div>
+          <svg class="chevron w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+          </svg>
+        </div>
+        <p class="desc text-xs text-gray-400 leading-relaxed pr-6">
+          Something else that doesn’t fit the categories above.
+        </p>
+      </li>
+
+    </ul>
+
+    <!-- Submit Button -->
+    <div class="mt-7 sm:mt-8 sticky bottom-4 sm:static pb-2">
+      <button 
+        id="submit-btn" 
+        class="w-full bg-green-500 hover:bg-green-400 active:scale-[0.98] text-black font-semibold text-sm sm:text-base py-3.5 rounded-xl shadow-lg shadow-green-500/25"
+      >
+        Submit Report
+      </button>
+    </div>
+
+  </div>
+
+  <script>
+    const options = document.querySelectorAll('.option-item');
+    const submitBtn = document.getElementById('submit-btn');
+    let activeOption = null;
+
+    options.forEach(option => {
+      option.addEventListener('click', () => {
+        // Reset previous
+        if (activeOption) {
+          activeOption.classList.remove('selected');
+        }
+
+        // Set new
+        activeOption = option;
+        option.classList.add('selected');
+
+        // Show submit
+        submitBtn.classList.add('visible');
+      });
+    });
+
+    submitBtn.addEventListener('click', () => {
+      if (!activeOption) return;
+
+      const reportId = activeOption.getAttribute('data-option');
+      const title = activeOption.querySelector('span.font-medium').textContent.trim();
+
+      console.log('Report ID:', reportId);
+      console.log('Reason:', title);
+
+      // Backend call yahan daalna
+      // fetch('/api/report', { method: 'POST', body: JSON.stringify({ id: reportId, reason: title }) })
+    });
+  </script>
+</body>
+</html>
