@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Report Message</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.5/flowbite.min.css" rel="stylesheet">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Signika+Negative:wght@300..700&display=swap');
+    
+    body {
+      font-family: 'Signika Negative', sans-serif;
+    }
+
+    /* Chevron Icon (Default) */
+    .line-md--chevron-small-right::after {
+      display: inline-block;
+      width: 22px;
+      height: 22px;
+      vertical-align: -0.125em;
+      content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='none' stroke='%2394a3b8' stroke-dasharray='10' stroke-dashoffset='10' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M15 12l-5 -5M15 12l-5 5'%3E%3Canimate fill='freeze' attributeName='stroke-dashoffset' dur='0.3s' values='10;0'/%3E%3C/path%3E%3C/svg%3E");
+    }
+
+    /* Check Icon (After Select) */
+    .line-md--circle-filled-to-confirm-circle-filled-transition::after {
+      display: inline-block;
+      width: 22px;
+      height: 22px;
+      vertical-align: -0.125em;
+      content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cmask id='lineMdCircleFilledToConfirmCircleFilledTransition0'%3E%3Cg fill='none' stroke='%23fff' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'%3E%3Cpath fill='%23fff' d='M3 12c0 -4.97 4.03 -9 9 -9c4.97 0 9 4.03 9 9c0 4.97 -4.03 9 -9 9c-4.97 0 -9 -4.03 -9 -9Z'/%3E%3Cpath stroke='%23000' stroke-dasharray='14' stroke-dashoffset='14' d='M8 12l3 3l5 -5'%3E%3Canimate fill='freeze' attributeName='stroke-dashoffset' dur='0.2s' values='14;0'/%3E%3C/path%3E%3C/g%3E%3C/mask%3E%3Crect width='24' height='24' fill='%2322c55e' mask='url(%23lineMdCircleFilledToConfirmCircleFilledTransition0)'/%3E%3C/svg%3E");
+    }
+
+    .option-item {
+      transition: all 0.2s ease;
+    }
+
+    .option-item:hover {
+      background-color: rgba(255, 255, 255, 0.06);
+    }
+
+    .option-item.selected {
+      background-color: rgba(34, 197, 94, 0.12);
+      border-color: rgba(34, 197, 94, 0.4);
+    }
+
+    #submit-btn {
+      transition: all 0.3s ease;
+      transform: translateY(10px);
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    #submit-btn.visible {
+      transform: translateY(0);
+      opacity: 1;
+      pointer-events: auto;
+    }
+  </style>
+</head>
+<body class="bg-black text-white min-h-screen">
+  <div class="max-w-lg mx-auto px-4 py-6 sm:px-6 sm:py-8">
+    
+    <!-- Header -->
+    <div class="mb-6">
+      <h1 class="text-2xl sm:text-3xl font-bold tracking-tight">Report</h1>
+      <p class="text-sm sm:text-base text-gray-400 mt-1.5">What is wrong with this message?</p>
+    </div>
+
+    <!-- Report Options -->
+    <ul id="report-options" class="space-y-2.5 sm:space-y-3">
+      
+      <li class="option-item flex justify-between items-center text-base sm:text-lg px-4 py-3.5 rounded-xl border border-transparent cursor-pointer select-none" data-option="1">
+        I don’t like it
+        <span class="icon text-gray-500 line-md--chevron-small-right"></span>
+      </li>
+
+      <li class="option-item flex justify-between items-center text-base sm:text-lg px-4 py-3.5 rounded-xl border border-transparent cursor-pointer select-none" data-option="2">
+        Child abuse / exploitation
+        <span class="icon text-gray-500 line-md--chevron-small-right"></span>
+      </li>
+
+      <li class="option-item flex justify-between items-center text-base sm:text-lg px-4 py-3.5 rounded-xl border border-transparent cursor-pointer select-none" data-option="3">
+        Violence or threats
+        <span class="icon text-gray-500 line-md--chevron-small-right"></span>
+      </li>
+
+      <li class="option-item flex justify-between items-center text-base sm:text-lg px-4 py-3.5 rounded-xl border border-transparent cursor-pointer select-none" data-option="4">
+        Illegal goods or services
+        <span class="icon text-gray-500 line-md--chevron-small-right"></span>
+      </li>
+
+      <li class="option-item flex justify-between items-center text-base sm:text-lg px-4 py-3.5 rounded-xl border border-transparent cursor-pointer select-none" data-option="5">
+        Illegal adult content
+        <span class="icon text-gray-500 line-md--chevron-small-right"></span>
+      </li>
+
+      <li class="option-item flex justify-between items-center text-base sm:text-lg px-4 py-3.5 rounded-xl border border-transparent cursor-pointer select-none" data-option="6">
+        Personal data / privacy violation
+        <span class="icon text-gray-500 line-md--chevron-small-right"></span>
+      </li>
+
+      <li class="option-item flex justify-between items-center text-base sm:text-lg px-4 py-3.5 rounded-xl border border-transparent cursor-pointer select-none" data-option="7">
+        Terrorism or extremism
+        <span class="icon text-gray-500 line-md--chevron-small-right"></span>
+      </li>
+
+      <li class="option-item flex justify-between items-center text-base sm:text-lg px-4 py-3.5 rounded-xl border border-transparent cursor-pointer select-none" data-option="8">
+        Scam, spam or phishing
+        <span class="icon text-gray-500 line-md--chevron-small-right"></span>
+      </li>
+
+      <li class="option-item flex justify-between items-center text-base sm:text-lg px-4 py-3.5 rounded-xl border border-transparent cursor-pointer select-none" data-option="9">
+        Copyright infringement
+        <span class="icon text-gray-500 line-md--chevron-small-right"></span>
+      </li>
+
+      <li class="option-item flex justify-between items-center text-base sm:text-lg px-4 py-3.5 rounded-xl border border-transparent cursor-pointer select-none" data-option="10">
+        Hate speech
+        <span class="icon text-gray-500 line-md--chevron-small-right"></span>
+      </li>
+
+      <li class="option-item flex justify-between items-center text-base sm:text-lg px-4 py-3.5 rounded-xl border border-transparent cursor-pointer select-none" data-option="11">
+        Harassment or bullying
+        <span class="icon text-gray-500 line-md--chevron-small-right"></span>
+      </li>
+
+      <li class="option-item flex justify-between items-center text-base sm:text-lg px-4 py-3.5 rounded-xl border border-transparent cursor-pointer select-none" data-option="12">
+        Misinformation
+        <span class="icon text-gray-500 line-md--chevron-small-right"></span>
+      </li>
+
+      <li class="option-item flex justify-between items-center text-base sm:text-lg px-4 py-3.5 rounded-xl border border-transparent cursor-pointer select-none" data-option="13">
+        Self-harm or suicide
+        <span class="icon text-gray-500 line-md--chevron-small-right"></span>
+      </li>
+
+      <li class="option-item flex justify-between items-center text-base sm:text-lg px-4 py-3.5 rounded-xl border border-transparent cursor-pointer select-none" data-option="14">
+        Impersonation
+        <span class="icon text-gray-500 line-md--chevron-small-right"></span>
+      </li>
+
+      <li class="option-item flex justify-between items-center text-base sm:text-lg px-4 py-3.5 rounded-xl border border-transparent cursor-pointer select-none" data-option="15">
+        It’s not illegal, but must be taken down
+        <span class="icon text-gray-500 line-md--chevron-small-right"></span>
+      </li>
+
+      <li class="option-item flex justify-between items-center text-base sm:text-lg px-4 py-3.5 rounded-xl border border-transparent cursor-pointer select-none" data-option="16">
+        Other
+        <span class="icon text-gray-500 line-md--chevron-small-right"></span>
+      </li>
+
+    </ul>
+
+    <!-- Submit Button (appears after selection) -->
+    <div class="mt-8 sm:mt-10 sticky bottom-4 sm:static">
+      <button 
+        id="submit-btn" 
+        class="w-full bg-green-500 hover:bg-green-400 active:bg-green-600 text-black font-semibold text-base sm:text-lg py-3.5 sm:py-4 rounded-xl shadow-lg shadow-green-500/20"
+      >
+        Submit Report
+      </button>
+    </div>
+
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.5/flowbite.min.js"></script>
+  <script>
+    const options = document.querySelectorAll('.option-item');
+    const submitBtn = document.getElementById('submit-btn');
+    let activeOption = null;
+
+    options.forEach(option => {
+      option.addEventListener('click', () => {
+        // Reset previous selection
+        if (activeOption) {
+          activeOption.classList.remove('selected');
+          const prevIcon = activeOption.querySelector('.icon');
+          prevIcon.classList.remove('line-md--circle-filled-to-confirm-circle-filled-transition');
+          prevIcon.classList.add('line-md--chevron-small-right');
+        }
+
+        // Set new selection
+        activeOption = option;
+        option.classList.add('selected');
+        
+        const icon = option.querySelector('.icon');
+        icon.classList.remove('line-md--chevron-small-right');
+        icon.classList.add('line-md--circle-filled-to-confirm-circle-filled-transition');
+
+        // Show submit button
+        submitBtn.classList.add('visible');
+      });
+    });
+
+    // Submit button click (backend logic later)
+    submitBtn.addEventListener('click', () => {
+      if (!activeOption) return;
+      
+      const selectedValue = activeOption.getAttribute('data-option');
+      const selectedText = activeOption.childNodes[0].textContent.trim();
+      
+      // You can replace this with your backend call
+      console.log('Selected option:', selectedValue, selectedText);
+      // alert('Report submitted: ' + selectedText);
+    });
+  </script>
+</body>
+</html>
