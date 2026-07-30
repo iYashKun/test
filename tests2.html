@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Complete KeyboardEvent.code + Mouse Explorer</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: #0d1117;
+      color: #c9d1d9;
+      line-height: 1.5;
+      padding: 20px;
+    }
+    h1, h2, h3 { color: #58a6ff; margin-bottom: 12px; }
+    .container { max-width: 1400px; margin: 0 auto; }
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+    @media (max-width: 900px) {
+      .grid { grid-template-columns: 1fr; }
+    }
+    .panel {
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 8px;
+      padding: 16px;
+    }
+    #log {
+      background: #010409;
+      border: 1px solid #30363d;
+      border-radius: 6px;
+      height: 420px;
+      overflow-y: auto;
+      padding: 12px;
+      font-family: 'Cascadia Code', 'Fira Code', Consolas, monospace;
+      font-size: 13px;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+    .log-entry { margin-bottom: 4px; }
+    .key { color: #7ee787; }
+    .code { color: #ffa657; }
+    .mouse { color: #d2a8ff; }
+    .meta { color: #79c0ff; }
+    .info-box {
+      background: #0d1117;
+      border-left: 4px solid #58a6ff;
+      padding: 12px 16px;
+      margin: 12px 0;
+      font-size: 14px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      margin-top: 10px;
+    }
+    th, td {
+      border: 1px solid #30363d;
+      padding: 6px 10px;
+      text-align: left;
+    }
+    th { background: #21262d; color: #58a6ff; }
+    .live-stats {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .stat {
+      background: #21262d;
+      padding: 8px 14px;
+      border-radius: 6px;
+      font-size: 13px;
+    }
+    .stat span { color: #7ee787; font-weight: bold; }
+    button {
+      background: #238636;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-right: 8px;
+      margin-bottom: 8px;
+    }
+    button:hover { background: #2ea043; }
+    button.danger { background: #da3633; }
+    button.danger:hover { background: #f85149; }
+    #visual-keyboard {
+      display: grid;
+      grid-template-columns: repeat(15, 1fr);
+      gap: 4px;
+      margin-top: 16px;
+    }
+    .key-cap {
+      background: #21262d;
+      border: 1px solid #30363d;
+      border-radius: 4px;
+      padding: 8px 4px;
+      text-align: center;
+      font-size: 11px;
+      user-select: none;
+      transition: all 0.1s;
+    }
+    .key-cap.active {
+      background: #238636;
+      border-color: #3fb950;
+      transform: scale(0.95);
+    }
+    .section { margin-bottom: 28px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>KeyboardEvent.code Deep Dive + Full Mouse Capture</h1>
+    <p style="margin-bottom: 20px; color: #8b949e;">
+      This page captures <strong>every keyboard key</strong> (a-z and all others) using the 
+      <code>code</code> property and also logs <strong>all mouse events</strong>.
+      Everything stays inside this browser tab only.
+    </p>
+
+    <div class="live-stats">
+      <div class="stat">Keys pressed: <span id="keyCount">0</span></div>
+      <div class="stat">Mouse events: <span id="mouseCount">0</span></div>
+      <div class="stat">Last key: <span id="lastKey">—</span></div>
+      <div class="stat">Last code: <span id="lastCode">—</span></div>
+      <div class="stat">Mouse X: <span id="mouseX">0</span></div>
+      <div class="stat">Mouse Y: <span id="mouseY">0</span></div>
+    </div>
+
+    <div>
+      <button onclick="clearLog()">Clear Log</button>
+      <button onclick="togglePause()" id="pauseBtn">Pause</button>
+      <button class="danger" onclick="downloadLog()">Download Log</button>
+    </div>
+
+    <div class="grid">
+      <!-- LEFT: Live Log -->
+      <div class="panel">
+        <h2>Live Event Log</h2>
+        <div id="log"></div>
+      </div>
+
+      <!-- RIGHT: Explanation + Code reference -->
+      <div class="panel">
+        <h2>KeyboardEvent.code Explained</h2>
+        
+        <div class="info-box">
+          <strong>event.code</strong> represents the <em>physical key</em> on the keyboard.
+          It does <strong>not</strong> change when you press Shift or change keyboard layout.
+          <br><br>
+          Example:<br>
+          • Physical key A → always <code>"KeyA"</code><br>
+          • Whether you type "a" or "A" → <code>event.key</code> changes, <code>event.code</code> stays <code>"KeyA"</code>
+        </div>
+
+        <h3>Most common code values (a-z + more)</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Physical Key</th>
+              <th>event.code</th>
+              <th>Typical event.key</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>A</td><td>KeyA</td><td>a / A</td></tr>
+            <tr><td>B</td><td>KeyB</td><td>b / B</td></tr>
+            <tr><td>C</td><td>KeyC</td><td>c / C</td></tr>
+            <tr><td>D</td><td>KeyD</td><td>d / D</td></tr>
+            <tr><td>E</td><td>KeyE</td><td>e / E</td></tr>
+            <tr><td>F</td><td>KeyF</td><td>f / F</td></tr>
+            <tr><td>G</td><td>KeyG</td><td>g / G</td></tr>
+            <tr><td>H</td><td>KeyH</td><td>h / H</td></tr>
+            <tr><td>I</td><td>KeyI</td><td>i / I</td></tr>
+            <tr><td>J</td><td>KeyJ</td><td>j / J</td></tr>
+            <tr><td>K</td><td>KeyK</td><td>k / K</td></tr>
+            <tr><td>L</td><td>KeyL</td><td>l / L</td></tr>
+            <tr><td>M</td><td>KeyM</td><td>m / M</td></tr>
+            <tr><td>N</td><td>KeyN</td><td>n / N</td></tr>
+            <tr><td>O</td><td>KeyO</td><td>o / O</td></tr>
+            <tr><td>P</td><td>KeyP</td><td>p / P</td></tr>
+            <tr><td>Q</td><td>KeyQ</td><td>q / Q</td></tr>
+            <tr><td>R</td><td>KeyR</td><td>r / R</td></tr>
+            <tr><td>S</td><td>KeyS</td><td>s / S</td></tr>
+            <tr><td>T</td><td>KeyT</td><td>t / T</td></tr>
+            <tr><td>U</td><td>KeyU</td><td>u / U</td></tr>
+            <tr><td>V</td><td>KeyV</td><td>v / V</td></tr>
+            <tr><td>W</td><td>KeyW</td><td>w / W</td></tr>
+            <tr><td>X</td><td>KeyX</td><td>x / X</td></tr>
+            <tr><td>Y</td><td>KeyY</td><td>y / Y</td></tr>
+            <tr><td>Z</td><td>KeyZ</td><td>z / Z</td></tr>
+            <tr><td>1</td><td>Digit1</td><td>1 / !</td></tr>
+            <tr><td>2</td><td>Digit2</td><td>2 / @</td></tr>
+            <tr><td>3</td><td>Digit3</td><td>3 / #</td></tr>
+            <tr><td>4</td><td>Digit4</td><td>4 / $</td></tr>
+            <tr><td>5</td><td>Digit5</td><td>5 / %</td></tr>
+            <tr><td>6</td><td>Digit6</td><td>6 / ^</td></tr>
+            <tr><td>7</td><td>Digit7</td><td>7 / &amp;</td></tr>
+            <tr><td>8</td><td>Digit8</td><td>8 / *</td></tr>
+            <tr><td>9</td><td>Digit9</td><td>9 / (</td></tr>
+            <tr><td>0</td><td>Digit0</td><td>0 / )</td></tr>
+            <tr><td>Enter</td><td>Enter</td><td>Enter</td></tr>
+            <tr><td>Space</td><td>Space</td><td> </td></tr>
+            <tr><td>Backspace</td><td>Backspace</td><td>Backspace</td></tr>
+            <tr><td>Tab</td><td>Tab</td><td>Tab</td></tr>
+            <tr><td>Escape</td><td>Escape</td><td>Escape</td></tr>
+            <tr><td>Shift (left)</td><td>ShiftLeft</td><td>Shift</td></tr>
+            <tr><td>Shift (right)</td><td>ShiftRight</td><td>Shift</td></tr>
+            <tr><td>Control (left)</td><td>ControlLeft</td><td>Control</td></tr>
+            <tr><td>Control (right)</td><td>ControlRight</td><td>Control</td></tr>
+            <tr><td>Alt (left)</td><td>AltLeft</td><td>Alt</td></tr>
+            <tr><td>Alt (right)</td><td>AltRight</td><td>Alt</td></tr>
+            <tr><td>Meta / Cmd (left)</td><td>MetaLeft</td><td>Meta</td></tr>
+            <tr><td>Meta / Cmd (right)</td><td>MetaRight</td><td>Meta</td></tr>
+            <tr><td>Arrow Up</td><td>ArrowUp</td><td>ArrowUp</td></tr>
+            <tr><td>Arrow Down</td><td>ArrowDown</td><td>ArrowDown</td></tr>
+            <tr><td>Arrow Left</td><td>ArrowLeft</td><td>ArrowLeft</td></tr>
+            <tr><td>Arrow Right</td><td>ArrowRight</td><td>ArrowRight</td></tr>
+            <tr><td>F1 – F12</td><td>F1 … F12</td><td>F1 … F12</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Visual keyboard feedback -->
+    <div class="panel section">
+      <h2>Visual Keyboard Feedback (press keys to highlight)</h2>
+      <div id="visual-keyboard"></div>
+    </div>
+
+    <!-- Mouse section -->
+    <div class="panel section">
+      <h2>Mouse Events Also Captured</h2>
+      <div class="info-box">
+        The same page also listens for:
+        <code>mousedown</code>, <code>mouseup</code>, <code>click</code>, 
+        <code>dblclick</code>, <code>mousemove</code>, <code>contextmenu</code>,
+        <code>wheel</code>, <code>mouseenter</code>, <code>mouseleave</code>.
+      </div>
+      <p>Move your mouse and click anywhere on this page to see mouse data in the log.</p>
+    </div>
+  </div>
+
+  <script>
+    // ============================================================
+    // STATE
+    // ============================================================
+    let keyCount = 0;
+    let mouseCount = 0;
+    let isPaused = false;
+    const logEl = document.getElementById("log");
+    const keyCountEl = document.getElementById("keyCount");
+    const mouseCountEl = document.getElementById("mouseCount");
+    const lastKeyEl = document.getElementById("lastKey");
+    const lastCodeEl = document.getElementById("lastCode");
+    const mouseXEl = document.getElementById("mouseX");
+    const mouseYEl = document.getElementById("mouseY");
+
+    // ============================================================
+    // LOGGING HELPERS
+    // ============================================================
+    function addLog(html, cssClass = "") {
+      if (isPaused) return;
+      const div = document.createElement("div");
+      div.className = "log-entry " + cssClass;
+      div.innerHTML = html;
+      logEl.appendChild(div);
+      logEl.scrollTop = logEl.scrollHeight;
+
+      // Keep log from growing forever
+      if (logEl.children.length > 500) {
+        logEl.removeChild(logEl.firstChild);
+      }
+    }
+
+    function clearLog() {
+      logEl.innerHTML = "";
+    }
+
+    function togglePause() {
+      isPaused = !isPaused;
+      document.getElementById("pauseBtn").textContent = isPaused ? "Resume" : "Pause";
+    }
+
+    function downloadLog() {
+      const text = logEl.innerText;
+      const blob = new Blob([text], { type: "text/plain" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "keyboard-mouse-log.txt";
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    // ============================================================
+    // VISUAL KEYBOARD
+    // ============================================================
+    const keyLayout = [
+      ["Escape","F1","F2","F3","F4","F5","F6","F7","F8","F9","F10","F11","F12"],
+      ["Backquote","Digit1","Digit2","Digit3","Digit4","Digit5","Digit6","Digit7","Digit8","Digit9","Digit0","Minus","Equal","Backspace"],
+      ["Tab","KeyQ","KeyW","KeyE","KeyR","KeyT","KeyY","KeyU","KeyI","KeyO","KeyP","BracketLeft","BracketRight","Backslash"],
+      ["CapsLock","KeyA","KeyS","KeyD","KeyF","KeyG","KeyH","KeyJ","KeyK","KeyL","Semicolon","Quote","Enter"],
+      ["ShiftLeft","KeyZ","KeyX","KeyC","KeyV","KeyB","KeyN","KeyM","Comma","Period","Slash","ShiftRight"],
+      ["ControlLeft","MetaLeft","AltLeft","Space","AltRight","MetaRight","ContextMenu","ControlRight"]
+    ];
+
+    const visualKeyboard = document.getElementById("visual-keyboard");
+    const keyElements = {};
+
+    keyLayout.forEach(row => {
+      row.forEach(code => {
+        const div = document.createElement("div");
+        div.className = "key-cap";
+        div.textContent = code.replace("Key", "").replace("Digit", "").replace("Arrow", "↑↓←→");
+        div.dataset.code = code;
+        visualKeyboard.appendChild(div);
+        keyElements[code] = div;
+      });
+    });
+
+    function highlightKey(code, active) {
+      const el = keyElements[code];
+      if (el) {
+        if (active) el.classList.add("active");
+        else el.classList.remove("active");
+      }
+    }
+
+    // ============================================================
+    // KEYBOARD EVENTS – FULL DETAILS
+    // ============================================================
+    window.addEventListener("keydown", (event) => {
+      keyCount++;
+      keyCountEl.textContent = keyCount;
+      lastKeyEl.textContent = event.key;
+      lastCodeEl.textContent = event.code;
+
+      highlightKey(event.code, true);
+
+      const modifiers = [];
+      if (event.ctrlKey) modifiers.push("Ctrl");
+      if (event.shiftKey) modifiers.push("Shift");
+      if (event.altKey) modifiers.push("Alt");
+      if (event.metaKey) modifiers.push("Meta");
+
+      const modStr = modifiers.length ? ` [${modifiers.join("+")}]` : "";
+
+      addLog(
+        `<span class="key">KEYDOWN</span> ` +
+        `key="<span class="key">${escapeHtml(event.key)}</span>" ` +
+        `code="<span class="code">${event.code}</span>" ` +
+        `location=${event.location} ` +
+        `repeat=${event.repeat} ` +
+        `mod=${modStr}`,
+        "key"
+      );
+
+      // Optional: prevent default for some keys if you want
+      // if (event.code === "Space") event.preventDefault();
+    });
+
+    window.addEventListener("keyup", (event) => {
+      highlightKey(event.code, false);
+
+      addLog(
+        `<span class="key">KEYUP</span> ` +
+        `key="<span class="key">${escapeHtml(event.key)}</span>" ` +
+        `code="<span class="code">${event.code}</span>"`,
+        "key"
+      );
+    });
+
+    // ============================================================
+    // MOUSE EVENTS – EVERYTHING
+    // ============================================================
+    function logMouse(type, event) {
+      mouseCount++;
+      mouseCountEl.textContent = mouseCount;
+      mouseXEl.textContent = event.clientX;
+      mouseYEl.textContent = event.clientY;
+
+      addLog(
+        `<span class="mouse">${type.toUpperCase()}</span> ` +
+        `button=${event.button} ` +
+        `buttons=${event.buttons} ` +
+        `x=${event.clientX} y=${event.clientY} ` +
+        `pageX=${event.pageX} pageY=${event.pageY} ` +
+        `screenX=${event.screenX} screenY=${event.screenY} ` +
+        `ctrl=${event.ctrlKey} shift=${event.shiftKey} alt=${event.altKey}`,
+        "mouse"
+      );
+    }
+
+    window.addEventListener("mousedown", (e) => logMouse("mousedown", e));
+    window.addEventListener("mouseup", (e) => logMouse("mouseup", e));
+    window.addEventListener("click", (e) => logMouse("click", e));
+    window.addEventListener("dblclick", (e) => logMouse("dblclick", e));
+    window.addEventListener("contextmenu", (e) => {
+      logMouse("contextmenu", e);
+      // e.preventDefault(); // uncomment if you want to block right-click menu
+    });
+    window.addEventListener("mousemove", (e) => {
+      // Throttle mousemove a bit so the log doesn't explode
+      if (Math.random() > 0.92) logMouse("mousemove", e);
+      mouseXEl.textContent = e.clientX;
+      mouseYEl.textContent = e.clientY;
+    });
+    window.addEventListener("wheel", (e) => {
+      addLog(
+        `<span class="mouse">WHEEL</span> ` +
+        `deltaX=${e.deltaX.toFixed(1)} deltaY=${e.deltaY.toFixed(1)} ` +
+        `deltaMode=${e.deltaMode}`,
+        "mouse"
+      );
+    });
+
+    // ============================================================
+    // UTILITY
+    // ============================================================
+    function escapeHtml(text) {
+      const div = document.createElement("div");
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    // ============================================================
+    // EXTRA: List of almost all standard KeyboardEvent.code values
+    // ============================================================
+    /*
+      Full reference list (most common ones):
+
+      // Letters
+      KeyA KeyB KeyC KeyD KeyE KeyF KeyG KeyH KeyI KeyJ KeyK KeyL KeyM
+      KeyN KeyO KeyP KeyQ KeyR KeyS KeyT KeyU KeyV KeyW KeyX KeyY KeyZ
+
+      // Digits
+      Digit0 Digit1 Digit2 Digit3 Digit4 Digit5 Digit6 Digit7 Digit8 Digit9
+
+      // Function keys
+      F1 F2 F3 F4 F5 F6 F7 F8 F9 F10 F11 F12
+      F13 F14 F15 F16 F17 F18 F19 F20 F21 F22 F23 F24
+
+      // Control keys
+      Escape Enter Tab Backspace Delete Insert
+      Home End PageUp PageDown
+
+      // Arrows
+      ArrowUp ArrowDown ArrowLeft ArrowRight
+
+      // Modifiers
+      ShiftLeft ShiftRight
+      ControlLeft ControlRight
+      AltLeft AltRight
+      MetaLeft MetaRight
+      CapsLock NumLock ScrollLock
+
+      // Numpad
+      Numpad0 Numpad1 Numpad2 Numpad3 Numpad4
+      Numpad5 Numpad6 Numpad7 Numpad8 Numpad9
+      NumpadAdd NumpadSubtract NumpadMultiply NumpadDivide
+      NumpadEnter NumpadDecimal NumpadEqual
+
+      // Symbols & punctuation
+      Backquote Minus Equal
+      BracketLeft BracketRight Backslash
+      Semicolon Quote
+      Comma Period Slash
+
+      // Browser / media keys (less common)
+      BrowserBack BrowserFavorites BrowserForward BrowserHome
+      BrowserRefresh BrowserSearch BrowserStop
+      AudioVolumeDown AudioVolumeMute AudioVolumeUp
+      MediaPlayPause MediaStop MediaTrackNext MediaTrackPrevious
+      LaunchMail LaunchMediaPlayer LaunchApplication1 LaunchApplication2
+    */
+
+    // Initial message
+    addLog('<span class="meta">Ready. Press any key or move/click the mouse.</span>');
+    addLog('<span class="meta">event.code always reflects the physical key location.</span>');
+  </script>
+</body>
+</html>
