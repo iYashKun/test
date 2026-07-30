@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>All Keys Logger</title>
+  <style>
+    body { font-family: monospace; padding: 20px; }
+    #output { 
+      background: #111; 
+      color: #0f0; 
+      padding: 15px; 
+      height: 400px; 
+      overflow-y: auto;
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+<body>
+  <h2>Press any key (a-z, numbers, arrows, F-keys, etc.)</h2>
+  <div id="output"></div>
+
+  <script>
+    const output = document.getElementById("output");
+
+    function log(message) {
+      output.textContent += message + "\n";
+      output.scrollTop = output.scrollHeight; // auto-scroll
+    }
+
+    window.addEventListener("keydown", (event) => {
+      // Prevent default browser actions if you want (optional)
+      // event.preventDefault();
+
+      const info = {
+        key: event.key,           // "a", "A", "1", "Enter", "ArrowUp", "F5"...
+        code: event.code,         // "KeyA", "Digit1", "Enter", "ArrowUp", "F5"...
+        ctrl: event.ctrlKey,
+        shift: event.shiftKey,
+        alt: event.altKey,
+        meta: event.metaKey,      // Cmd on Mac
+        repeat: event.repeat,     // true if key is held down
+      };
+
+      log(
+        `key: "${info.key}" | code: "${info.code}" | ` +
+        `Ctrl:${info.ctrl} Shift:${info.shift} Alt:${info.alt} Meta:${info.meta} | ` +
+        `repeat: ${info.repeat}`
+      );
+    });
+
+    // Optional: also listen for keyup
+    window.addEventListener("keyup", (event) => {
+      log(`  → released: "${event.key}"`);
+    });
+  </script>
+</body>
+</html>
