@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>3D Camera + Keyboard + Pointer Lock + Capture Demo</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: #0d1117;
+      color: #c9d1d9;
+      padding: 16px;
+      line-height: 1.45;
+    }
+    h1, h2, h3 { color: #58a6ff; margin-bottom: 8px; }
+    .container { max-width: 1400px; margin: 0 auto; }
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+    @media (max-width: 1000px) { .grid { grid-template-columns: 1fr; } }
+    .panel {
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 10px;
+      padding: 14px;
+    }
+    #log {
+      background: #010409;
+      border: 1px solid #30363d;
+      border-radius: 6px;
+      height: 320px;
+      overflow-y: auto;
+      padding: 10px;
+      font-family: ui-monospace, monospace;
+      font-size: 12px;
+      white-space: pre-wrap;
+    }
+    .log-key { color: #7ee787; }
+    .log-pointer { color: #d2a8ff; }
+    .log-lock { color: #ffa657; }
+    .log-meta { color: #79c0ff; }
+    .info {
+      background: #0d1117;
+      border-left: 4px solid #58a6ff;
+      padding: 10px 12px;
+      margin: 10px 0;
+      font-size: 13.5px;
+    }
+    button {
+      background: #238636;
+      color: white;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      margin: 0 6px 6px 0;
+      font-size: 13px;
+    }
+    button:hover { background: #2ea043; }
+    button.danger { background: #da3633; }
+    button.danger:hover { background: #f85149; }
+    .stats {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    .stat {
+      background: #21262d;
+      padding: 6px 11px;
+      border-radius: 6px;
+      font-size: 12.5px;
+    }
+    .stat b { color: #7ee787; }
+    #gameCanvas {
+      width: 100%;
+      height: 360px;
+      background: #0a0e14;
+      border: 2px solid #30363d;
+      border-radius: 8px;
+      display: block;
+      cursor: crosshair;
+      touch-action: none;
+    }
+    #gameCanvas.locked {
+      border-color: #ffa657;
+      cursor: none;
+    }
+    .controls-help {
+      font-size: 13px;
+      color: #8b949e;
+      margin-top: 8px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12.5px;
+      margin-top: 6px;
+    }
+    th, td {
+      border: 1px solid #30363d;
+      padding: 4px 7px;
+      text-align: left;
+    }
+    th { background: #21262d; color: #58a6ff; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>3D Camera Demo + Keyboard (a-z) + Pointer Lock + Capture</h1>
+
+    <div class="stats">
+      <div class="stat">Keys: <b id="keyCount">0</b></div>
+      <div class="stat">Pointer: <b id="pointerCount">0</b></div>
+      <div class="stat">Lock: <b id="lockStatus">Unlocked</b></div>
+      <div class="stat">Yaw: <b id="yawVal">0</b>°</div>
+      <div class="stat">Pitch: <b id="pitchVal">0</b>°</div>
+      <div class="stat">Pos: <b id="posVal">0, 0, 0</b></div>
+    </div>
+
+    <div>
+      <button onclick="clearLog()">Clear Log</button>
+      <button id="lockBtn" onclick="requestLock()">Click Canvas → Start 3D Camera</button>
+      <button class="danger" onclick="exitLock()">Exit Pointer Lock (or press Esc)</button>
+    </div>
+
+    <div class="grid">
+      <!-- LEFT: 3D Camera Canvas -->
+      <div class="panel">
+        <h2>3D Camera View (Pointer Lock)</h2>
+        <canvas id="gameCanvas" width="800" height="360"></canvas>
+        <div class="controls-help">
+          <b>Controls (when locked):</b><br>
+          Mouse → Look around &nbsp;|&nbsp;
+          W A S D → Move &nbsp;|&nbsp;
+          Space → Up &nbsp;|&nbsp;
+          Shift → Down &nbsp;|&nbsp;
+          Esc → Exit lock
+        </div>
+      </div>
+
+      <!-- RIGHT: Log + a-z table -->
+      <div class="panel">
+        <h2>Live Event Log</h2>
+        <div id="log"></div>
+
+        <h3 style="margin-top:14px">KeyboardEvent.code – a to z</h3>
+        <div class="info" style="font-size:12.5px">
+          <code>code</code> = physical key &nbsp;|&nbsp; <code>key</code> = character
+        </div>
+        <table>
+          <thead>
+            <tr><th>Key</th><th>code</th><th>key</th><th>Shift</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>A</td><td>KeyA</td><td>a</td><td>A</td></tr>
+            <tr><td>B</td><td>KeyB</td><td>b</td><td>B</td></tr>
+            <tr><td>C</td><td>KeyC</td><td>c</td><td>C</td></tr>
+            <tr><td>D</td><td>KeyD</td><td>d</td><td>D</td></tr>
+            <tr><td>E</td><td>KeyE</td><td>e</td><td>E</td></tr>
+            <tr><td>F</td><td>KeyF</td><td>f</td><td>F</td></tr>
+            <tr><td>G</td><td>KeyG</td><td>g</td><td>G</td></tr>
+            <tr><td>H</td><td>KeyH</td><td>h</td><td>H</td></tr>
+            <tr><td>I</td><td>KeyI</td><td>i</td><td>I</td></tr>
+            <tr><td>J</td><td>KeyJ</td><td>j</td><td>J</td></tr>
+            <tr><td>K</td><td>KeyK</td><td>k</td><td>K</td></tr>
+            <tr><td>L</td><td>KeyL</td><td>l</td><td>L</td></tr>
+            <tr><td>M</td><td>KeyM</td><td>m</td><td>M</td></tr>
+            <tr><td>N</td><td>KeyN</td><td>n</td><td>N</td></tr>
+            <tr><td>O</td><td>KeyO</td><td>o</td><td>O</td></tr>
+            <tr><td>P</td><td>KeyP</td><td>p</td><td>P</td></tr>
+            <tr><td>Q</td><td>KeyQ</td><td>q</td><td>Q</td></tr>
+            <tr><td>R</td><td>KeyR</td><td>r</td><td>R</td></tr>
+            <tr><td>S</td><td>KeyS</td><td>s</td><td>S</td></tr>
+            <tr><td>T</td><td>KeyT</td><td>t</td><td>T</td></tr>
+            <tr><td>U</td><td>KeyU</td><td>u</td><td>U</td></tr>
+            <tr><td>V</td><td>KeyV</td><td>v</td><td>V</td></tr>
+            <tr><td>W</td><td>KeyW</td><td>w</td><td>W</td></tr>
+            <tr><td>X</td><td>KeyX</td><td>x</td><td>X</td></tr>
+            <tr><td>Y</td><td>KeyY</td><td>y</td><td>Y</td></tr>
+            <tr><td>Z</td><td>KeyZ</td><td>z</td><td>Z</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>How the 3D Camera works</h2>
+      <div class="info">
+        <b>Pointer Lock</b> hides the cursor and gives relative mouse movement (<code>movementX</code> / <code>movementY</code>).<br>
+        We use that to update <b>yaw</b> (left/right) and <b>pitch</b> (up/down).<br>
+        WASD moves the camera in the direction it is facing.<br>
+        This is the same technique used in browser-based first-person games.
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ============================================================
+    // DOM & STATE
+    // ============================================================
+    const canvas = document.getElementById("gameCanvas");
+    const ctx = canvas.getContext("2d");
+    const logEl = document.getElementById("log");
+    const keyCountEl = document.getElementById("keyCount");
+    const pointerCountEl = document.getElementById("pointerCount");
+    const lockStatusEl = document.getElementById("lockStatus");
+    const yawValEl = document.getElementById("yawVal");
+    const pitchValEl = document.getElementById("pitchVal");
+    const posValEl = document.getElementById("posVal");
+    const lockBtn = document.getElementById("lockBtn");
+
+    let keyCount = 0;
+    let pointerCount = 0;
+
+    // Camera state
+    const camera = {
+      x: 0,
+      y: 1.6,          // eye height
+      z: 0,
+      yaw: 0,          // left-right (radians)
+      pitch: 0,        // up-down
+      speed: 0.12
+    };
+
+    // Keyboard state
+    const keys = {};
+
+    // ============================================================
+    // LOGGING
+    // ============================================================
+    function log(msg, type = "meta") {
+      const div = document.createElement("div");
+      div.className = "log-" + type;
+      div.textContent = msg;
+      logEl.appendChild(div);
+      logEl.scrollTop = logEl.scrollHeight;
+      if (logEl.children.length > 300) logEl.removeChild(logEl.firstChild);
+    }
+
+    function clearLog() {
+      logEl.innerHTML = "";
+      log("Log cleared.");
+    }
+
+    // ============================================================
+    // KEYBOARD
+    // ============================================================
+    window.addEventListener("keydown", (e) => {
+      keys[e.code] = true;
+      keyCount++;
+      keyCountEl.textContent = keyCount;
+
+      log(`KEYDOWN  key="${e.key}"  code="${e.code}"`, "key");
+
+      // Prevent scrolling with arrows/space when locked
+      if (document.pointerLockElement === canvas) {
+        if (["Space", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.code)) {
+          e.preventDefault();
+        }
+      }
+    });
+
+    window.addEventListener("keyup", (e) => {
+      keys[e.code] = false;
+      log(`KEYUP    key="${e.key}"  code="${e.code}"`, "key");
+    });
+
+    // ============================================================
+    // POINTER LOCK
+    // ============================================================
+    function requestLock() {
+      canvas.requestPointerLock();
+    }
+
+    function exitLock() {
+      if (document.pointerLockElement) document.exitPointerLock();
+    }
+
+    document.addEventListener("pointerlockchange", () => {
+      if (document.pointerLockElement === canvas) {
+        lockStatusEl.textContent = "LOCKED";
+        canvas.classList.add("locked");
+        lockBtn.textContent = "Camera Active (Esc to exit)";
+        log("POINTER LOCK ON – mouse look enabled", "lock");
+      } else {
+        lockStatusEl.textContent = "Unlocked";
+        canvas.classList.remove("locked");
+        lockBtn.textContent = "Click Canvas → Start 3D Camera";
+        log("POINTER LOCK OFF", "lock");
+      }
+    });
+
+    document.addEventListener("pointerlockerror", () => {
+      log("Pointer Lock failed (browser blocked or permission denied)", "lock");
+    });
+
+    // Mouse look
+    document.addEventListener("mousemove", (e) => {
+      if (document.pointerLockElement !== canvas) return;
+
+      const sensitivity = 0.0022;
+      camera.yaw   -= e.movementX * sensitivity;
+      camera.pitch -= e.movementY * sensitivity;
+
+      // Clamp pitch so you can't flip over
+      const limit = Math.PI / 2 - 0.01;
+      camera.pitch = Math.max(-limit, Math.min(limit, camera.pitch));
+
+      yawValEl.textContent   = (camera.yaw * 180 / Math.PI).toFixed(1);
+      pitchValEl.textContent = (camera.pitch * 180 / Math.PI).toFixed(1);
+    });
+
+    // Click canvas to lock
+    canvas.addEventListener("click", () => {
+      if (document.pointerLockElement !== canvas) {
+        canvas.requestPointerLock();
+      }
+    });
+
+    // ============================================================
+    // POINTER CAPTURE (bonus – on the canvas)
+    // ============================================================
+    canvas.addEventListener("pointerdown", (e) => {
+      pointerCount++;
+      pointerCountEl.textContent = pointerCount;
+      canvas.setPointerCapture(e.pointerId);
+      log(`POINTERDOWN + CAPTURE  type=${e.pointerType} id=${e.pointerId}`, "pointer");
+    });
+
+    canvas.addEventListener("pointerup", (e) => {
+      canvas.releasePointerCapture(e.pointerId);
+      log(`POINTERUP + RELEASE   id=${e.pointerId}`, "pointer");
+    });
+
+    // ============================================================
+    // 3D CAMERA MOVEMENT + RENDER
+    // ============================================================
+    function update() {
+      if (document.pointerLockElement === canvas) {
+        const speed = camera.speed;
+        const cos = Math.cos(camera.yaw);
+        const sin = Math.sin(camera.yaw);
+
+        // WASD movement relative to yaw
+        if (keys["KeyW"]) { camera.x += sin * speed; camera.z += cos * speed; }
+        if (keys["KeyS"]) { camera.x -= sin * speed; camera.z -= cos * speed; }
+        if (keys["KeyA"]) { camera.x -= cos * speed; camera.z += sin * speed; }
+        if (keys["KeyD"]) { camera.x += cos * speed; camera.z -= sin * speed; }
+
+        // Up / Down
+        if (keys["Space"])     camera.y += speed;
+        if (keys["ShiftLeft"] || keys["ShiftRight"]) camera.y -= speed;
+
+        posValEl.textContent = `${camera.x.toFixed(1)}, ${camera.y.toFixed(1)}, ${camera.z.toFixed(1)}`;
+      }
+
+      render();
+      requestAnimationFrame(update);
+    }
+
+    function render() {
+      const w = canvas.width;
+      const h = canvas.height;
+
+      // Clear
+      ctx.fillStyle = "#0a0e14";
+      ctx.fillRect(0, 0, w, h);
+
+      // Sky
+      const skyGrad = ctx.createLinearGradient(0, 0, 0, h / 2);
+      skyGrad.addColorStop(0, "#1a2332");
+      skyGrad.addColorStop(1, "#2c3e50");
+      ctx.fillStyle = skyGrad;
+      ctx.fillRect(0, 0, w, h / 2 + camera.pitch * 80);
+
+      // Ground
+      const groundGrad = ctx.createLinearGradient(0, h / 2 + camera.pitch * 80, 0, h);
+      groundGrad.addColorStop(0, "#1e3a2f");
+      groundGrad.addColorStop(1, "#0d1f17");
+      ctx.fillStyle = groundGrad;
+      ctx.fillRect(0, h / 2 + camera.pitch * 80, w, h);
+
+      // Horizon line
+      ctx.strokeStyle = "#3d5a4c";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(0, h / 2 + camera.pitch * 80);
+      ctx.lineTo(w, h / 2 + camera.pitch * 80);
+      ctx.stroke();
+
+      // Simple "world" markers (circles that move with camera)
+      ctx.fillStyle = "#58a6ff";
+      for (let i = -5; i <= 5; i++) {
+        for (let j = -5; j <= 5; j++) {
+          if (i === 0 && j === 0) continue;
+          const wx = i * 4 - camera.x;
+          const wz = j * 4 - camera.z;
+
+          // Very basic projection
+          const dist = Math.sqrt(wx * wx + wz * wz);
+          if (dist < 0.5 || dist > 30) continue;
+
+          const angle = Math.atan2(wx, wz) - camera.yaw;
+          const screenX = w / 2 + Math.tan(angle) * (w * 0.5);
+          const screenY = h / 2 + camera.pitch * 80 - (1.5 - camera.y) / dist * 180;
+
+          const size = Math.max(2, 40 / dist);
+          ctx.beginPath();
+          ctx.arc(screenX, screenY, size, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+
+      // Crosshair (only when locked)
+      if (document.pointerLockElement === canvas) {
+        ctx.strokeStyle = "#ffffff";
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(w / 2 - 12, h / 2);
+        ctx.lineTo(w / 2 + 12, h / 2);
+        ctx.moveTo(w / 2, h / 2 - 12);
+        ctx.lineTo(w / 2, h / 2 + 12);
+        ctx.stroke();
+      }
+
+      // Instructions overlay when not locked
+      if (document.pointerLockElement !== canvas) {
+        ctx.fillStyle = "rgba(0,0,0,0.55)";
+        ctx.fillRect(0, 0, w, h);
+        ctx.fillStyle = "#58a6ff";
+        ctx.font = "20px system-ui";
+        ctx.textAlign = "center";
+        ctx.fillText("Click here to start 3D Camera", w / 2, h / 2 - 10);
+        ctx.font = "14px system-ui";
+        ctx.fillStyle = "#8b949e";
+        ctx.fillText("Mouse look + WASD movement", w / 2, h / 2 + 18);
+      }
+    }
+
+    // Start the loop
+    update();
+    log("Ready. Click the canvas to activate 3D Camera (Pointer Lock).");
+  </script>
+</body>
+</html>
