@@ -1,338 +1,36 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Already Open</title>
-
-    <style>
-        * {
-            box-sizing: border-box;
-        }
-
-        body {
-            margin: 0;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: Inter, Arial, sans-serif;
-            background:
-                radial-gradient(circle at top left, #243b70, transparent 40%),
-                radial-gradient(circle at bottom right, #461c61, transparent 40%),
-                #090b12;
-            color: white;
-        }
-
-        .card {
-            width: min(440px, calc(100% - 32px));
-            padding: 42px 30px;
-            text-align: center;
-            border: 1px solid rgba(255,255,255,.12);
-            border-radius: 24px;
-            background: rgba(255,255,255,.07);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            box-shadow:
-                0 25px 70px rgba(0,0,0,.45),
-                inset 0 1px 0 rgba(255,255,255,.08);
-        }
-
-        .icon {
-            width: 72px;
-            height: 72px;
-            margin: 0 auto 22px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #6366f1, #8b5cf6);
-            box-shadow: 0 12px 35px rgba(99,102,241,.35);
-            font-size: 32px;
-        }
-
-        h1 {
-            margin: 0 0 12px;
-            font-size: 27px;
-            font-weight: 700;
-            letter-spacing: -.5px;
-        }
-
-        p {
-            margin: 0;
-            color: rgba(255,255,255,.68);
-            font-size: 16px;
-            line-height: 1.6;
-        }
-
-        .count {
-            display: inline-block;
-            margin-top: 24px;
-            padding: 9px 16px;
-            border-radius: 999px;
-            background: rgba(99,102,241,.15);
-            border: 1px solid rgba(139,92,246,.3);
-            color: #c4b5fd;
-            font-size: 14px;
-            font-weight: 600;
-        }
-
-        .status {
-            margin-top: 18px;
-            font-size: 12px;
-            color: rgba(255,255,255,.4);
-        }
-    </style>
+    <title>Check</title>
 </head>
-
 <body>
 
-<div class="card">
-    <div class="icon">↗</div>
-
-    <h1>Already Open</h1>
-
-    <p id="message">
-        Checking other tabs...
-    </p>
-
-    <div class="count" id="count">
-        Checking...
-    </div>
-
-    <div class="status">
-        This website is already open in another tab.
-    </div>
-</div>
-
+<h2 id="message">Checking...</h2>
 
 <script>
-(() => {
+const CHANNEL_NAME = "exyz";
+const channel = new BroadcastChannel(CHANNEL_NAME);
 
-    /*
-     * Same website ke sabhi pages ko ek hi group maana jayega.
-     *
-     * Example:
-     * examplexyz.com/
-     * examplexyz.com/etc
-     * examplexyz.com/dashboard
-     *
-     * Sab ek hi tab count mein aayenge.
-     */
+let alreadyOpen = false;
 
-    const CHANNEL_NAME = "examplexyz_tab_counter_v1";
-
-    const channel = new BroadcastChannel(CHANNEL_NAME);
-
-    // Har tab ka unique ID
-    const tabId =
-        Date.now().toString(36) +
-        Math.random().toString(36).substring(2);
-
-    // Active tabs ka record
-    const tabs = new Map();
-
-    // Human-readable numbers
-    const numberWords = [
-        "zero",
-        "one",
-        "two",
-        "three",
-        "four",
-        "five",
-        "six",
-        "seven",
-        "eight",
-        "nine",
-        "ten",
-        "eleven",
-        "twelve",
-        "thirteen",
-        "fourteen",
-        "fifteen",
-        "sixteen",
-        "seventeen",
-        "eighteen",
-        "nineteen",
-        "twenty"
-    ];
-
-    function numberToWords(number) {
-
-        if (number <= 20) {
-            return numberWords[number];
-        }
-
-        return String(number);
+channel.postMessage({ type: "CHECK" });
+channel.onmessage = function (event) {
+    if (event.data.type === "CHECK") {
+        channel.postMessage({ type: "ALREADY_OPEN" });
     }
 
-    function updateUI() {
-
-        // Khud ko bhi active tab list mein rakho
-        tabs.set(tabId, Date.now());
-
-        const totalTabs = tabs.size;
-
-        const message = document.getElementById("message");
-        const count = document.getElementById("count");
-
-        if (totalTabs <= 1) {
-
-            message.textContent =
-                "This website is currently open in one tab.";
-
-            count.textContent =
-                "One active tab";
-
-        } else {
-
-            const otherTabs = totalTabs - 1;
-            const word = numberToWords(otherTabs);
-
-            message.textContent =
-                `This website is already open in another ${word} ${otherTabs === 1 ? "tab" : "tabs"}.`;
-
-            count.textContent =
-                `${numberToWords(totalTabs)} active tabs`;
-        }
+    if (event.data.type === "ALREADY_OPEN") {
+        alreadyOpen = true;
+        document.getElementById("message").textContent = "Already opened in another tab.";
     }
+};
 
-    /*
-     * New tab announces itself.
-     */
-    channel.postMessage({
-        type: "JOIN",
-        id: tabId
-    });
-
-
-    /*
-     * Existing tabs reply when a new tab joins.
-     */
-    channel.addEventListener("message", event => {
-
-        const data = event.data;
-
-        if (!data) return;
-
-
-        // New tab joined
-        if (data.type === "JOIN") {
-
-            if (data.id !== tabId) {
-
-                tabs.set(data.id, Date.now());
-
-                channel.postMessage({
-                    type: "HERE",
-                    id: tabId
-                });
-
-                updateUI();
-            }
-        }
-
-
-        // Existing tab says it is here
-        if (data.type === "HERE") {
-
-            if (data.id !== tabId) {
-
-                tabs.set(data.id, Date.now());
-
-                updateUI();
-            }
-        }
-
-
-        // Heartbeat from another tab
-        if (data.type === "HEARTBEAT") {
-
-            if (data.id !== tabId) {
-
-                tabs.set(data.id, Date.now());
-
-                updateUI();
-            }
-        }
-
-
-        // Tab leaving
-        if (data.type === "LEAVE") {
-
-            tabs.delete(data.id);
-
-            updateUI();
-        }
-    });
-
-
-    /*
-     * Har second heartbeat bhejo.
-     * Isse pata chalta rahega ki tab active hai.
-     */
-    setInterval(() => {
-
-        tabs.set(tabId, Date.now());
-
-        channel.postMessage({
-            type: "HEARTBEAT",
-            id: tabId
-        });
-
-        updateUI();
-
-    }, 1000);
-
-
-    /*
-     * Dead tabs ko remove karo.
-     * Agar browser crash ho gaya ya tab properly
-     * LEAVE message nahi bhej paya to bhi count fix ho jayega.
-     */
-    setInterval(() => {
-
-        const now = Date.now();
-
-        for (const [id, lastSeen] of tabs.entries()) {
-
-            if (id === tabId) continue;
-
-            if (now - lastSeen > 3500) {
-                tabs.delete(id);
-            }
-        }
-
-        updateUI();
-
-    }, 1500);
-
-
-    /*
-     * Tab normally close hone par announce karo.
-     */
-    window.addEventListener("beforeunload", () => {
-
-        channel.postMessage({
-            type: "LEAVE",
-            id: tabId
-        });
-
-        channel.close();
-    });
-
-
-    /*
-     * Initial UI
-     */
-    tabs.set(tabId, Date.now());
-
-    setTimeout(() => {
-        updateUI();
-    }, 300);
-
-})();
+setTimeout(() => {
+    if (!alreadyOpen) {
+        document.getElementById("message").textContent = "Hey;";
+    }
+}, 500);
 </script>
 
 </body>
