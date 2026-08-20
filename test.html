@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Single Tab Check</title>
+</head>
+<body>
+
+<h2 id="message">Checking...</h2>
+
+<script>
+const CHANNEL_NAME = "examplexyz-single-tab";
+const channel = new BroadcastChannel(CHANNEL_NAME);
+
+let alreadyOpen = false;
+
+// Ask other tabs if this website is already open
+channel.postMessage({
+    type: "CHECK"
+});
+
+// Existing tab responds
+channel.onmessage = function (event) {
+    if (event.data.type === "CHECK") {
+        channel.postMessage({
+            type: "ALREADY_OPEN"
+        });
+    }
+
+    if (event.data.type === "ALREADY_OPEN") {
+        alreadyOpen = true;
+
+        document.getElementById("message").textContent =
+            "Already opened in another tab.";
+    }
+};
+
+// If nobody responds, this is the first tab
+setTimeout(() => {
+    if (!alreadyOpen) {
+        document.getElementById("message").textContent =
+            "This is the first open tab.";
+    }
+}, 500);
+</script>
+
+</body>
+</html>
