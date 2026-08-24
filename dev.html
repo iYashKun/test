@@ -3,15 +3,37 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#080b12" />
   <title>Access Restricted</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+
   <style>
     :root {
-      color-scheme: light;
-      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color-scheme: dark;
+      --bg: #080b12;
+      --surface: #0e131c;
+      --surface-2: #121925;
+      --border: #202938;
+      --border-soft: #18202c;
+      --text: #f4f7fb;
+      --muted: #8b96a8;
+      --muted-2: #667184;
+      --accent: #4f8cff;
+      --accent-hover: #6b9fff;
+      --danger: #ff5c68;
+      --radius: 22px;
     }
 
     * {
       box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+      background: var(--bg);
     }
 
     body {
@@ -22,195 +44,378 @@
       padding: 24px;
 
       background:
-        radial-gradient(circle at 20% 20%, rgba(32, 129, 226, .08), transparent 35%),
-        radial-gradient(circle at 80% 80%, rgba(99, 102, 241, .08), transparent 35%),
-        #f5f7fb;
+        linear-gradient(145deg, #080b12 0%, #0a0f17 50%, #080b12 100%);
 
-      color: #172033;
+      color: var(--text);
+      font-family: "Inter", system-ui, sans-serif;
+
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    /* Subtle background structure — NO GLOW */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: .35;
+
+      background-image:
+        linear-gradient(rgba(255,255,255,.018) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.018) 1px, transparent 1px);
+
+      background-size: 42px 42px;
+
+      mask-image: linear-gradient(to bottom, black, transparent 90%);
+      -webkit-mask-image: linear-gradient(to bottom, black, transparent 90%);
     }
 
     main {
-      width: min(100%, 540px);
-      padding: 42px 38px;
-      text-align: center;
+      position: relative;
+      width: min(100%, 560px);
 
-      background: rgba(255, 255, 255, .92);
-      border: 1px solid #e2e8f0;
-      border-radius: 24px;
+      padding: 44px 42px 32px;
+
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
 
       box-shadow:
-        0 25px 70px rgba(23, 32, 51, .10),
-        0 4px 12px rgba(23, 32, 51, .04);
+        0 24px 60px rgba(0, 0, 0, .38),
+        0 2px 4px rgba(0, 0, 0, .25);
 
-      backdrop-filter: blur(12px);
-
-      animation: cardIn .45s ease;
+      animation: cardIn .45s cubic-bezier(.2,.8,.2,1);
     }
 
     @keyframes cardIn {
       from {
         opacity: 0;
-        transform: translateY(12px) scale(.98);
+        transform: translateY(14px);
       }
 
       to {
         opacity: 1;
-        transform: translateY(0) scale(1);
+        transform: translateY(0);
       }
     }
 
+    .top-line {
+      position: absolute;
+      top: 0;
+      left: 32px;
+      right: 32px;
+      height: 1px;
+
+      background: linear-gradient(
+        90deg,
+        transparent,
+        #344052,
+        transparent
+      );
+    }
+
     .icon {
-      width: 72px;
-      height: 72px;
-      margin: 0 auto 22px;
+      width: 70px;
+      height: 70px;
+      margin: 0 auto 25px;
 
       display: grid;
       place-items: center;
 
-      border-radius: 50%;
+      border-radius: 18px;
 
-      background: #eff6ff;
-      border: 8px solid #eaf2ff;
+      background: #141a24;
+      border: 1px solid #293444;
 
-      color: #2081e2;
+      color: var(--danger);
 
+      font-family: "Space Grotesk", sans-serif;
       font-size: 30px;
-      font-weight: 900;
+      font-weight: 700;
 
-      box-shadow: 0 10px 25px rgba(32, 129, 226, .12);
+      box-shadow: none;
+    }
+
+    .eyebrow {
+      margin-bottom: 10px;
+
+      color: #697588;
+
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 2.2px;
+      text-transform: uppercase;
     }
 
     h1 {
       margin: 0;
 
-      font-size: 28px;
-      line-height: 1.2;
-      letter-spacing: -.5px;
+      font-family: "Space Grotesk", sans-serif;
+      font-size: clamp(28px, 5vw, 38px);
+      line-height: 1.05;
+      letter-spacing: -1.4px;
+      font-weight: 700;
     }
 
     p {
-      max-width: 430px;
-      margin: 14px auto 0;
+      max-width: 455px;
+      margin: 16px auto 0;
 
-      color: #64748b;
-      line-height: 1.65;
-      font-size: 15px;
+      color: var(--muted);
+
+      font-size: 14px;
+      line-height: 1.7;
     }
 
     .status {
-      margin-top: 26px;
-      padding: 13px 15px;
+      margin-top: 28px;
+      min-height: 48px;
 
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 9px;
+      gap: 10px;
 
-      border: 1px solid #e5eaf2;
+      padding: 12px 15px;
+
+      background: #0b1018;
+      border: 1px solid var(--border);
       border-radius: 12px;
 
-      background: #f8fafc;
-      color: #475569;
+      color: #a7b0bf;
 
-      font: 13px ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-family: "Space Grotesk", monospace;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: .2px;
     }
 
     .dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: #ef4444;
+      width: 7px;
+      height: 7px;
+      flex: 0 0 7px;
 
-      box-shadow: 0 0 0 4px rgba(239, 68, 68, .10);
+      border-radius: 50%;
+      background: var(--danger);
     }
 
     .actions {
-      margin-top: 22px;
+      margin-top: 14px;
     }
 
     .reload-btn {
       width: 100%;
-      border: 0;
+      min-height: 50px;
+
+      border: 1px solid #5b93ff;
       border-radius: 12px;
 
       padding: 13px 18px;
 
-      background: #2081e2;
-      color: white;
+      background: var(--accent);
+      color: #fff;
 
+      font-family: "Inter", sans-serif;
       font-size: 14px;
       font-weight: 700;
 
       cursor: pointer;
 
-      box-shadow: 0 8px 20px rgba(32, 129, 226, .22);
-
       transition:
-        transform .15s ease,
         background .15s ease,
-        box-shadow .15s ease;
+        border-color .15s ease,
+        transform .15s ease;
     }
 
     .reload-btn:hover {
-      background: #176fc5;
+      background: var(--accent-hover);
+      border-color: var(--accent-hover);
       transform: translateY(-1px);
-      box-shadow: 0 10px 25px rgba(32, 129, 226, .28);
     }
 
     .reload-btn:active {
       transform: translateY(0);
     }
 
+    .reload-btn:focus-visible {
+      outline: 2px solid #9bbcff;
+      outline-offset: 3px;
+    }
+
     .hint {
-      margin-top: 16px;
-      font-size: 12px;
-      color: #94a3b8;
+      margin-top: 13px;
+
+      color: var(--muted-2);
+
+      font-size: 11px;
+      line-height: 1.5;
     }
 
     .footer {
       margin-top: 28px;
-      padding-top: 18px;
+      padding-top: 19px;
 
-      border-top: 1px solid #edf1f5;
+      border-top: 1px solid var(--border-soft);
 
-      color: #94a3b8;
-      font-size: 11px;
-      letter-spacing: .2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+
+      color: #596476;
+
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: .7px;
+      text-transform: uppercase;
     }
 
-    @media (max-width: 480px) {
+    .footer-mark {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: #596476;
+    }
+
+    /* Tablet */
+    @media (max-width: 640px) {
+      body {
+        padding: 18px;
+      }
+
       main {
-        padding: 34px 24px;
-        border-radius: 20px;
+        padding: 38px 30px 28px;
+      }
+    }
+
+    /* Mobile */
+    @media (max-width: 480px) {
+      body {
+        padding: 14px;
+      }
+
+      main {
+        width: 100%;
+        padding: 32px 20px 24px;
+        border-radius: 18px;
+      }
+
+      .top-line {
+        left: 22px;
+        right: 22px;
+      }
+
+      .icon {
+        width: 62px;
+        height: 62px;
+        margin-bottom: 21px;
+        border-radius: 16px;
+        font-size: 26px;
+      }
+
+      .eyebrow {
+        font-size: 9px;
+        letter-spacing: 1.8px;
       }
 
       h1 {
-        font-size: 24px;
+        font-size: 28px;
+        letter-spacing: -1px;
+      }
+
+      p {
+        margin-top: 14px;
+        font-size: 13px;
+        line-height: 1.65;
+      }
+
+      .status {
+        margin-top: 23px;
+        font-size: 11px;
+      }
+
+      .reload-btn {
+        min-height: 48px;
+      }
+
+      .footer {
+        margin-top: 24px;
+      }
+    }
+
+    /* Very small phones */
+    @media (max-width: 360px) {
+      body {
+        padding: 10px;
+      }
+
+      main {
+        padding: 28px 17px 21px;
+      }
+
+      h1 {
+        font-size: 25px;
+      }
+
+      p {
+        font-size: 12.5px;
+      }
+
+      .status {
+        padding-inline: 10px;
+      }
+    }
+
+    /* Reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+      main {
+        animation: none;
+      }
+
+      .reload-btn {
+        transition: none;
       }
     }
   </style>
 </head>
+
 <body>
   <main>
+    <div class="top-line"></div>
+
     <div class="icon">!</div>
+
+    <div class="eyebrow">Security checkpoint</div>
+
     <h1>Access Restricted</h1>
+
     <p>
       Developer tools were detected on this page.
       Please close Inspect or DevTools and reload the page to continue.
     </p>
+
     <div class="status">
       <span class="dot"></span>
       Protected page
     </div>
+
     <div class="actions">
-      <button class="reload-btn" onclick="location.reload()">
+      <button
+        class="reload-btn"
+        type="button"
+        onclick="location.reload()"
+      >
         ↻ &nbsp; Reload Page
       </button>
     </div>
+
     <div class="hint">
       Close Developer Tools before continuing.
     </div>
+
     <div class="footer">
+      <span class="footer-mark"></span>
       Security protection enabled
     </div>
   </main>
