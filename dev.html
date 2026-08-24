@@ -9,7 +9,10 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap"
+    rel="stylesheet"
+  >
 
   <style>
     :root {
@@ -74,7 +77,7 @@
       text-rendering: optimizeLegibility;
     }
 
-    /* Very subtle grid — no glow */
+    /* Subtle background pattern - no glow */
     body::before {
       content: "";
 
@@ -157,12 +160,12 @@
 
       height: 2px;
 
-      background: #2563eb;
+      background: var(--blue);
 
       border-radius: 0 0 10px 10px;
     }
 
-    /* Icon */
+    /* Warning icon */
     .icon {
       width: 72px;
       height: 72px;
@@ -197,6 +200,7 @@
       font-weight: 800;
 
       letter-spacing: 2px;
+
       text-transform: uppercase;
     }
 
@@ -228,7 +232,7 @@
       line-height: 1.7;
     }
 
-    /* Status */
+    /* Protected page status */
     .status {
       min-height: 48px;
 
@@ -267,23 +271,28 @@
       background: var(--red);
     }
 
-    /* Buttons */
+    /*
+      BUTTON AREA
+      Single button is centered using flexbox.
+    */
     .actions {
+      width: 100%;
+
       margin-top: 14px;
 
-      display: grid;
+      display: flex;
 
-      grid-template-columns: 1fr 1fr;
+      align-items: center;
 
-      gap: 10px;
+      justify-content: center;
     }
 
     button {
       min-height: 50px;
 
-      border-radius: 12px;
+      padding: 12px 22px;
 
-      padding: 12px 16px;
+      border-radius: 12px;
 
       font-family: "Inter", sans-serif;
 
@@ -299,12 +308,15 @@
         transform .15s ease;
     }
 
+    /* Centered reload button */
     .reload-btn {
+      width: 220px;
+
       border: 1px solid var(--blue);
 
       background: var(--blue);
 
-      color: #fff;
+      color: #ffffff;
     }
 
     .reload-btn:hover {
@@ -315,23 +327,7 @@
       transform: translateY(-1px);
     }
 
-    .root-btn {
-      border: 1px solid var(--border-dark);
-
-      background: #fff;
-
-      color: #344054;
-    }
-
-    .root-btn:hover {
-      background: #f8fafc;
-
-      border-color: #cbd2dc;
-
-      transform: translateY(-1px);
-    }
-
-    button:active {
+    .reload-btn:active {
       transform: translateY(0);
     }
 
@@ -452,10 +448,13 @@
         font-size: 11px;
       }
 
-      .actions {
-        grid-template-columns: 1fr;
-
-        gap: 9px;
+      /*
+        Mobile:
+        button remains centered but becomes full width
+        so it doesn't look cramped on small screens.
+      */
+      .reload-btn {
+        width: 100%;
       }
 
       button {
@@ -484,9 +483,13 @@
       p {
         font-size: 12.5px;
       }
+
+      .reload-btn {
+        font-size: 12.5px;
+      }
     }
 
-    /* Accessibility */
+    /* Reduced motion accessibility */
     @media (prefers-reduced-motion: reduce) {
       main {
         animation: none;
@@ -527,10 +530,11 @@
 
     <div class="actions">
 
+      <!-- Reload current page -->
       <button
-        class="root-btn"
+        class="reload-btn"
         type="button"
-        onclick="window.location.href='/'"
+        onclick="location.reload()"
       >
         ↻ &nbsp; Reload Page
       </button>
