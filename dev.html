@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DevTools Detector</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #111827;
+      color: white;
+      display: grid;
+      place-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .box {
+      text-align: center;
+      background: #1f2937;
+      padding: 40px;
+      border-radius: 16px;
+      min-width: 300px;
+    }
+
+    #status {
+      font-size: 28px;
+      font-weight: bold;
+      margin: 20px 0;
+    }
+
+    .open {
+      color: #ef4444;
+    }
+
+    .closed {
+      color: #22c55e;
+    }
+
+    #info {
+      color: #9ca3af;
+      font-size: 14px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="box">
+    <h1>Browser Inspect Detector</h1>
+
+    <div id="status" class="closed">
+      Checking...
+    </div>
+
+    <div id="info"></div>
+  </div>
+
+  <script>
+    function detectDevTools() {
+      const threshold = 160;
+
+      const widthDiff = window.outerWidth - window.innerWidth;
+      const heightDiff = window.outerHeight - window.innerHeight;
+
+      const detected =
+        widthDiff > threshold ||
+        heightDiff > threshold;
+
+      const status = document.getElementById("status");
+      const info = document.getElementById("info");
+
+      if (detected) {
+        status.textContent = "⚠️ Inspect / DevTools OPEN";
+        status.className = "open";
+      } else {
+        status.textContent = "✅ Inspect / DevTools CLOSED";
+        status.className = "closed";
+      }
+
+      info.textContent =
+        `Width diff: ${widthDiff}px | Height diff: ${heightDiff}px`;
+    }
+
+    detectDevTools();
+
+    window.addEventListener("resize", detectDevTools);
+
+    setInterval(detectDevTools, 500);
+  </script>
+
+</body>
+</html>
