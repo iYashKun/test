@@ -28,9 +28,6 @@
       --border: #e5e9ef;
       --border-dark: #d9dee7;
 
-      --blue: #2563eb;
-      --blue-hover: #1d4ed8;
-
       --red: #dc3545;
       --red-bg: #fff4f5;
 
@@ -77,7 +74,7 @@
       text-rendering: optimizeLegibility;
     }
 
-    /* Subtle background pattern - no glow */
+    /* Subtle grid background — NO GLOW */
     body::before {
       content: "";
 
@@ -116,6 +113,7 @@
         );
     }
 
+    /* Main card */
     main {
       position: relative;
 
@@ -150,7 +148,7 @@
       }
     }
 
-    /* Top accent */
+    /* Top accent line */
     .top-line {
       position: absolute;
 
@@ -160,7 +158,7 @@
 
       height: 2px;
 
-      background: var(--blue);
+      background: #2563eb;
 
       border-radius: 0 0 10px 10px;
     }
@@ -191,6 +189,7 @@
       box-shadow: none;
     }
 
+    /* Small heading */
     .eyebrow {
       margin-bottom: 9px;
 
@@ -204,6 +203,7 @@
       text-transform: uppercase;
     }
 
+    /* Main heading */
     h1 {
       margin: 0;
 
@@ -220,6 +220,7 @@
       font-weight: 700;
     }
 
+    /* Description */
     p {
       max-width: 450px;
 
@@ -272,8 +273,8 @@
     }
 
     /*
-      BUTTON AREA
-      Single button is centered using flexbox.
+      Reload button area
+      Button stays centered on desktop.
     */
     .actions {
       width: 100%;
@@ -283,7 +284,6 @@
       display: flex;
 
       align-items: center;
-
       justify-content: center;
     }
 
@@ -305,29 +305,36 @@
       transition:
         background .15s ease,
         border-color .15s ease,
+        color .15s ease,
         transform .15s ease;
     }
 
-    /* Centered reload button */
+    /*
+      Transparent premium reload button
+    */
     .reload-btn {
       width: 220px;
 
-      border: 1px solid var(--blue);
+      border: 1px solid var(--border-dark);
 
-      background: var(--blue);
+      background: transparent;
 
-      color: #ffffff;
+      color: #344054;
     }
 
     .reload-btn:hover {
-      background: var(--blue-hover);
+      background: #f8fafc;
 
-      border-color: var(--blue-hover);
+      border-color: #cbd2dc;
+
+      color: #111827;
 
       transform: translateY(-1px);
     }
 
     .reload-btn:active {
+      background: #f1f4f8;
+
       transform: translateY(0);
     }
 
@@ -337,6 +344,7 @@
       outline-offset: 3px;
     }
 
+    /* Hint */
     .hint {
       margin-top: 13px;
 
@@ -347,6 +355,7 @@
       line-height: 1.5;
     }
 
+    /* Footer */
     .footer {
       margin-top: 27px;
 
@@ -449,9 +458,8 @@
       }
 
       /*
-        Mobile:
-        button remains centered but becomes full width
-        so it doesn't look cramped on small screens.
+        Full width on mobile,
+        still centered inside the card.
       */
       .reload-btn {
         width: 100%;
@@ -489,7 +497,7 @@
       }
     }
 
-    /* Reduced motion accessibility */
+    /* Accessibility */
     @media (prefers-reduced-motion: reduce) {
       main {
         animation: none;
@@ -530,7 +538,6 @@
 
     <div class="actions">
 
-      <!-- Reload current page -->
       <button
         class="reload-btn"
         type="button"
