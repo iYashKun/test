@@ -1,202 +1,597 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>ASCII Shader</title>
-
-<style>
-    html, body {
-        margin: 0;
-        padding: 0;
-        background: #000;
-        overflow: hidden;
-        width: 100%;
-        height: 100%;
-    }
-
-    #ascii-container {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background: #000;
-    }
-
-    #ascii-output {
-        font-family: monospace;
-        line-height: 1;
-        letter-spacing: 0px;
-        white-space: pre;
-        margin: 0;
-        padding: 0;
-        cursor: pointer;
-        user-select: none;
-    }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MINTERA: Limited 1/1 Hand-Painted Collection</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            overflow-x: hidden;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            font-size: 14px;
+        }
+        
+        .display-font { 
+            font-family: 'Syne', sans-serif; 
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+        
+        .ascii-art {
+            font-family: 'Courier New', monospace;
+            line-height: 1.1;
+            font-size: 6px;
+            color: rgba(0, 255, 255, 0.1);
+            font-weight: 400;
+        }
+        
+        .card {
+            background: #0f0f0f;
+            border: 1px solid #1a1a1a;
+            border-radius: 8px;
+            transition: border-color 0.2s ease;
+        }
+        
+        .card:hover {
+            border-color: rgba(0, 255, 255, 0.3);
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #00ffff 0%, #ff00ff 50%, #ffff00 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        ::-webkit-scrollbar { 
+            width: 6px; 
+        }
+        
+        ::-webkit-scrollbar-track { 
+            background: #0a0a0a; 
+        }
+        
+        ::-webkit-scrollbar-thumb { 
+            background: linear-gradient(180deg, #00ffff, #ff00ff);
+            border-radius: 3px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover { 
+            background: linear-gradient(180deg, #00ffff, #ffff00);
+        }
+        
+        .selected-card {
+            border-color: rgba(0, 255, 255, 0.6) !important;
+            background: #121212 !important;
+        }
+        
+        .badge {
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 9px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .badge-mythic { 
+            background: linear-gradient(135deg, #ff00ff, #00ffff);
+            color: #000000;
+        }
+        
+        .badge-legendary { 
+            background: linear-gradient(135deg, #ffd700, #ff8c00);
+            color: #000000;
+        }
+        
+        .badge-epic { 
+            background: linear-gradient(135deg, #9b59b6, #e74c3c);
+            color: #ffffff;
+        }
+        
+        .badge-rare { 
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: #ffffff;
+        }
+        
+        .badge-uncommon { 
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            color: #ffffff;
+        }
+        
+        .badge-common { 
+            background: linear-gradient(135deg, #95a5a6, #7f8c8d);
+            color: #ffffff;
+        }
+        
+        button {
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+        
+        button:active {
+            transform: scale(0.98);
+        }
+        
+        .art-card {
+            background: #0f0f0f;
+            border: 1px solid #1a1a1a;
+            border-radius: 8px;
+        }
+        
+        .art-card:hover {
+            border-color: rgba(0, 255, 255, 0.3);
+        }
+        
+        .filter-btn {
+            background: transparent;
+            border: 1px solid #2a2a2a;
+            color: #666666;
+            transition: all 0.2s ease;
+        }
+        
+        .filter-btn:hover {
+            border-color: rgba(0, 255, 255, 0.5);
+            color: #00ffff;
+        }
+        
+        .filter-btn.active {
+            background: linear-gradient(135deg, #00ffff, #ff00ff);
+            color: #000000;
+            border-color: transparent;
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                font-size: 13px;
+            }
+            
+            .ascii-art {
+                display: none !important;
+            }
+            
+            .display-font {
+                font-size: 2rem !important;
+            }
+            
+            .card {
+                border-radius: 6px;
+            }
+            
+            .badge {
+                padding: 3px 8px;
+                font-size: 8px;
+            }
+            
+            .filter-btn {
+                padding: 8px 12px !important;
+                font-size: 9px !important;
+            }
+        }
+        
+        @media (max-width: 640px) {
+            .display-font {
+                font-size: 1.75rem !important;
+            }
+        }
+    </style>
 </head>
 <body>
 
-<div id="ascii-container">
-    <pre id="ascii-output">Generating Color ASCII...</pre>
-</div>
-
-<canvas id="art" style="display:none;"></canvas>
-
-<script>
-const canvas = document.getElementById("art");
-const ctx = canvas.getContext("2d", { willReadFrequently: true });
-const asciiOutput = document.getElementById("ascii-output");
-const asciiWidth = 160; 
-const charAspectRatio = 0.5;
-
-function resize() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-}
-
-function rand(min, max) {
-    return Math.random() * (max - min) + min;
-}
-
-function drawGlowCircle(x, y, r, color) {
-    ctx.save();
-    ctx.globalAlpha = 0.35;
-
-    const g = ctx.createRadialGradient(x, y, 0, x, y, r);
-    g.addColorStop(0, color);
-    g.addColorStop(1, "transparent");
-
-    ctx.fillStyle = g;
-    ctx.beginPath();
-    ctx.arc(x, y, r, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.restore();
-}
-
-function drawSquare(x, y, size, color) {
-    ctx.save();
-    ctx.fillStyle = color;
-    ctx.fillRect(x - size / 2, y - size / 2, size, size);
-    ctx.restore();
-}
-
-function drawLine(x1, y1, x2, y2, color) {
-    ctx.save();
-    ctx.strokeStyle = color;
-    ctx.globalAlpha = 0.5;
-    ctx.lineWidth = 3;
-    ctx.beginPath();
-    ctx.moveTo(x1, y1);
-    ctx.lineTo(x2, y2);
-    ctx.stroke();
-    ctx.restore();
-}
-
-function generate() {
-    ctx.fillStyle = "#000";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    const palette = [
-        "#ff003c",
-        "#ff006e",
-        "#d000ff",
-        "#8b00ff"
-    ];
-
-    for (let i = 0; i < 8; i++) {
-        drawGlowCircle(rand(0, canvas.width), rand(0, canvas.height), rand(80, 250), palette[Math.floor(Math.random() * palette.length)]);
-    }
-
-    for (let i = 0; i < 20; i++) {
-        drawSquare(rand(0, canvas.width), rand(0, canvas.height), rand(20, 100), palette[Math.floor(Math.random() * palette.length)]);
-    }
-
-    for (let i = 0; i < 25; i++) {
-        drawLine(rand(0, canvas.width), 0, rand(0, canvas.width), canvas.height, palette[Math.floor(Math.random() * palette.length)]);
-    }
-
-    for (let i = 0; i < 25; i++) {
-        drawLine(0, rand(0, canvas.height), canvas.width, rand(0, canvas.height), palette[Math.floor(Math.random() * palette.length)]);
-    }
-
-    ctx.save();
-    ctx.fillStyle = "#fff";
-    ctx.font = "24px monospace";
-    ctx.fillText("FRAGNITES", 40, 60);
-    ctx.fillText("#" + Math.floor(rand(1, 4444)), 40, 95);
-    ctx.restore();
-
-    renderColorAscii();
-}
-
-function renderColorAscii() {
-    const asciiHeight = Math.round(asciiWidth * (canvas.height / canvas.width) * charAspectRatio);
-    const tempCanvas = document.createElement('canvas');
-    const tempCtx = tempCanvas.getContext('2d');
-    tempCanvas.width = asciiWidth;
-    tempCanvas.height = asciiHeight;
-
-    tempCtx.drawImage(canvas, 0, 0, asciiWidth, asciiHeight);
-
-    const imageData = tempCtx.getImageData(0, 0, asciiWidth, asciiHeight);
-    const data = imageData.data;
+    <div class="fixed inset-0 bg-[#0a0a0a]"></div>
+    <div class="fixed inset-0 opacity-[0.02]" style="background-image: radial-gradient(circle at 2px 2px, rgba(0, 255, 255, 0.15) 1px, transparent 0); background-size: 40px 40px;"></div>
+    <div class="fixed top-8 right-8 ascii-art hidden xl:block">
+<pre>
+    M I N T E R A  :  LIMITED EDITION
+</pre>
+    </div>
     
-    let htmlOutput = "";
-    for (let y = 0; y < asciiHeight; y++) {
-        let currentColor = "";
-        let batchText = "";
-        for (let x = 0; x < asciiWidth; x++) {
-            const idx = (y * asciiWidth + x) * 4;
-            const r = data[idx];
-            const g = data[idx + 1];
-            const b = data[idx + 2];
-            const brightness = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+    <div class="relative z-10 max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-12 py-6 sm:py-8">
+        <header class="mb-8 sm:mb-12 pb-6 sm:pb-8 border-b border-[#1a1a1a]">
+            <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 sm:gap-6">
+                <div class="flex items-start gap-4 sm:gap-6">
+                    <div class="relative w-12 h-12 sm:w-16 sm:h-16">
+                        <svg width="100%" height="100%" viewBox="0 0 100 100">
+                            <defs>
+                                <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="#00ffff" />
+                                    <stop offset="50%" stop-color="#ff00ff" />
+                                    <stop offset="100%" stop-color="#ffff00" />
+                                </linearGradient>
+                            </defs>
+                            <rect x="0" y="0" width="100" height="100" fill="none" stroke="url(#logoGrad)" stroke-width="2"/>
+                            <rect x="10" y="10" width="35" height="35" fill="url(#logoGrad)" opacity="0.9"/>
+                            <rect x="55" y="10" width="35" height="35" fill="url(#logoGrad)" opacity="0.6"/>
+                            <rect x="10" y="55" width="35" height="35" fill="url(#logoGrad)" opacity="0.8"/>
+                            <rect x="55" y="55" width="35" height="35" fill="url(#logoGrad)" opacity="0.4"/>
+                        </svg>
+                    </div>
+                    
+                    <div>
+                        <h1 class="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight gradient-text display-font mb-1 sm:mb-2">
+                            MINTERA
+                        </h1>
+                        <p class="text-[10px] sm:text-xs text-[#666666] uppercase tracking-wide">
+                            Hand-Painted Digital Art
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="flex items-center gap-3 sm:gap-4 w-full lg:w-auto">
+                    <div class="text-center flex-1 lg:flex-none">
+                        <p class="text-[9px] sm:text-[10px] text-[#666666] mb-1 uppercase tracking-wide">Supply</p>
+                        <p class="text-2xl sm:text-3xl font-black display-font gradient-text">222</p>
+                    </div>
+                    <div class="w-px h-10 sm:h-12 bg-[#1a1a1a]"></div>
+                    <div class="text-center flex-1 lg:flex-none">
+                        <p class="text-[9px] sm:text-[10px] text-[#666666] mb-1 uppercase tracking-wide">Edition</p>
+                        <p class="text-2xl sm:text-3xl font-black display-font gradient-text">1/1</p>
+                    </div>
+                    <div class="w-px h-10 sm:h-12 bg-[#1a1a1a]"></div>
+                    <button class="bg-gradient-to-r from-cyan-500 to-pink-500 text-black px-4 sm:px-6 py-2 sm:py-3 text-[10px] sm:text-xs font-bold uppercase tracking-wide rounded-lg flex-1 lg:flex-none">
+                        Connect
+                    </button>
+                </div>
+            </div>
+        </header>
 
-            if (brightness > 15) {
-                const hexColor = `rgb(${r},${g},${b})`;
-                if (hexColor === currentColor) {
-                    batchText += "█";
-                } else {
-                    if (batchText !== "") {
-                        htmlOutput += `<span style="color:${currentColor}">${batchText}</span>`;
-                    }
-                    currentColor = hexColor;
-                    batchText = "█";
-                }
-            } else {
-                if (batchText !== "") {
-                    htmlOutput += `<span style="color:${currentColor}">${batchText}</span>`;
-                    batchText = "";
-                    currentColor = "";
-                }
-                htmlOutput += " ";
+        <div class="grid lg:grid-cols-[1.2fr,500px] gap-6 sm:gap-8 lg:gap-10">
+            <div class="space-y-4 sm:space-y-6">
+                <div class="card p-0 overflow-hidden">
+                    <svg id="artwork-main" width="100%" viewBox="0 0 700 700" class="w-full" style="background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);">
+                        <defs>
+                            <filter id="paint-texture">
+                                <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" result="noise"/>
+                                <feDisplacementMap in="SourceGraphic" in2="noise" scale="7"/>
+                                <feGaussianBlur stdDeviation="0.5"/>
+                            </filter>
+                            <filter id="impasto">
+                                <feTurbulence type="fractalNoise" baseFrequency="1.8" numOctaves="3"/>
+                                <feDisplacementMap in="SourceGraphic" scale="10"/>
+                            </filter>
+                        </defs>
+                        
+                        <rect x="0" y="0" width="700" height="700" fill="#0f0f0f"/>
+                        
+                        <rect x="100" y="100" width="70" height="70" fill="#FF1744" opacity="0.85" filter="url(#paint-texture)"/>
+                        <rect x="280" y="140" width="60" height="60" fill="#2979FF" opacity="0.75" filter="url(#paint-texture)"/>
+                        <rect x="450" y="180" width="80" height="80" fill="#FFD600" opacity="0.8" filter="url(#paint-texture)"/>
+                        <rect x="180" y="380" width="65" height="65" fill="#D500F9" opacity="0.8" filter="url(#paint-texture)"/>
+                        <rect x="500" y="450" width="75" height="75" fill="#00E676" opacity="0.85" filter="url(#paint-texture)"/>
+                        
+                        <circle cx="350" cy="350" r="150" fill="#FF5252" opacity="0.12" filter="url(#impasto)"/>
+                        <circle cx="220" cy="220" r="120" fill="#2979FF" opacity="0.15" filter="url(#impasto)"/>
+                        <circle cx="480" cy="480" r="140" fill="#FFD600" opacity="0.13" filter="url(#impasto)"/>
+                        <circle cx="550" cy="260" r="100" fill="#D500F9" opacity="0.11" filter="url(#impasto)"/>
+                        <circle cx="260" cy="550" r="110" fill="#00E676" opacity="0.14" filter="url(#impasto)"/>
+                        
+                        <path d="M 130 130 Q 280 180, 400 130" stroke="#FF1744" stroke-width="30" fill="none" opacity="0.25" filter="url(#paint-texture)" stroke-linecap="round"/>
+                        <path d="M 450 280 Q 400 420, 550 480" stroke="#2979FF" stroke-width="35" fill="none" opacity="0.22" filter="url(#paint-texture)" stroke-linecap="round"/>
+                        <path d="M 180 500 Q 320 450, 460 550" stroke="#FFD600" stroke-width="32" fill="none" opacity="0.24" filter="url(#paint-texture)" stroke-linecap="round"/>
+                        
+                        <line x1="0" y1="233" x2="700" y2="233" stroke="#00ffff" stroke-width="2" opacity="0.2"/>
+                        <line x1="0" y1="466" x2="700" y2="466" stroke="#ff00ff" stroke-width="2" opacity="0.2"/>
+                        <line x1="233" y1="0" x2="233" y2="700" stroke="#ffff00" stroke-width="2" opacity="0.2"/>
+                        <line x1="466" y1="0" x2="466" y2="700" stroke="#00ffff" stroke-width="2" opacity="0.2"/>
+                        
+                        <circle cx="160" cy="600" r="10" fill="#FF1744" opacity="0.5"/>
+                        <circle cx="600" cy="160" r="9" fill="#2979FF" opacity="0.6"/>
+                        <circle cx="350" cy="180" r="10" fill="#FFD600" opacity="0.55"/>
+                        <circle cx="620" cy="620" r="11" fill="#D500F9" opacity="0.5"/>
+                        <circle cx="220" cy="280" r="8" fill="#00E676" opacity="0.6"/>
+                    </svg>
+                </div>
+                
+                <div class="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4 sm:gap-6 pt-2">
+                    <div class="flex-1 w-full">
+                        <div class="flex flex-wrap items-baseline gap-2 sm:gap-3 mb-2 sm:mb-3">
+                            <h2 class="text-2xl sm:text-3xl lg:text-4xl font-black display-font tracking-tight text-white" id="art-title">Crimson Whisper</h2>
+                            <span class="badge badge-legendary" id="art-rarity">LEGENDARY</span>
+                        </div>
+                        <div class="flex flex-wrap items-center gap-3 sm:gap-4 text-xs sm:text-sm">
+                            <span class="text-[#999999]">Edition <span id="art-number" class="text-white font-bold">#001</span> / 222</span>
+                            <span class="text-[#333333]">•</span>
+                            <span class="text-[#999999]">Rarity <span id="art-score" class="text-cyan-400 font-bold">95</span>/100</span>
+                        </div>
+                    </div>
+                    <button onclick="downloadArt()" class="w-full sm:w-auto bg-gradient-to-r from-cyan-500 to-pink-500 text-black px-6 sm:px-8 py-2.5 sm:py-3 text-[10px] sm:text-xs font-bold uppercase tracking-wide rounded-lg">
+                        Download
+                    </button>
+                </div>
+                
+                <div class="grid sm:grid-cols-2 gap-4 sm:gap-6 pt-2 sm:pt-4">
+                    <div class="card p-4 sm:p-6">
+                        <h3 class="text-[10px] sm:text-xs font-bold text-[#666666] mb-3 sm:mb-4 uppercase tracking-wide">Color Palette</h3>
+                        <div class="grid grid-cols-5 gap-2 sm:gap-3">
+                            <div>
+                                <div class="aspect-square rounded-md mb-2 border border-[#2a2a2a]" style="background: #FF1744;"></div>
+                                <p class="text-[8px] sm:text-[9px] text-[#666666] text-center">#FF1744</p>
+                            </div>
+                            <div>
+                                <div class="aspect-square rounded-md mb-2 border border-[#2a2a2a]" style="background: #2979FF;"></div>
+                                <p class="text-[8px] sm:text-[9px] text-[#666666] text-center">#2979FF</p>
+                            </div>
+                            <div>
+                                <div class="aspect-square rounded-md mb-2 border border-[#2a2a2a]" style="background: #FFD600;"></div>
+                                <p class="text-[8px] sm:text-[9px] text-[#666666] text-center">#FFD600</p>
+                            </div>
+                            <div>
+                                <div class="aspect-square rounded-md mb-2 border border-[#2a2a2a]" style="background: #D500F9;"></div>
+                                <p class="text-[8px] sm:text-[9px] text-[#666666] text-center">#D500F9</p>
+                            </div>
+                            <div>
+                                <div class="aspect-square rounded-md mb-2 border border-[#2a2a2a]" style="background: #00E676;"></div>
+                                <p class="text-[8px] sm:text-[9px] text-[#666666] text-center">#00E676</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card p-4 sm:p-6">
+                        <h3 class="text-[10px] sm:text-xs font-bold text-[#666666] mb-3 sm:mb-4 uppercase tracking-wide">Metadata</h3>
+                        <div class="space-y-2 sm:space-y-3">
+                            <div class="flex justify-between items-center pb-2 border-b border-[#1a1a1a]">
+                                <span class="text-[10px] sm:text-xs text-[#666666] uppercase tracking-wide">Technique</span>
+                                <span class="text-xs sm:text-sm font-bold text-white">Impasto</span>
+                            </div>
+                            <div class="flex justify-between items-center pb-2 border-b border-[#1a1a1a]">
+                                <span class="text-[10px] sm:text-xs text-[#666666] uppercase tracking-wide">Mood</span>
+                                <span class="text-xs sm:text-sm font-bold text-white">Energetic</span>
+                            </div>
+                            <div class="flex justify-between items-center pb-2 border-b border-[#1a1a1a]">
+                                <span class="text-[10px] sm:text-xs text-[#666666] uppercase tracking-wide">Strokes</span>
+                                <span class="text-xs sm:text-sm font-bold text-white">342</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-[10px] sm:text-xs text-[#666666] uppercase tracking-wide">Layers</span>
+                                <span class="text-xs sm:text-sm font-bold text-white">7</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="space-y-4 sm:space-y-6">
+                <div class="flex items-center justify-between pb-3 sm:pb-4 border-b border-[#1a1a1a]">
+                    <h3 class="text-sm sm:text-base font-bold text-white uppercase tracking-wide display-font">
+                        Collection
+                    </h3>
+                    <div class="text-[10px] sm:text-xs text-[#666666]">
+                        <span class="text-white font-bold" id="total-count">222</span> Pieces
+                    </div>
+                </div>
+                
+                <div class="flex flex-wrap gap-2">
+                    <button onclick="filterGallery('all')" class="filter-btn active px-3 sm:px-4 py-2 text-[9px] sm:text-[10px] font-bold uppercase tracking-wide rounded-md">All</button>
+                    <button onclick="filterGallery('Mythic')" class="filter-btn px-3 sm:px-4 py-2 text-[9px] sm:text-[10px] font-bold uppercase tracking-wide rounded-md">Mythic</button>
+                    <button onclick="filterGallery('Legendary')" class="filter-btn px-3 sm:px-4 py-2 text-[9px] sm:text-[10px] font-bold uppercase tracking-wide rounded-md">Legendary</button>
+                    <button onclick="filterGallery('Epic')" class="filter-btn px-3 sm:px-4 py-2 text-[9px] sm:text-[10px] font-bold uppercase tracking-wide rounded-md">Epic</button>
+                    <button onclick="filterGallery('Rare')" class="filter-btn px-3 sm:px-4 py-2 text-[9px] sm:text-[10px] font-bold uppercase tracking-wide rounded-md">Rare</button>
+                    <button onclick="filterGallery('Uncommon')" class="filter-btn px-3 sm:px-4 py-2 text-[9px] sm:text-[10px] font-bold uppercase tracking-wide rounded-md">Uncommon</button>
+                    <button onclick="filterGallery('Common')" class="filter-btn px-3 sm:px-4 py-2 text-[9px] sm:text-[10px] font-bold uppercase tracking-wide rounded-md">Common</button>
+                </div>
+                
+                <div id="gallery-grid" class="grid grid-cols-2 gap-3 sm:gap-4 max-h-[600px] sm:max-h-[800px] overflow-y-auto pr-2">
+                </div>
+                
+                <div class="card p-4 sm:p-6 mt-4 sm:mt-6">
+                    <h4 class="text-[10px] sm:text-xs font-bold text-[#666666] mb-3 sm:mb-4 uppercase tracking-wide">About</h4>
+                    <p class="text-xs sm:text-sm text-[#999999] leading-relaxed mb-4 sm:mb-6 font-light">
+                        MINTERA is an exclusive collection of 222 unique limited 1/1 edition pieces. Each artwork combines modern aesthetics with hand-painted digital techniques, featuring authentic brush strokes and impasto effects.
+                    </p>
+                    <div class="grid grid-cols-3 gap-3 sm:gap-4 pt-3 sm:pt-4 border-t border-[#1a1a1a]">
+                        <div>
+                            <p class="text-[8px] sm:text-[9px] text-[#666666] mb-1 sm:mb-2 uppercase tracking-wide">Artist</p>
+                            <p class="text-xs sm:text-sm font-bold text-white">Anonymous</p>
+                        </div>
+                        <div>
+                            <p class="text-[8px] sm:text-[9px] text-[#666666] mb-1 sm:mb-2 uppercase tracking-wide">Year</p>
+                            <p class="text-xs sm:text-sm font-bold text-white">2026</p>
+                        </div>
+                        <div>
+                            <p class="text-[8px] sm:text-[9px] text-[#666666] mb-1 sm:mb-2 uppercase tracking-wide">Supply</p>
+                            <p class="text-xs sm:text-sm font-bold text-white">222</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const nftNames = [
+            "Crimson Whisper", "Azure Dreams", "Golden Ember", "Violet Haze", "Emerald Mist", "Coral Sunset", "Midnight Storm", "Citrus Burst",
+            "Neon Pulse", "Magenta Fire", "Electric Lime", "Plasma Wave", "Toxic Green", "Royal Purple", "Sunset Blaze", "Ice Blue",
+            "Hot Pink", "Cyber Yellow", "Deep Ocean", "Lava Red", "Mint Fresh", "Galaxy Purple", "Amber Glow", "Teal Storm",
+            "Cherry Bomb", "Neon Orange", "Aqua Marine", "Rose Gold", "Lime Shock", "Indigo Night", "Peach Fuzz", "Sapphire Blue",
+            "Tangerine", "Jade Green", "Fuchsia Flash", "Bronze Age", "Turquoise Bay", "Scarlet Fire", "Chartreuse", "Cobalt Dreams",
+            "Raspberry", "Mustard Gold", "Navy Deep", "Flamingo", "Olive Drab", "Orchid Pink", "Rust Orange", "Sky Cyan",
+            "Burgundy", "Pistachio", "Plum Purple", "Copper Shine", "Periwinkle", "Crimson Red", "Seafoam", "Lavender",
+            "Terracotta", "Steel Blue", "Marigold", "Forest Green", "Blush Pink", "Charcoal", "Honey Gold", "Slate Gray",
+            "Sangria", "Mint Cream", "Cosmic Purple", "Dragon Fire", "Mystic Blue", "Sunset Orange", "Neon Dream", "Thunder Gray",
+            "Crystal Pink", "Lunar Silver", "Solar Flare", "Nebula Violet", "Comet Green", "Star Dust", "Aurora Pink", "Eclipse Black",
+            "Phoenix Red", "Ocean Breeze", "Mountain Mist", "Desert Sand", "Arctic Frost", "Jungle Fever", "Volcano Ash", "Canyon Red",
+            "Prism Light", "Diamond White", "Pearl Shine", "Onyx Black", "Ruby Glow", "Emerald Shine", "Sapphire Mist", "Topaz Burst",
+            "Amber Wave", "Jade Spirit", "Opal Flash", "Quartz Dream", "Moonstone", "Sunstone", "Bloodstone", "Fire Opal",
+            "Sea Glass", "Storm Cloud", "Dawn Light", "Dusk Shadow", "Twilight Blue", "Midnight Purple", "Sunrise Pink", "Noon Gold",
+            "Velvet Red", "Silk Blue", "Satin Pink", "Cotton White", "Leather Brown", "Denim Blue", "Lace Cream", "Suede Tan",
+            "Marble White", "Granite Gray", "Obsidian Black", "Limestone Beige", "Sandstone Gold", "Slate Blue", "Basalt Black", "Quartz White",
+            "Cherry Blossom", "Orchid Dream", "Rose Petal", "Tulip Red", "Lily White", "Iris Purple", "Daisy Yellow", "Sunflower Gold",
+            "Maple Red", "Oak Brown", "Pine Green", "Birch White", "Cedar Brown", "Willow Green", "Ash Gray", "Elm Brown",
+            "Cloud Nine", "Rain Drop", "Snow Fall", "Thunder Strike", "Lightning Flash", "Wind Gust", "Tornado Gray", "Hurricane Blue",
+            "Spring Green", "Summer Yellow", "Autumn Orange", "Winter White", "Monsoon Blue", "Harvest Gold", "Bloom Pink", "Frost White",
+            "Mercury Silver", "Venus Gold", "Earth Green", "Mars Red", "Jupiter Orange", "Saturn Yellow", "Uranus Blue", "Neptune Teal",
+            "Pluto Gray", "Sun Burst", "Moon Glow", "Star Light", "Comet Tail", "Asteroid Gray", "Meteor Red", "Galaxy Swirl",
+            "Alpha Red", "Beta Blue", "Gamma Green", "Delta Yellow", "Epsilon Purple", "Zeta Orange", "Eta Pink", "Theta Cyan",
+            "Iota Violet", "Kappa Gold", "Lambda Silver", "Mu Bronze", "Nu Copper", "Xi Platinum", "Omicron Steel", "Pi Titanium",
+            "Rho Zinc", "Sigma Iron", "Tau Chrome", "Upsilon Nickel", "Phi Cobalt", "Chi Aluminum", "Psi Magnesium", "Omega Lead",
+            "Neon Genesis", "Cyber Punk", "Retro Wave", "Vaporwave", "Synthwave", "Future Funk", "Dark Wave", "Dream Pop",
+            "Acid Jazz", "Lo-Fi Chill", "Ambient Drift", "Drone Hum", "Glitch Art", "Pixel Perfect", "Vector Flow", "Gradient Mesh",
+            "Bezier Curve", "Fractal Zoom", "Mandelbrot Set", "Julia Set", "Sierpinski", "Koch Curve"
+        ];
+        
+        const colorSets = [
+            ['#FF1744', '#D50000', '#C62828', '#B71C1C', '#880E4F'],
+            ['#2979FF', '#1565C0', '#0D47A1', '#01579B', '#006064'],
+            ['#FFD600', '#FFA000', '#FF6F00', '#E65100', '#BF360C'],
+            ['#D500F9', '#AA00FF', '#6200EA', '#4A148C', '#311B92'],
+            ['#00E676', '#00C853', '#00BFA5', '#00897B', '#004D40'],
+            ['#FF5252', '#FF4081', '#E91E63', '#C2185B', '#880E4F'],
+            ['#607D8B', '#455A64', '#37474F', '#263238', '#1A237E'],
+            ['#76FF03', '#64DD17', '#AEEA00', '#C6FF00', '#F4FF81'],
+            ['#00FFF0', '#00D9FF', '#0099FF', '#0055FF', '#3D00FF'],
+            ['#FF006E', '#D90055', '#B3003C', '#8C0023', '#66000A']
+        ];
+        
+        const backgrounds = ['#0f0f0f', '#121212', '#0e0e0e', '#101010', '#0d0d0d', '#111111', '#0f0f0f', '#131313', '#0e0e0e', '#101010'];
+        
+        function generateCollection() {
+            const collection = [];
+            for (let i = 0; i < 222; i++) {
+                const rarityScore = 10 + Math.floor(Math.random() * 90);
+                const rarity = rarityScore < 30 ? 'Common' : 
+                               rarityScore < 50 ? 'Uncommon' :
+                               rarityScore < 70 ? 'Rare' :
+                               rarityScore < 85 ? 'Epic' :
+                               rarityScore < 95 ? 'Legendary' : 'Mythic';
+                
+                collection.push({
+                    id: i + 1,
+                    name: nftNames[i % nftNames.length] + (i >= nftNames.length ? ` ${Math.floor(i / nftNames.length) + 1}` : ''),
+                    colors: colorSets[i % colorSets.length],
+                    bg: backgrounds[i % backgrounds.length],
+                    rarityScore: rarityScore,
+                    rarity: rarity
+                });
             }
+            return collection;
         }
-        if (batchText !== "") {
-            htmlOutput += `<span style="color:${currentColor}">${batchText}</span>`;
+        
+        const collection = generateCollection();
+        let currentFilter = 'all';
+        
+        function generateArt(nft, seed) {
+            const random = (n) => ((seed * n * 9301 + 49297) % 233280) / 233280;
+            
+            let svg = `<svg width="100%" viewBox="0 0 450 450" style="background: ${nft.bg};">
+                <defs>
+                    <filter id="paint${seed}">
+                        <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4"/>
+                        <feDisplacementMap in="SourceGraphic" scale="7"/>
+                        <feGaussianBlur stdDeviation="0.5"/>
+                    </filter>
+                </defs>`;
+            
+            for (let i = 0; i < 5; i++) {
+                const x = random(i * 7) * 380 + 35;
+                const y = random(i * 11) * 380 + 35;
+                const size = 35 + random(i * 13) * 35;
+                const color = nft.colors[Math.floor(random(i * 17) * nft.colors.length)];
+                svg += `<rect x="${x}" y="${y}" width="${size}" height="${size}" fill="${color}" opacity="${0.75 + random(i * 19) * 0.15}" filter="url(#paint${seed})"/>`;
+            }
+            
+            for (let i = 0; i < 5; i++) {
+                const cx = random(i * 23) * 450;
+                const cy = random(i * 29) * 450;
+                const r = 45 + random(i * 31) * 70;
+                const color = nft.colors[Math.floor(random(i * 37) * nft.colors.length)];
+                svg += `<circle cx="${cx}" cy="${cy}" r="${r}" fill="${color}" opacity="${0.10 + random(i * 41) * 0.08}" filter="url(#paint${seed})"/>`;
+            }
+            
+            svg += `<line x1="0" y1="${random(43) * 450}" x2="450" y2="${random(43) * 450}" stroke="#00ffff" stroke-width="2" opacity="0.2"/>`;
+            svg += `<line x1="${random(47) * 450}" y1="0" x2="${random(47) * 450}" y2="450" stroke="#ff00ff" stroke-width="2" opacity="0.2"/>`;
+            
+            svg += '</svg>';
+            return svg;
         }
-        htmlOutput += "\n";
-    }
-
-    asciiOutput.innerHTML = htmlOutput;
-    const fontSize = window.innerWidth / asciiWidth;
-    asciiOutput.style.fontSize = fontSize + 'px';
-}
-
-resize();
-generate();
-
-window.addEventListener("resize", () => {
-    resize();
-    generate();
-});
-
-document.getElementById("ascii-container").addEventListener("click", generate);
-
-</script>
+        
+        function renderGallery() {
+            const gallery = document.getElementById('gallery-grid');
+            const filtered = currentFilter === 'all' ? collection : collection.filter(nft => nft.rarity === currentFilter);
+            
+            gallery.innerHTML = filtered.map(nft => `
+                <div class="art-card p-0 cursor-pointer overflow-hidden" onclick="selectNFT(${nft.id})">
+                    ${generateArt(nft, nft.id * 7)}
+                    <div class="p-3 border-t border-[#1a1a1a]">
+                        <div class="flex items-center justify-between gap-2 mb-2">
+                            <p class="text-xs font-bold text-white truncate">${nft.name}</p>
+                            <span class="badge badge-${nft.rarity.toLowerCase()} text-[8px] whitespace-nowrap">${nft.rarity.toUpperCase()}</span>
+                        </div>
+                        <p class="text-[10px] text-[#666666]">#${String(nft.id).padStart(3, '0')} • ${nft.rarityScore}/100</p>
+                    </div>
+                </div>
+            `).join('');
+            
+            document.getElementById('total-count').textContent = filtered.length;
+        }
+        
+        function filterGallery(rarity) {
+            currentFilter = rarity;
+            renderGallery();
+            
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }
+        
+        function selectNFT(id) {
+            const nft = collection.find(n => n.id === id);
+            document.getElementById('art-title').textContent = nft.name;
+            document.getElementById('art-number').textContent = '#' + String(nft.id).padStart(3, '0');
+            document.getElementById('art-score').textContent = nft.rarityScore;
+            document.getElementById('art-rarity').textContent = nft.rarity.toUpperCase();
+            document.getElementById('art-rarity').className = `badge badge-${nft.rarity.toLowerCase()}`;
+            
+            const mainArtContainer = document.getElementById('artwork-main').parentElement;
+            const newArt = generateArt(nft, nft.id * 7).replace('viewBox="0 0 450 450"', 'viewBox="0 0 700 700"');
+            mainArtContainer.innerHTML = newArt.replace('<svg', '<svg id="artwork-main"');
+            
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        
+        // Download Art
+        function downloadArt() {
+            const svg = document.getElementById('artwork-main');
+            const canvas = document.createElement('canvas');
+            canvas.width = 4000;
+            canvas.height = 4000;
+            const ctx = canvas.getContext('2d');
+            
+            const svgData = new XMLSerializer().serializeToString(svg);
+            const svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
+            const url = URL.createObjectURL(svgBlob);
+            
+            const img = new Image();
+            img.onload = () => {
+                ctx.drawImage(img, 0, 0, 4000, 4000);
+                canvas.toBlob((blob) => {
+                    const link = document.createElement('a');
+                    link.download = `mintera_${document.getElementById('art-title').textContent.replace(/\s+/g, '_')}.png`;
+                    link.href = URL.createObjectURL(blob);
+                    link.click();
+                    URL.revokeObjectURL(url);
+                    URL.revokeObjectURL(link.href);
+                }, 'image/png');
+            };
+            img.src = url;
+        }
+        
+        // Initialize
+        renderGallery();
+    </script>
 </body>
 </html>
