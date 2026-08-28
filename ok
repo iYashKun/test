@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Trobi</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --lime: #b8ff00;
+      --bg: #050705;
+      --text: #f3f3f3;
+      --muted: #777b75;
+      --border: #303330;
+    }
+
+    html,
+    body {
+      width: 100%;
+      min-height: 100%;
+      background: var(--bg);
+    }
+
+    body {
+      color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
+      overflow-x: hidden;
+    }
+
+    .page {
+      width: 100%;
+      max-width: 528px;
+      min-height: 762px;
+      margin: 0 auto;
+      padding: 26px 24px 40px;
+      position: relative;
+      background:
+        radial-gradient(
+          circle at 82% 7%,
+          rgba(184, 255, 0, 0.025),
+          transparent 20%
+        ),
+        #050705;
+    }
+
+    /* ---------------- HEADER ---------------- */
+
+    header {
+      height: 70px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 19px;
+      padding-top: 28px;
+    }
+
+    .logo {
+      width: 39px;
+      height: 9px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .logo::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 3px;
+      width: 27px;
+      height: 2px;
+      background: var(--lime);
+      opacity: 0.95;
+    }
+
+    .dot {
+      position: relative;
+      z-index: 2;
+      width: 6px;
+      height: 6px;
+      background: var(--lime);
+      border-radius: 50%;
+      box-shadow: 0 0 7px rgba(184, 255, 0, 0.55);
+    }
+
+    .dot:nth-child(1) {
+      margin-left: 7px;
+    }
+
+    .dot:nth-child(2) {
+      width: 7px;
+      height: 7px;
+    }
+
+    .dot:nth-child(3) {
+      width: 9px;
+      height: 9px;
+    }
+
+    .brand-name {
+      font-size: 20px;
+      line-height: 1;
+      font-weight: 700;
+      letter-spacing: -0.4px;
+    }
+
+    .launch {
+      width: 120px;
+      height: 69px;
+      border: 0;
+      border-radius: 3px;
+      background: var(--lime);
+      color: #070907;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.15px;
+      cursor: pointer;
+      box-shadow:
+        0 12px 24px rgba(184, 255, 0, 0.13),
+        0 0 20px rgba(184, 255, 0, 0.07);
+    }
+
+    .launch:hover {
+      background: #c3ff29;
+    }
+
+    /* ---------------- HERO ---------------- */
+
+    .hero {
+      margin-top: 134px;
+    }
+
+    h1 {
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 40px;
+      line-height: 0.99;
+      letter-spacing: -1.65px;
+      font-weight: 800;
+      text-transform: uppercase;
+      max-width: 390px;
+    }
+
+    h1 .lime {
+      color: var(--lime);
+    }
+
+    .subtitle {
+      margin-top: 25px;
+      color: #7b8179;
+      font-family: "Courier New", Courier, monospace;
+      font-size: 13px;
+      line-height: 22px;
+      letter-spacing: -0.2px;
+    }
+
+    /* ---------------- SPEED ---------------- */
+
+    .speed {
+      margin-top: 55px;
+      display: flex;
+      align-items: center;
+      gap: 49px;
+    }
+
+    .speed-line {
+      height: 2px;
+      flex: 1;
+      position: relative;
+      background: var(--lime);
+      box-shadow:
+        0 0 7px rgba(184, 255, 0, 0.34),
+        0 0 18px rgba(184, 255, 0, 0.08);
+    }
+
+    .speed-line::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      height: 2px;
+      background: linear-gradient(
+        90deg,
+        rgba(184, 255, 0, 0.05),
+        rgba(184, 255, 0, 0.85)
+      );
+      transform: translateX(-1px);
+    }
+
+    .knob {
+      position: absolute;
+      right: -1px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 13px;
+      height: 13px;
+      border-radius: 50%;
+      background: var(--lime);
+      box-shadow:
+        0 0 9px rgba(184, 255, 0, 0.8),
+        0 0 20px rgba(184, 255, 0, 0.45);
+    }
+
+    .latency {
+      color: var(--lime);
+      font-family: "Courier New", monospace;
+      font-size: 13px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    /* ---------------- FORM ---------------- */
+
+    .form {
+      margin-top: 37px;
+    }
+
+    .address {
+      width: 100%;
+      height: 70px;
+      padding: 0 30px;
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      outline: none;
+      background: #101210;
+      color: #d7d9d5;
+      font-family: "Courier New", Courier, monospace;
+      font-size: 16px;
+      letter-spacing: -0.3px;
+      box-shadow: inset 0 0 12px rgba(255, 255, 255, 0.008);
+    }
+
+    .address::placeholder {
+      color: #666a65;
+      opacity: 1;
+    }
+
+    .address:focus {
+      border-color: #4a4f49;
+    }
+
+    .submit {
+      width: 100%;
+      height: 70px;
+      margin-top: 12px;
+      border: 0;
+      border-radius: 2px;
+      background: #191b1a;
+      color: #555956;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .submit:hover {
+      color: #777b77;
+      background: #1d201e;
+    }
+
+    /* ---------------- RESPONSIVE ---------------- */
+
+    @media (max-width: 560px) {
+      .page {
+        min-height: 100vh;
+      }
+    }
+
+    @media (max-width: 400px) {
+      .page {
+        padding-left: 20px;
+        padding-right: 20px;
+      }
+
+      .launch {
+        width: 112px;
+      }
+
+      h1 {
+        font-size: 36px;
+      }
+
+      .speed {
+        gap: 35px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="page">
+
+    <header>
+      <div class="brand">
+        <div class="logo">
+          <span class="dot"></span>
+          <span class="dot"></span>
+          <span class="dot"></span>
+        </div>
+
+        <div class="brand-name">Trobi</div>
+      </div>
+
+      <button class="launch" onclick="launchApp()">
+        LAUNCH APP
+      </button>
+    </header>
+
+    <section class="hero">
+
+      <h1>
+        PRIORITY CAN’T<br />
+        BE <span class="lime">BOUGHT.</span>
+      </h1>
+
+      <p class="subtitle">
+        Speed can.<br />
+        Only on Robinhood Chain.
+      </p>
+
+    </section>
+
+    <section class="speed">
+      <div class="speed-line">
+        <span class="knob"></span>
+      </div>
+
+      <span class="latency">12ms</span>
+    </section>
+
+    <form class="form" onsubmit="submitAddress(event)">
+
+      <input
+        id="address"
+        class="address"
+        type="text"
+        placeholder="Your EVM (0x...) Address"
+        autocomplete="off"
+        spellcheck="false"
+      />
+
+      <button class="submit" type="submit">
+        SUBMIT
+      </button>
+
+    </form>
+
+  </main>
+
+  <script>
+    function launchApp() {
+      alert("Launching app...");
+    }
+
+    function submitAddress(event) {
+      event.preventDefault();
+
+      const input = document.getElementById("address");
+      const address = input.value.trim();
+
+      if (!address) {
+        input.focus();
+        return;
+      }
+
+      console.log("Submitted address:", address);
+    }
+  </script>
+</body>
+</html>
