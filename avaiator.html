@@ -2,25 +2,39 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>AEROX — Provably Fair Crash Demo</title>
 
 <style>
+
 :root{
     --bg:#03050b;
-    --panel:rgba(13,17,29,.78);
-    --panel2:rgba(18,24,40,.85);
-    --line:rgba(255,255,255,.09);
+    --panel:rgba(13,17,29,.84);
+    --panel2:rgba(18,24,40,.88);
+    --line:rgba(255,255,255,.10);
+
     --white:#f7f9ff;
     --muted:#7e879d;
+
     --pink:#ff326d;
     --pink2:#ff6b91;
+
     --cyan:#5ce1ff;
     --green:#35e6a1;
     --gold:#ffc857;
     --danger:#ff4267;
+
+    --lemon:#f3ff4f;
+    --rose:#ff4f86;
+
     --shadow:0 30px 100px rgba(0,0,0,.55);
 }
+
+
+/* =========================
+   RESET
+========================= */
 
 *{
     box-sizing:border-box;
@@ -33,163 +47,324 @@ html{
 }
 
 body{
+
     min-height:100vh;
+
     color:var(--white);
+
+    /*
+        70% LEMON
+        30% ROSE PINK
+    */
     background:
-        radial-gradient(circle at 10% 0%,rgba(255,50,109,.13),transparent 28%),
-        radial-gradient(circle at 90% 8%,rgba(92,225,255,.10),transparent 25%),
-        radial-gradient(circle at 50% 100%,rgba(96,65,255,.09),transparent 30%),
-        var(--bg);
-    font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+        linear-gradient(
+            120deg,
+            var(--lemon) 0%,
+            var(--lemon) 70%,
+            var(--rose) 100%
+        );
+
+    font-family:
+        Inter,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+
+    position:relative;
 }
+
+
+/*
+    Dark transparent overlay so the
+    dashboard remains readable.
+*/
+body::before{
+
+    content:"";
+
+    position:fixed;
+
+    inset:0;
+
+    pointer-events:none;
+
+    z-index:-1;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(3,5,11,.60),
+            rgba(3,5,11,.78)
+        );
+}
+
 
 /* =========================
    HEADER
 ========================= */
 
 .header{
+
     height:76px;
+
     position:sticky;
+
     top:0;
+
     z-index:100;
+
     display:flex;
+
     align-items:center;
+
     justify-content:space-between;
-    padding:0 clamp(16px,5vw,70px);
-    background:rgba(3,5,11,.76);
-    backdrop-filter:blur(25px);
-    border-bottom:1px solid var(--line);
+
+    padding:
+        0
+        clamp(16px,5vw,70px);
+
+    background:
+        rgba(3,5,11,.78);
+
+    backdrop-filter:
+        blur(25px);
+
+    border-bottom:
+        1px solid var(--line);
 }
 
+
 .logo{
+
     display:flex;
+
     align-items:center;
+
     gap:12px;
 }
 
+
 .logo-mark{
+
     width:42px;
     height:42px;
+
     display:grid;
+
     place-items:center;
+
     border-radius:13px;
+
     background:
-        linear-gradient(135deg,var(--pink),#a800ff);
+        linear-gradient(
+            135deg,
+            var(--pink),
+            #a800ff
+        );
+
     box-shadow:
-        0 0 30px rgba(255,50,109,.35);
+        0 0 30px
+        rgba(255,50,109,.35);
+
     font-size:20px;
 }
 
+
 .logo-text{
+
     font-size:18px;
+
     font-weight:950;
+
     letter-spacing:3px;
 }
 
+
 .demo-tag{
+
     margin-left:5px;
+
     font-size:9px;
+
     color:var(--gold);
-    border:1px solid rgba(255,200,87,.25);
+
+    border:
+        1px solid
+        rgba(255,200,87,.25);
+
     padding:4px 7px;
+
     border-radius:6px;
+
     letter-spacing:1px;
 }
 
+
 .header-right{
+
     display:flex;
+
     align-items:center;
+
     gap:12px;
 }
 
+
 .connection{
+
     display:flex;
+
     align-items:center;
+
     gap:6px;
+
     color:var(--green);
+
     font-size:10px;
 }
 
+
 .dot{
+
     width:7px;
     height:7px;
+
     background:var(--green);
+
     border-radius:50%;
-    box-shadow:0 0 12px var(--green);
+
+    box-shadow:
+        0 0 12px
+        var(--green);
 }
 
+
 .balance{
+
     padding:11px 16px;
+
     border-radius:13px;
-    background:rgba(255,255,255,.045);
-    border:1px solid var(--line);
+
+    background:
+        rgba(255,255,255,.045);
+
+    border:
+        1px solid var(--line);
+
     color:var(--green);
+
     font-weight:900;
+
     font-size:13px;
 }
+
 
 /* =========================
    PAGE
 ========================= */
 
 .page{
+
     width:min(1280px,94%);
-    margin:28px auto 70px;
+
+    margin:
+        28px auto
+        70px;
 }
 
+
 /* =========================
-   TRANSPARENCY
+   NOTICE
 ========================= */
 
 .notice{
+
     display:flex;
+
     gap:14px;
+
     align-items:center;
+
     padding:16px 18px;
+
     margin-bottom:18px;
+
     border-radius:15px;
-    border:1px solid rgba(92,225,255,.16);
+
+    border:
+        1px solid
+        rgba(92,225,255,.16);
+
     background:
         linear-gradient(
             90deg,
-            rgba(92,225,255,.06),
-            rgba(255,50,109,.04)
+            rgba(92,225,255,.08),
+            rgba(255,50,109,.06)
         );
+
+    backdrop-filter:blur(15px);
 }
 
+
 .notice-icon{
+
     width:36px;
     height:36px;
+
     flex-shrink:0;
+
     display:grid;
+
     place-items:center;
+
     border-radius:11px;
-    background:rgba(92,225,255,.09);
+
+    background:
+        rgba(92,225,255,.09);
+
     color:var(--cyan);
 }
 
+
 .notice strong{
+
     display:block;
+
     font-size:12px;
 }
 
+
 .notice p{
+
     margin-top:3px;
+
     color:var(--muted);
+
     font-size:10px;
+
     line-height:1.5;
 }
+
 
 /* =========================
    GAME
 ========================= */
 
 .game{
+
     height:590px;
+
     position:relative;
+
     overflow:hidden;
-    border:1px solid var(--line);
+
+    border:
+        1px solid var(--line);
+
     border-radius:28px;
+
     background:
         radial-gradient(
             circle at 50% 45%,
@@ -197,13 +372,19 @@ body{
             #0b1123 34%,
             #050711 80%
         );
+
     box-shadow:var(--shadow);
 }
 
+
 .game:before{
+
     content:"";
+
     position:absolute;
+
     inset:0;
+
     background:
         linear-gradient(
             115deg,
@@ -211,49 +392,77 @@ body{
             rgba(255,255,255,.025) 45%,
             transparent 55%
         );
+
     pointer-events:none;
 }
 
+
 .glow{
+
     position:absolute;
+
     width:650px;
     height:300px;
+
     left:50%;
     top:12%;
-    transform:translateX(-50%);
+
+    transform:
+        translateX(-50%);
+
     background:
         radial-gradient(
             ellipse,
             rgba(255,50,109,.15),
             transparent 67%
         );
+
     filter:blur(25px);
 }
 
-/* stars */
+
+/* =========================
+   STARS
+========================= */
 
 .stars{
+
     position:absolute;
+
     inset:0;
 }
 
+
 .star{
+
     position:absolute;
+
     width:2px;
     height:2px;
+
     border-radius:50%;
+
     background:white;
+
     opacity:.5;
 }
 
-/* horizon */
+
+/* =========================
+   HORIZON
+========================= */
 
 .horizon{
+
     position:absolute;
+
     left:0;
     right:0;
+
     bottom:31%;
+
     height:1px;
+
     background:
         linear-gradient(
             90deg,
@@ -261,18 +470,31 @@ body{
             rgba(92,225,255,.35),
             transparent
         );
-    box-shadow:0 0 25px rgba(92,225,255,.15);
+
+    box-shadow:
+        0 0 25px
+        rgba(92,225,255,.15);
 }
 
-/* grid */
+
+/* =========================
+   GRID
+========================= */
 
 .grid{
+
     position:absolute;
+
     width:145%;
+
     height:60%;
+
     left:-22%;
+
     bottom:-12%;
+
     opacity:.2;
+
     background-image:
         linear-gradient(
             rgba(92,225,255,.28) 1px,
@@ -283,104 +505,200 @@ body{
             rgba(92,225,255,.28) 1px,
             transparent 1px
         );
-    background-size:70px 70px;
+
+    background-size:
+        70px 70px;
+
     transform:
         perspective(480px)
         rotateX(59deg);
-    transform-origin:center bottom;
+
+    transform-origin:
+        center bottom;
 }
 
-/* status */
+
+/* =========================
+   STATUS
+========================= */
 
 .status{
+
     position:absolute;
+
     z-index:20;
+
     top:20px;
+
     left:50%;
-    transform:translateX(-50%);
+
+    transform:
+        translateX(-50%);
+
     display:flex;
+
     align-items:center;
+
     gap:8px;
+
     white-space:nowrap;
+
     padding:8px 14px;
+
     border-radius:100px;
-    background:rgba(0,0,0,.28);
-    border:1px solid var(--line);
+
+    background:
+        rgba(0,0,0,.28);
+
+    border:
+        1px solid var(--line);
+
     color:var(--muted);
+
     font-size:9px;
+
     font-weight:900;
+
     letter-spacing:1.4px;
-    backdrop-filter:blur(10px);
+
+    backdrop-filter:
+        blur(10px);
 }
+
 
 .status-dot{
+
     width:6px;
     height:6px;
+
     border-radius:50%;
+
     background:var(--green);
-    box-shadow:0 0 12px var(--green);
+
+    box-shadow:
+        0 0 12px
+        var(--green);
 }
 
-/* multiplier */
+
+/* =========================
+   MULTIPLIER
+========================= */
 
 .multiplier{
+
     position:absolute;
+
     z-index:15;
+
     top:35%;
+
     width:100%;
+
     text-align:center;
-    font-size:clamp(70px,11vw,135px);
+
+    font-size:
+        clamp(70px,11vw,135px);
+
     line-height:1;
+
     font-weight:1000;
+
     letter-spacing:-7px;
+
     color:#fff;
+
     text-shadow:
-        0 0 25px rgba(255,50,109,.42),
-        0 0 90px rgba(255,50,109,.16);
+        0 0 25px
+        rgba(255,50,109,.42),
+
+        0 0 90px
+        rgba(255,50,109,.16);
+
     transition:.25s;
 }
 
+
 .multiplier.running{
-    animation:pulse 1.3s infinite;
+
+    animation:
+        pulse 1.3s infinite;
 }
+
 
 .multiplier.crashed{
+
     color:var(--danger);
+
     text-shadow:
-        0 0 30px rgba(255,50,109,.8),
-        0 0 100px rgba(255,50,109,.25);
+        0 0 30px
+        rgba(255,50,109,.8),
+
+        0 0 100px
+        rgba(255,50,109,.25);
 }
 
+
 @keyframes pulse{
+
     50%{
         transform:scale(1.015);
     }
 }
 
+
 /* =========================
-   FUTURISTIC PLANE
+   AIRCRAFT
 ========================= */
 
 .aircraft{
+
     position:absolute;
+
     z-index:25;
+
     left:8%;
+
     bottom:14%;
+
     width:100px;
+
     height:55px;
-    transform:rotate(-17deg);
+
+    transform:
+        rotate(-17deg);
+
     filter:
-        drop-shadow(0 0 7px rgba(255,70,120,.9))
-        drop-shadow(0 0 30px rgba(255,50,109,.35));
+        drop-shadow(
+            0 0 7px
+            rgba(255,70,120,.9)
+        )
+        drop-shadow(
+            0 0 30px
+            rgba(255,50,109,.35)
+        );
+
+    transition:
+        left .08s linear,
+        bottom .08s linear;
 }
 
+
+/* body */
+
 .aircraft-body{
+
     position:absolute;
+
     width:76px;
     height:19px;
+
     top:18px;
     left:10px;
-    border-radius:70% 20% 20% 70%;
+
+    border-radius:
+        70% 20% 20% 70%;
+
     background:
         linear-gradient(
             90deg,
@@ -388,75 +706,136 @@ body{
             #fff 45%,
             #9eabc4
         );
-    transform:skewX(-15deg);
+
+    transform:
+        skewX(-15deg);
 }
+
 
 .aircraft-nose{
+
     position:absolute;
+
     right:0;
     top:16px;
+
     width:25px;
     height:25px;
+
     background:#fff;
-    clip-path:polygon(0 0,100% 50%,0 100%);
+
+    clip-path:
+        polygon(
+            0 0,
+            100% 50%,
+            0 100%
+        );
 }
 
+
 .aircraft-wing{
+
     position:absolute;
+
     left:30px;
     top:5px;
+
     width:47px;
     height:28px;
+
     background:
         linear-gradient(
             135deg,
             #dce9ff,
             #8796b3
         );
-    clip-path:polygon(0 0,100% 25%,35% 100%);
-    transform:rotate(-5deg);
+
+    clip-path:
+        polygon(
+            0 0,
+            100% 25%,
+            35% 100%
+        );
+
+    transform:
+        rotate(-5deg);
 }
+
 
 .aircraft-wing2{
+
     position:absolute;
+
     left:30px;
     top:29px;
+
     width:43px;
     height:25px;
+
     background:#8291ad;
-    clip-path:polygon(0 100%,100% 65%,30% 0);
+
+    clip-path:
+        polygon(
+            0 100%,
+            100% 65%,
+            30% 0
+        );
 }
+
 
 .aircraft-tail{
+
     position:absolute;
+
     left:8px;
     top:7px;
+
     width:20px;
     height:30px;
+
     background:#ff3b70;
-    clip-path:polygon(0 100%,50% 0,100% 100%);
+
+    clip-path:
+        polygon(
+            0 100%,
+            50% 0,
+            100% 100%
+        );
 }
 
+
 .window{
+
     position:absolute;
+
     z-index:2;
+
     width:8px;
     height:6px;
+
     top:23px;
     left:39px;
+
     border-radius:3px;
+
     background:#27364f;
+
     box-shadow:
         12px 0 #27364f,
         24px 0 #27364f;
 }
 
+
 .engine{
+
     position:absolute;
+
     left:3px;
     top:22px;
+
     width:20px;
     height:9px;
+
     background:
         linear-gradient(
             90deg,
@@ -464,26 +843,49 @@ body{
             #ffb43b,
             transparent
         );
+
     filter:blur(2px);
-    animation:engine .12s infinite alternate;
+
+    animation:
+        engine .12s infinite alternate;
 }
 
+
 @keyframes engine{
+
     to{
+
         width:35px;
+
         opacity:.55;
     }
 }
 
+
+/* =========================
+   TRAIL
+========================= */
+
 .trail{
+
     position:absolute;
+
     z-index:10;
+
     left:8%;
+
     bottom:16%;
+
     width:0;
+
     height:3px;
-    transform-origin:left center;
-    transform:rotate(-26deg);
+
+    transform:
+        rotate(-26deg);
+
+    transform-origin:
+        left center;
+
     background:
         linear-gradient(
             90deg,
@@ -491,436 +893,796 @@ body{
             rgba(255,50,109,.12),
             var(--pink)
         );
-    box-shadow:0 0 18px rgba(255,50,109,.55);
+
+    box-shadow:
+        0 0 18px
+        rgba(255,50,109,.55);
 }
 
-/* bottom game info */
+
+/* =========================
+   GAME NOTE
+========================= */
 
 .game-note{
+
     position:absolute;
+
     bottom:18px;
+
     width:100%;
+
     text-align:center;
+
     color:#59647c;
+
     font-size:9px;
+
     letter-spacing:.7px;
 }
+
 
 /* =========================
    DASHBOARD
 ========================= */
 
 .dashboard{
+
     display:grid;
-    grid-template-columns:1.15fr .85fr;
+
+    grid-template-columns:
+        1.15fr .85fr;
+
     gap:18px;
+
     margin-top:18px;
 }
 
+
 .panel{
-    border:1px solid var(--line);
+
+    border:
+        1px solid var(--line);
+
     border-radius:19px;
-    background:var(--panel);
-    backdrop-filter:blur(18px);
+
+    background:
+        var(--panel);
+
+    backdrop-filter:
+        blur(18px);
+
     padding:20px;
-    box-shadow:0 15px 45px rgba(0,0,0,.22);
+
+    box-shadow:
+        0 15px 45px
+        rgba(0,0,0,.22);
 }
 
+
 .panel-head{
+
     display:flex;
+
     align-items:center;
+
     justify-content:space-between;
+
     margin-bottom:18px;
 }
 
+
 .panel-head h3{
+
     font-size:14px;
 }
 
+
 .panel-head span{
+
     color:var(--muted);
+
     font-size:9px;
+
     letter-spacing:1px;
 }
 
-/* risk modes */
+
+/* =========================
+   RISK
+========================= */
 
 .risk-grid{
+
     display:grid;
-    grid-template-columns:repeat(10,1fr);
+
+    grid-template-columns:
+        repeat(10,1fr);
+
     gap:5px;
 }
 
+
 .risk{
+
     min-width:0;
+
     padding:9px 3px;
+
     border-radius:8px;
-    border:1px solid var(--line);
+
+    border:
+        1px solid var(--line);
+
     background:#11172a;
+
     color:#7e879d;
+
     font-size:10px;
+
     font-weight:900;
+
+    cursor:pointer;
+
     transition:.2s;
 }
 
+
 .risk:hover{
-    transform:translateY(-2px);
-    border-color:rgba(255,50,109,.35);
+
+    transform:
+        translateY(-2px);
+
+    border-color:
+        rgba(255,50,109,.35);
 }
 
+
 .risk.active{
+
     color:#fff;
-    border-color:var(--pink);
+
+    border-color:
+        var(--pink);
+
     background:
         linear-gradient(
             135deg,
             rgba(255,50,109,.3),
             rgba(135,30,255,.18)
         );
+
     box-shadow:
-        0 0 20px rgba(255,50,109,.13);
+        0 0 20px
+        rgba(255,50,109,.13);
 }
 
-/* risk description */
 
 .risk-info{
+
     display:flex;
+
     justify-content:space-between;
+
     align-items:center;
+
     margin-top:10px;
+
     padding:10px 12px;
+
     border-radius:9px;
-    background:rgba(255,255,255,.025);
-    border:1px solid var(--line);
+
+    background:
+        rgba(255,255,255,.025);
+
+    border:
+        1px solid var(--line);
 }
 
+
 .risk-info small{
+
     color:var(--muted);
+
     font-size:9px;
 }
 
+
 .risk-info strong{
+
     color:var(--pink2);
+
     font-size:11px;
 }
 
-/* betting */
+
+/* =========================
+   BET
+========================= */
 
 .bet-area{
+
     margin-top:17px;
 }
 
+
 .input-row{
+
     display:flex;
+
     gap:9px;
 }
 
+
 .input-row input{
+
     flex:1;
+
     min-width:0;
-    border:1px solid #293149;
+
+    border:
+        1px solid #293149;
+
     border-radius:11px;
+
     background:#070a13;
+
     color:white;
+
     padding:14px;
+
     outline:none;
 }
 
+
 .input-row input:focus{
-    border-color:var(--pink);
-    box-shadow:0 0 0 3px rgba(255,50,109,.07);
+
+    border-color:
+        var(--pink);
+
+    box-shadow:
+        0 0 0 3px
+        rgba(255,50,109,.07);
 }
 
+
 .primary{
+
     width:125px;
+
     border:0;
+
     border-radius:11px;
+
     background:
         linear-gradient(
             135deg,
             #ff4e7d,
             #ff1450
         );
+
     color:white;
+
     font-weight:950;
-    box-shadow:0 10px 30px rgba(255,50,109,.2);
+
+    cursor:pointer;
+
+    box-shadow:
+        0 10px 30px
+        rgba(255,50,109,.2);
 }
 
+
 .primary:disabled{
+
     opacity:.4;
+
     cursor:not-allowed;
 }
 
+
+/* quick */
+
 .quick{
+
     display:flex;
+
     gap:6px;
+
     margin-top:9px;
 }
 
+
 .quick button{
+
     flex:1;
-    border:1px solid var(--line);
+
+    border:
+        1px solid var(--line);
+
     background:#171d30;
+
     color:#929bb0;
+
     padding:7px;
+
     border-radius:8px;
+
     font-size:10px;
+
+    cursor:pointer;
 }
 
+
+.quick button:hover{
+
+    color:white;
+
+    border-color:
+        rgba(255,50,109,.4);
+}
+
+
+/* cashout */
+
 .cashout{
+
     width:100%;
+
     margin-top:12px;
+
     padding:15px;
+
     border:0;
+
     border-radius:11px;
+
     background:
         linear-gradient(
             135deg,
             #39edaa,
             #13bd7c
         );
+
     color:#03130c;
+
     font-size:15px;
+
     font-weight:1000;
-    box-shadow:0 12px 30px rgba(53,230,161,.17);
+
+    cursor:pointer;
+
+    box-shadow:
+        0 12px 30px
+        rgba(53,230,161,.17);
 }
 
+
 .cashout:disabled{
+
     background:#252b3d;
+
     color:#6c7488;
+
     box-shadow:none;
+
     cursor:not-allowed;
 }
 
-/* stats */
+
+/* =========================
+   STATS
+========================= */
 
 .stats{
+
     display:grid;
-    grid-template-columns:repeat(3,1fr);
+
+    grid-template-columns:
+        repeat(3,1fr);
+
     gap:7px;
+
     margin-top:13px;
 }
 
+
 .stat{
+
     padding:10px;
+
     border-radius:10px;
-    border:1px solid var(--line);
-    background:rgba(255,255,255,.025);
+
+    border:
+        1px solid var(--line);
+
+    background:
+        rgba(255,255,255,.025);
 }
 
+
 .stat label{
+
     display:block;
+
     color:#68738a;
+
     font-size:8px;
+
     margin-bottom:5px;
 }
 
+
 .stat strong{
+
     font-size:12px;
 }
 
-/* history */
+
+/* =========================
+   MESSAGE
+========================= */
+
+.message{
+
+    min-height:18px;
+
+    margin-top:11px;
+
+    text-align:center;
+
+    color:#929bb0;
+
+    font-size:10px;
+
+    line-height:1.5;
+}
+
+
+/* =========================
+   HISTORY
+========================= */
 
 .history{
+
     display:flex;
+
     flex-wrap:wrap;
+
     gap:7px;
 }
 
+
 .result{
+
     padding:8px 10px;
+
     border-radius:8px;
+
     font-size:10px;
+
     font-weight:900;
+
     color:var(--green);
-    background:rgba(53,230,161,.07);
-    border:1px solid rgba(53,230,161,.11);
+
+    background:
+        rgba(53,230,161,.07);
+
+    border:
+        1px solid
+        rgba(53,230,161,.11);
 }
+
 
 .result.low{
+
     color:#ff607e;
-    background:rgba(255,50,109,.07);
-    border-color:rgba(255,50,109,.12);
+
+    background:
+        rgba(255,50,109,.07);
+
+    border-color:
+        rgba(255,50,109,.12);
 }
 
+
 .result.high{
+
     color:var(--gold);
-    background:rgba(255,200,87,.07);
-    border-color:rgba(255,200,87,.12);
+
+    background:
+        rgba(255,200,87,.07);
+
+    border-color:
+        rgba(255,200,87,.12);
 }
+
 
 /* =========================
    FAIRNESS
 ========================= */
 
 .fairness{
+
     margin-top:18px;
+
     display:grid;
-    grid-template-columns:1fr 1fr;
+
+    grid-template-columns:
+        1fr 1fr;
+
     gap:18px;
 }
 
+
 .fair-card{
-    border:1px solid var(--line);
+
+    border:
+        1px solid var(--line);
+
     border-radius:19px;
-    background:var(--panel);
+
+    background:
+        var(--panel);
+
     padding:21px;
 }
 
+
 .fair-card h3{
+
     font-size:14px;
+
     margin-bottom:11px;
 }
 
+
 .fair-card p{
+
     color:#919bb0;
+
     font-size:11px;
+
     line-height:1.7;
 }
 
+
 .seed{
+
     margin-top:10px;
 }
 
+
 .seed label{
+
     display:block;
+
     color:#69738a;
+
     font-size:8px;
+
     margin-bottom:5px;
+
     text-transform:uppercase;
+
     letter-spacing:.7px;
 }
 
+
 .seed-value{
+
     padding:11px;
+
     border-radius:9px;
+
     background:#070a13;
-    border:1px solid #252d42;
+
+    border:
+        1px solid #252d42;
+
     color:#70dfff;
+
     font-family:monospace;
+
     font-size:9px;
+
     word-break:break-all;
 }
 
+
 .formula{
+
     margin-top:12px;
+
     padding:14px;
+
     border-radius:10px;
+
     background:#070a13;
-    border:1px solid #252d42;
+
+    border:
+        1px solid #252d42;
+
     color:#75dcff;
+
     font-family:monospace;
+
     font-size:10px;
+
     line-height:1.7;
+
     overflow:auto;
 }
 
+
 .verify-btn{
+
     width:100%;
+
     margin-top:12px;
+
     padding:11px;
+
     border-radius:10px;
-    border:1px solid rgba(92,225,255,.2);
-    background:rgba(92,225,255,.06);
+
+    border:
+        1px solid
+        rgba(92,225,255,.2);
+
+    background:
+        rgba(92,225,255,.06);
+
     color:var(--cyan);
+
     font-weight:900;
+
     font-size:10px;
+
+    cursor:pointer;
 }
 
+
+.verify-btn:hover{
+
+    background:
+        rgba(92,225,255,.12);
+}
+
+
 .verify-result{
+
     margin-top:9px;
+
     color:var(--muted);
+
     font-size:10px;
+
     line-height:1.5;
 }
 
-/* message */
 
-.message{
-    min-height:18px;
-    margin-top:11px;
-    text-align:center;
-    color:#929bb0;
-    font-size:10px;
-}
-
-/* responsive */
+/* =========================
+   RESPONSIVE
+========================= */
 
 @media(max-width:850px){
 
     .dashboard,
     .fairness{
+
         grid-template-columns:1fr;
     }
 
     .game{
+
         height:500px;
     }
 }
 
+
 @media(max-width:600px){
 
     .header{
+
         height:65px;
     }
 
     .connection{
+
         display:none;
     }
 
     .logo-text{
+
         font-size:15px;
     }
 
     .game{
+
         height:430px;
+
         border-radius:20px;
     }
 
     .risk-grid{
-        grid-template-columns:repeat(5,1fr);
+
+        grid-template-columns:
+            repeat(5,1fr);
     }
 
     .input-row{
+
         flex-direction:column;
     }
 
     .primary{
+
         width:100%;
+
         padding:13px;
     }
 
     .stats{
+
         grid-template-columns:1fr;
     }
 
     .aircraft{
-        transform:scale(.75) rotate(-17deg);
-        transform-origin:center;
+
+        transform:
+            scale(.75)
+            rotate(-17deg);
+
+        transform-origin:
+            center;
     }
 }
+
 </style>
 </head>
 
+
 <body>
+
 
 <header class="header">
 
     <div class="logo">
-        <div class="logo-mark">✈</div>
-        <div class="logo-text">AEROX</div>
-        <div class="demo-tag">DEMO</div>
+
+        <div class="logo-mark">
+            ✈
+        </div>
+
+        <div class="logo-text">
+            AEROX
+        </div>
+
+        <div class="demo-tag">
+            DEMO
+        </div>
+
     </div>
+
 
     <div class="header-right">
 
         <div class="connection">
+
             <span class="dot"></span>
+
             LOCAL VERIFIED
+
         </div>
 
+
         <div class="balance">
-            <span id="balance">1000.00</span> CR
+
+            <span id="balance">
+                1000.00
+            </span>
+
+            CR
+
         </div>
 
     </div>
@@ -928,15 +1690,20 @@ body{
 </header>
 
 
+
 <main class="page">
 
-    <!-- TRANSPARENCY -->
+
+    <!-- NOTICE -->
 
     <div class="notice">
 
-        <div class="notice-icon">✓</div>
+        <div class="notice-icon">
+            ✓
+        </div>
 
         <div>
+
             <strong>
                 NOT UNDER OPERATOR CONTROL • VERIFIABLE DEMO
             </strong>
@@ -946,9 +1713,11 @@ body{
                 This page uses virtual credits only. No deposits,
                 withdrawals or real-money wagering are implemented.
             </p>
+
         </div>
 
     </div>
+
 
 
     <!-- GAME -->
@@ -957,18 +1726,26 @@ body{
 
         <div class="glow"></div>
 
-        <div class="stars" id="stars"></div>
+        <div
+            class="stars"
+            id="stars"
+        ></div>
 
         <div class="grid"></div>
 
         <div class="horizon"></div>
 
+
         <div class="status">
+
             <span class="status-dot"></span>
+
             <span id="statusText">
                 PREPARING FLIGHT
             </span>
+
         </div>
+
 
         <div
             class="multiplier"
@@ -978,7 +1755,7 @@ body{
         </div>
 
 
-        <!-- MODERN PLANE -->
+        <!-- AIRCRAFT -->
 
         <div
             class="aircraft"
@@ -1009,38 +1786,108 @@ body{
 
 
         <div class="game-note">
+
             VIRTUAL CREDITS ONLY • LOCAL VERIFICATION DEMO
+
         </div>
 
     </section>
 
 
-    <!-- CONTROLS -->
+
+    <!-- DASHBOARD -->
 
     <section class="dashboard">
+
+
+        <!-- CONTROL PANEL -->
 
         <div class="panel">
 
             <div class="panel-head">
-                <h3>Flight Configuration</h3>
-                <span>RISK ENGINE</span>
+
+                <h3>
+                    Flight Configuration
+                </h3>
+
+                <span>
+                    RISK ENGINE
+                </span>
+
             </div>
 
 
-            <!-- RISK MODES -->
-
             <div class="risk-grid">
 
-                <button class="risk active" data-risk="1">1x</button>
-                <button class="risk" data-risk="2">2x</button>
-                <button class="risk" data-risk="3">3x</button>
-                <button class="risk" data-risk="4">4x</button>
-                <button class="risk" data-risk="5">5x</button>
-                <button class="risk" data-risk="6">6x</button>
-                <button class="risk" data-risk="7">7x</button>
-                <button class="risk" data-risk="8">8x</button>
-                <button class="risk" data-risk="9">9x</button>
-                <button class="risk" data-risk="10">10x</button>
+                <button
+                    class="risk active"
+                    data-risk="1"
+                >
+                    1x
+                </button>
+
+                <button
+                    class="risk"
+                    data-risk="2"
+                >
+                    2x
+                </button>
+
+                <button
+                    class="risk"
+                    data-risk="3"
+                >
+                    3x
+                </button>
+
+                <button
+                    class="risk"
+                    data-risk="4"
+                >
+                    4x
+                </button>
+
+                <button
+                    class="risk"
+                    data-risk="5"
+                >
+                    5x
+                </button>
+
+                <button
+                    class="risk"
+                    data-risk="6"
+                >
+                    6x
+                </button>
+
+                <button
+                    class="risk"
+                    data-risk="7"
+                >
+                    7x
+                </button>
+
+                <button
+                    class="risk"
+                    data-risk="8"
+                >
+                    8x
+                </button>
+
+                <button
+                    class="risk"
+                    data-risk="9"
+                >
+                    9x
+                </button>
+
+                <button
+                    class="risk"
+                    data-risk="10"
+                >
+                    10x
+                </button>
 
             </div>
 
@@ -1084,19 +1931,31 @@ body{
 
                 <div class="quick">
 
-                    <button onclick="setBet(10)">
+                    <button
+                        type="button"
+                        data-bet="10"
+                    >
                         10
                     </button>
 
-                    <button onclick="setBet(25)">
+                    <button
+                        type="button"
+                        data-bet="25"
+                    >
                         25
                     </button>
 
-                    <button onclick="setBet(50)">
+                    <button
+                        type="button"
+                        data-bet="50"
+                    >
                         50
                     </button>
 
-                    <button onclick="setBet(100)">
+                    <button
+                        type="button"
+                        data-bet="100"
+                    >
                         100
                     </button>
 
@@ -1114,22 +1973,47 @@ body{
 
                 <div class="stats">
 
-                    <div class="stat">
-                        <label>VIRTUAL BET</label>
-                        <strong id="yourBet">0.00 CR</strong>
-                    </div>
 
                     <div class="stat">
-                        <label>MULTIPLIER</label>
-                        <strong id="currentMultiplier">1.00x</strong>
+
+                        <label>
+                            VIRTUAL BET
+                        </label>
+
+                        <strong id="yourBet">
+                            0.00 CR
+                        </strong>
+
                     </div>
 
+
                     <div class="stat">
-                        <label>PAYOUT</label>
-                        <strong id="payout">0.00 CR</strong>
+
+                        <label>
+                            MULTIPLIER
+                        </label>
+
+                        <strong id="currentMultiplier">
+                            1.00x
+                        </strong>
+
+                    </div>
+
+
+                    <div class="stat">
+
+                        <label>
+                            PAYOUT
+                        </label>
+
+                        <strong id="payout">
+                            0.00 CR
+                        </strong>
+
                     </div>
 
                 </div>
+
 
                 <div
                     class="message"
@@ -1143,19 +2027,29 @@ body{
         </div>
 
 
+
         <!-- HISTORY -->
 
         <div class="panel">
 
             <div class="panel-head">
-                <h3>Flight History</h3>
-                <span>RECENT ROUNDS</span>
+
+                <h3>
+                    Flight History
+                </h3>
+
+                <span>
+                    RECENT ROUNDS
+                </span>
+
             </div>
+
 
             <div
                 class="history"
                 id="history"
             ></div>
+
 
             <div style="margin-top:20px">
 
@@ -1179,6 +2073,7 @@ body{
                         ROUND INDEPENDENCE
                     </div>
 
+
                     <p
                         style="
                         color:#788298;
@@ -1186,9 +2081,11 @@ body{
                         line-height:1.6;
                         "
                     >
+
                         Previous results are never fed back into
                         the next round calculation. Each nonce
                         produces a different cryptographic output.
+
                     </p>
 
                 </div>
@@ -1200,9 +2097,11 @@ body{
     </section>
 
 
+
     <!-- FAIRNESS -->
 
     <section class="fairness">
+
 
         <div class="fair-card">
 
@@ -1210,11 +2109,14 @@ body{
                 🔐 Provably-Fair Demonstration
             </h3>
 
+
             <p>
+
                 Before a round begins, the application creates a
                 secret server seed and publishes only its SHA-256
                 commitment. The round then uses HMAC-SHA256 with
                 the server seed, client seed and nonce.
+
             </p>
 
 
@@ -1243,7 +2145,9 @@ body{
                 <div
                     class="seed-value"
                     id="clientSeed"
-                ></div>
+                >
+                    Generating...
+                </div>
 
             </div>
 
@@ -1271,6 +2175,7 @@ body{
                 VERIFY CURRENT ROUND
             </button>
 
+
             <div
                 class="verify-result"
                 id="verifyResult"
@@ -1281,16 +2186,22 @@ body{
         </div>
 
 
+
+        <!-- FORMULA -->
+
         <div class="fair-card">
 
             <h3>
                 📐 Transparent Calculation
             </h3>
 
+
             <p>
+
                 The following algorithm is used by this demo.
                 The exact inputs and output are shown so the
                 completed round can be reproduced locally.
+
             </p>
 
 
@@ -1313,7 +2224,7 @@ baseCrash =
   ) / 100
 
 riskAdjustedCrash =
-  riskMode transformation
+  baseCrash × risk factor
 
             </div>
 
@@ -1334,6 +2245,22 @@ riskAdjustedCrash =
             </div>
 
 
+            <div class="seed">
+
+                <label>
+                    Current Crash Point
+                </label>
+
+                <div
+                    class="seed-value"
+                    id="crashPoint"
+                >
+                    Waiting...
+                </div>
+
+            </div>
+
+
             <div
                 style="
                 margin-top:12px;
@@ -1346,11 +2273,12 @@ riskAdjustedCrash =
                 line-height:1.6;
                 "
             >
+
                 IMPORTANT: This is a browser-only demonstration.
                 A real production provably-fair service must keep
                 the server seed secret on a server and publish its
-                commitment before play. A client-only HTML file
-                cannot provide that operator/server trust model.
+                commitment before play.
+
             </div>
 
         </div>
@@ -1360,46 +2288,37 @@ riskAdjustedCrash =
 </main>
 
 
+
 <script>
+
 /*
 ============================================================
- AEROX — TRANSPARENT CRASH DEMO
- VIRTUAL CREDITS ONLY
+ AEROX — CLEANED LOCAL CRASH DEMO
 ============================================================
 
 IMPORTANT:
 
-This is a LOCAL demonstration.
+This is a browser-only virtual-credit demonstration.
 
-A production provably-fair system should have:
+It does NOT implement real-money gambling.
 
-1. Server generates secret serverSeed.
+For production provably-fair infrastructure:
+
+1. Server creates secret serverSeed.
 2. Server publishes SHA-256(serverSeed).
-3. Player supplies/gets clientSeed.
-4. Each round increments nonce.
-5. Server computes:
+3. Client seed is supplied.
+4. Nonce increments every round.
+5. Server computes HMAC-SHA256.
+6. Server later reveals serverSeed.
+7. Client verifies commitment + round hash.
 
-   HMAC-SHA256(
-       serverSeed,
-       clientSeed + ":" + nonce
-   )
-
-6. Server reveals serverSeed later.
-7. Player verifies:
-   SHA256(serverSeed) === commitment
-   and reproduces the round calculation.
-
-This standalone browser demo keeps the seed locally so it
-can demonstrate the mathematics and verification UI.
-It should NOT be represented as a real server-backed
-provably-fair gambling implementation.
 ============================================================
 */
 
 
-/* =========================
+/* =========================================================
    STATE
-========================= */
+========================================================= */
 
 let balance = 1000;
 
@@ -1407,32 +2326,34 @@ let gameRunning = false;
 let hasBet = false;
 
 let currentBet = 0;
-let multiplier = 1;
 
+let multiplier = 1;
 let crashPoint = 1;
 
 let riskMode = 1;
 
-
 let currentRoundHash = "";
 
-let roundStartTime = 0;
-
 let serverSeed = "";
+let serverCommitment = "";
+
 let clientSeed = "";
+
 let nonce = 0;
+
 let startTime = 0;
+
 let animationFrame = null;
+let resetTimer = null;
 
 
+/* =========================================================
+   DOM ELEMENTS
+========================================================= */
 
-/* =========================
-   ELEMENTS
-========================= */
+const balanceEl =
+    document.getElementById("balance");
 
-const balanceEl = document.getElementById("balance");
-const copyHashButton =
-    document.getElementById("copyHashButton");
 const multiplierEl =
     document.getElementById("multiplier");
 
@@ -1478,6 +2399,15 @@ const clientSeedEl =
 const nonceEl =
     document.getElementById("nonce");
 
+const roundHashEl =
+    document.getElementById("roundHash");
+
+const crashPointEl =
+    document.getElementById("crashPoint");
+
+const verifyButton =
+    document.getElementById("verifyButton");
+
 const verifyResultEl =
     document.getElementById("verifyResult");
 
@@ -1487,70 +2417,98 @@ const riskDescription =
 const riskLabel =
     document.getElementById("riskLabel");
 
-const roundStatusEl = document.getElementById("roundStatus");
-const gameStatusEl = document.getElementById("gameStatus");
-
-const planeEl = document.getElementById("plane");
-const resultsEl = document.getElementById("results");
-
-const roundHashEl = document.getElementById("roundHash");
-const crashPointEl = document.getElementById("crashPoint");
-
-const verifyButton =
-    document.getElementById("verifyButton");
-
-const verificationEl =
-    document.getElementById("verification");
+const starsEl =
+    document.getElementById("stars");
 
 
-/* =========================
-   RANDOM CLIENT SEED
-========================= */
+/* =========================================================
+   UTILITY
+========================================================= */
 
-function updateBalance() {
-    balanceEl.textContent = balance.toFixed(2);
+function updateBalance(){
+
+    balanceEl.textContent =
+        balance.toFixed(2);
 }
 
+
+function setMessage(text){
+
+    messageEl.textContent =
+        text;
+}
+
+
+function formatCredits(value){
+
+    return value.toFixed(2) + " CR";
+}
+
+
+/* =========================================================
+   HEX
+========================================================= */
+
+function bytesToHex(bytes){
+
+    return Array.from(bytes)
+
+        .map(
+            byte =>
+                byte
+                    .toString(16)
+                    .padStart(2,"0")
+        )
+
+        .join("");
+}
+
+
+/* =========================================================
+   RANDOM CLIENT SEED
+========================================================= */
+
 function generateClientSeed(){
+
+    if(
+        window.crypto &&
+        typeof crypto.randomUUID === "function"
+    ){
+
+        return "client-" +
+            crypto.randomUUID();
+    }
+
 
     const bytes =
         crypto.getRandomValues(
             new Uint8Array(16)
         );
 
-    return Array.from(bytes)
-        .map(
-            b => b.toString(16).padStart(2,"0")
-        )
-        .join("");
+
+    return "client-" +
+        bytesToHex(bytes);
 }
 
 
-clientSeed =
-    generateClientSeed();
+/* =========================================================
+   SERVER SEED
+========================================================= */
 
-clientSeedEl.textContent =
-    clientSeed;
+function generateServerSeed(){
 
+    const bytes =
+        crypto.getRandomValues(
+            new Uint8Array(32)
+        );
 
-/* =========================
-   HEX
-========================= */
-
-function bytesToHex(bytes){
-
-    return Array.from(bytes)
-        .map(
-            b => b.toString(16).padStart(2,"0")
-        )
-        .join("");
+    return bytesToHex(bytes);
 }
 
 
-
-/* =========================
+/* =========================================================
    SHA-256
-========================= */
+========================================================= */
 
 async function sha256(text){
 
@@ -1558,11 +2516,13 @@ async function sha256(text){
         new TextEncoder()
             .encode(text);
 
+
     const hash =
         await crypto.subtle.digest(
             "SHA-256",
             data
         );
+
 
     return bytesToHex(
         new Uint8Array(hash)
@@ -1570,34 +2530,53 @@ async function sha256(text){
 }
 
 
-
-/* =========================
+/* =========================================================
    HMAC-SHA256
-========================= */
+========================================================= */
 
 async function hmacSHA256(
     keyText,
     messageText
 ){
 
-    const key =
+    const keyData =
+        new TextEncoder()
+            .encode(keyText);
+
+
+    const messageData =
+        new TextEncoder()
+            .encode(messageText);
+
+
+    const cryptoKey =
         await crypto.subtle.importKey(
+
             "raw",
-            new TextEncoder().encode(keyText),
+
+            keyData,
+
             {
                 name:"HMAC",
                 hash:"SHA-256"
             },
+
             false,
+
             ["sign"]
         );
 
+
     const signature =
         await crypto.subtle.sign(
+
             "HMAC",
-            key,
-            new TextEncoder().encode(messageText)
+
+            cryptoKey,
+
+            messageData
         );
+
 
     return bytesToHex(
         new Uint8Array(signature)
@@ -1605,100 +2584,155 @@ async function hmacSHA256(
 }
 
 
+/* =========================================================
+   HASH → FRACTION
+========================================================= */
 
-/* =========================
-   SERVER SEED
-========================= */
+function hashToFraction(hash){
 
-async function createServerSeed(){
+    /*
+        13 hex characters = 52 bits.
+    */
 
-    const bytes =
-        crypto.getRandomValues(
-            new Uint8Array(32)
-        );
+    const hex =
+        hash.substring(0,13);
 
-    serverSeed =
-        bytesToHex(bytes);
 
-    const commitment =
-        await sha256(serverSeed);
+    const integer =
+        parseInt(hex,16);
 
-    serverHashEl.textContent =
-        commitment;
+
+    const max =
+        Math.pow(16,13);
+
+
+    return integer / max;
 }
 
-createServerSeed();
+
+/* =========================================================
+   CRASH CALCULATION
+========================================================= */
+
+function calculateCrash(
+    fraction,
+    risk
+){
+
+    const u =
+        Math.min(
+            Math.max(
+                fraction,
+                0
+            ),
+            0.999999999999
+        );
 
 
+    /*
+        Base long-tail distribution.
+    */
 
-/* =========================
-   RISK SYSTEM
-========================= */
+    const raw =
+        1 +
+        (
+            -Math.log(1-u) *
+            2.5
+        );
+
+
+    /*
+        Risk is only a DEMO transformation.
+
+        Higher risk = more volatile / faster
+        virtual demonstration.
+    */
+
+    const riskFactor =
+        1 -
+        (
+            (risk - 1) *
+            0.035
+        );
+
+
+    const adjusted =
+        raw *
+        riskFactor;
+
+
+    return Math.min(
+        Math.max(
+            adjusted,
+            1.01
+        ),
+        100
+    );
+}
+
+
+/* =========================================================
+   RISK DATA
+========================================================= */
 
 const riskData = {
 
     1:{
         label:"LOW RISK",
-        description:"Conservative virtual mode",
-        speed:1.00
+        description:"Conservative virtual mode"
     },
 
     2:{
         label:"LOW+",
-        description:"Slightly faster growth",
-        speed:1.05
+        description:"Slightly faster growth"
     },
 
     3:{
         label:"BALANCED",
-        description:"Balanced virtual mode",
-        speed:1.10
+        description:"Balanced virtual mode"
     },
 
     4:{
         label:"MEDIUM",
-        description:"Faster multiplier growth",
-        speed:1.16
+        description:"Faster multiplier growth"
     },
 
     5:{
         label:"MEDIUM+",
-        description:"Aggressive growth profile",
-        speed:1.22
+        description:"Aggressive growth profile"
     },
 
     6:{
         label:"HIGH",
-        description:"High-speed virtual mode",
-        speed:1.29
+        description:"High-speed virtual mode"
     },
 
     7:{
         label:"HIGH+",
-        description:"Very aggressive demo mode",
-        speed:1.37
+        description:"Very aggressive demo mode"
     },
 
     8:{
         label:"EXTREME",
-        description:"Extreme multiplier acceleration",
-        speed:1.46
+        description:"Extreme multiplier acceleration"
     },
 
     9:{
         label:"ULTRA",
-        description:"Ultra-fast virtual mode",
-        speed:1.56
+        description:"Ultra-fast virtual mode"
     },
 
     10:{
         label:"MAX",
-        description:"Maximum demo acceleration",
-        speed:1.68
+        description:"Maximum demo acceleration"
     }
 
 };
 
+
+/* =========================================================
+   RISK BUTTONS
+========================================================= */
 
 document
     .querySelectorAll(".risk")
@@ -1708,364 +2742,255 @@ document
             "click",
             () => {
 
-                if(gameRunning)
+                if(gameRunning){
                     return;
+                }
+
 
                 document
                     .querySelectorAll(".risk")
                     .forEach(
-                        b => b.classList.remove("active")
+                        item =>
+                            item.classList.remove("active")
                     );
+
 
                 button.classList.add("active");
 
+
                 riskMode =
-                    Number(button.dataset.risk);
+                    Number(
+                        button.dataset.risk
+                    );
+
 
                 riskLabel.textContent =
                     riskData[riskMode].label;
 
+
                 riskDescription.textContent =
                     riskData[riskMode].description;
+
             }
         );
 
     });
 
 
+/* =========================================================
+   QUICK BET
+========================================================= */
 
-/* =========================
-   ROUND RESULT
-========================= */
+function setBet(amount){
 
-/*
-    HMAC hash -> 52-bit fraction
-*/
+    if(gameRunning){
+        return;
+    }
 
-function hashToFraction(hash){
-
-    const first13 =
-        hash.slice(0,13);
-
-    const integer =
-        parseInt(first13,16);
-
-    const TWO_52 =
-        4503599627370496;
-
-    return integer / TWO_52;
+    betAmountEl.value =
+        amount;
 }
 
 
-/*
-    Base crash distribution.
+document
+    .querySelectorAll("[data-bet]")
+    .forEach(button => {
 
-    This creates a long-tail distribution.
+        button.addEventListener(
+            "click",
+            () => {
 
-    The risk mode modifies the demo experience.
-*/
+                const amount =
+                    Number(
+                        button.dataset.bet
+                    );
 
-function calculateCrash(
-    fraction,
-    risk
-){
+                setBet(amount);
 
-    const safe =
-        Math.max(
-            0.0000000001,
-            Math.min(.9999999999,fraction)
+            }
         );
 
-    const base =
-        Math.floor(
+    });
+
+
+/* =========================================================
+   STARS
+========================================================= */
+
+function createStars(){
+
+    starsEl.innerHTML = "";
+
+
+    for(
+        let i = 0;
+        i < 90;
+        i++
+    ){
+
+        const star =
+            document.createElement("span");
+
+
+        star.className =
+            "star";
+
+
+        star.style.left =
+            Math.random() * 100 +
+            "%";
+
+
+        star.style.top =
+            Math.random() * 75 +
+            "%";
+
+
+        const size =
+            Math.random() > .85
+            ? 3
+            : 2;
+
+
+        star.style.width =
+            size + "px";
+
+
+        star.style.height =
+            size + "px";
+
+
+        star.style.opacity =
             (
-                1 / (1-safe)
-            ) * 100
-        ) / 100;
+                .2 +
+                Math.random() * .7
+            );
 
-    /*
-        Risk mode intentionally changes
-        the DEMO distribution.
 
-        Higher modes produce a more
-        aggressive/volatile demonstration.
-    */
-
-    const factor =
-        1 - (
-            (risk - 1) * 0.045
-        );
-
-    const adjusted =
-        Math.max(
-            1.01,
-            base * factor
-        );
-
-    return Math.min(
-        1000,
-        adjusted
-    );
+        starsEl.appendChild(star);
+    }
 }
 
 
-
-/* =========================
-   NEW ROUND HASH
-========================= */
+/* =========================================================
+   ROUND PREPARATION
+========================================================= */
 
 async function prepareRound(){
 
+    /*
+        Increment nonce.
+    */
+
     nonce++;
+
 
     nonceEl.textContent =
         nonce;
 
+
+    /*
+        Generate deterministic HMAC.
+    */
+
     currentRoundHash =
         await hmacSHA256(
+
             serverSeed,
-            clientSeed + ":" + nonce
+
+            clientSeed +
+            ":" +
+            nonce
         );
+
 
     roundHashEl.textContent =
         currentRoundHash;
+
+
+    /*
+        Convert HMAC → deterministic
+        fraction.
+    */
 
     const fraction =
         hashToFraction(
             currentRoundHash
         );
 
+
+    /*
+        Calculate crash point.
+    */
+
     crashPoint =
         calculateCrash(
-            fraction
+            fraction,
+            riskMode
         );
+
 
     crashPointEl.textContent =
-        crashPoint.toFixed(2) + "x";
-}
+        crashPoint.toFixed(2) +
+        "x";
 
-
-/* =========================
-   SHA-256 / HMAC
-========================= */
-
-async function hmacSHA256(key, message){
-
-    const encoder =
-        new TextEncoder();
-
-    const keyData =
-        encoder.encode(key);
-
-    const messageData =
-        encoder.encode(message);
-
-    const cryptoKey =
-        await crypto.subtle.importKey(
-            "raw",
-            keyData,
-            {
-                name: "HMAC",
-                hash: "SHA-256"
-            },
-            false,
-            ["sign"]
-        );
-
-    const signature =
-        await crypto.subtle.sign(
-            "HMAC",
-            cryptoKey,
-            messageData
-        );
-
-    return Array.from(
-        new Uint8Array(signature)
-    )
-    .map(
-        byte =>
-            byte.toString(16).padStart(2, "0")
-    )
-    .join("");
-}
-
-
-/* =========================
-   HASH → FRACTION
-========================= */
-
-function hashToFraction(hash){
 
     /*
-        Take the first 13 hexadecimal
-        characters from the HMAC.
-
-        13 hex characters = 52 bits.
-
-        This gives a deterministic
-        fraction between 0 and 1.
+        Update fairness UI.
     */
 
-    const hex =
-        hash.substring(0, 13);
+    clientSeedEl.textContent =
+        clientSeed;
 
-    const integer =
-        parseInt(hex, 16);
-
-    const max =
-        Math.pow(16, 13);
-
-    return integer / max;
+    nonceEl.textContent =
+        nonce;
 }
 
 
-/* =========================
-   CRASH CALCULATION
-========================= */
-
-function calculateCrash(fraction){
-
-    /*
-        Transparent demo formula:
-
-        crash = 1 + (-ln(1-u) × 2.5)
-
-        where:
-
-        u = deterministic fraction
-            derived from HMAC-SHA256.
-
-        Result is capped at 100x.
-    */
-
-    const u =
-        Math.min(
-            Math.max(fraction, 0),
-            0.999999999999
-        );
-
-    const raw =
-        1 +
-        (
-            -Math.log(1 - u) *
-            2.5
-        );
-
-    return Math.min(
-        Math.max(raw, 1.01),
-        100
-    );
-}
-
-
-/* =========================
-   GENERATE SERVER SEED
-========================= */
-
-function generateServerSeed(){
-
-    /*
-        Browser demo only.
-
-        For a real provably-fair system,
-        the server seed MUST be generated
-        on a trusted backend using a
-        cryptographically secure RNG.
-    */
-
-    const bytes =
-        new Uint8Array(32);
-
-    crypto.getRandomValues(bytes);
-
-    return Array.from(bytes)
-        .map(
-            byte =>
-                byte
-                    .toString(16)
-                    .padStart(2, "0")
-        )
-        .join("");
-}
-
-
-/* =========================
-   GENERATE CLIENT SEED
-========================= */
-
-function generateClientSeed(){
-
-    const randomPart =
-        crypto.randomUUID();
-
-    return "client-" + randomPart;
-}
-
-
-/* =========================
-   UPDATE ROUND DETAILS
-========================= */
-
-function updateRoundDetails(){
-
-    if(roundHashEl){
-
-        roundHashEl.textContent =
-            currentRoundHash ||
-            "Preparing...";
-    }
-
-    if(clientSeedEl){
-
-        clientSeedEl.textContent =
-            clientSeed;
-    }
-
-    if(nonceEl){
-
-        nonceEl.textContent =
-            nonce;
-    }
-}
-
-
-/* =========================
-   PLACE VIRTUAL BET
-========================= */
+/* =========================================================
+   PLACE BET
+========================================================= */
 
 async function placeBet(){
 
     if(gameRunning){
 
-        messageEl.textContent =
-            "A flight is already in progress.";
+        setMessage(
+            "A flight is already in progress."
+        );
 
         return;
     }
+
 
     const amount =
         Number(
             betAmountEl.value
         );
 
+
     if(
         !Number.isFinite(amount) ||
         amount <= 0
     ){
 
-        messageEl.textContent =
-            "Enter a valid virtual credit amount.";
+        setMessage(
+            "Enter a valid virtual credit amount."
+        );
 
         return;
     }
+
 
     if(amount > balance){
 
-        messageEl.textContent =
-            "Insufficient virtual credits.";
+        setMessage(
+            "Insufficient virtual credits."
+        );
 
         return;
     }
+
 
     /*
         Deduct virtual credits.
@@ -2073,81 +2998,147 @@ async function placeBet(){
 
     balance -= amount;
 
+
     currentBet =
         amount;
+
 
     hasBet =
         true;
 
+
     updateBalance();
 
+
     yourBetEl.textContent =
-        currentBet.toFixed(2) +
-        " CR";
+        formatCredits(
+            currentBet
+        );
+
+
+    payoutEl.textContent =
+        formatCredits(0);
+
 
     cashoutButton.disabled =
         false;
 
-    messageEl.textContent =
-        "Virtual bet placed. Cash out before the crash.";
+
+    betButton.disabled =
+        true;
+
+
+    betAmountEl.disabled =
+        true;
+
 
     /*
-        Prepare a fresh deterministic
-        round before starting.
+        Prepare deterministic round.
     */
 
-    await prepareRound();
+    try{
+
+        await prepareRound();
+
+    }catch(error){
+
+        console.error(
+            "Round preparation error:",
+            error
+        );
+
+
+        /*
+            Refund bet if preparation
+            somehow fails.
+        */
+
+        balance += currentBet;
+
+        currentBet = 0;
+        hasBet = false;
+
+        updateBalance();
+
+        yourBetEl.textContent =
+            formatCredits(0);
+
+        cashoutButton.disabled =
+            true;
+
+        betButton.disabled =
+            false;
+
+        betAmountEl.disabled =
+            false;
+
+        setMessage(
+            "Unable to prepare the round."
+        );
+
+        return;
+    }
+
 
     startFlight();
 }
 
 
-/* =========================
+/* =========================================================
    START FLIGHT
-========================= */
+========================================================= */
 
 function startFlight(){
 
     gameRunning =
         true;
 
+
     multiplier =
         1;
+
 
     startTime =
         performance.now();
 
-    roundStatusEl.textContent =
+
+    statusText.textContent =
         "FLIGHT IN PROGRESS";
 
-    roundStatusEl.style.color =
-        "#35e6a1";
 
-    gameStatusEl.textContent =
-        "Flying";
-
-    betButton.disabled =
-        true;
-
-    betAmountEl.disabled =
-        true;
-
-    requestAnimationFrame(
-        updateFlight
+    multiplierEl.classList.add(
+        "running"
     );
+
+
+    setMessage(
+        "Virtual bet placed. Cash out before the crash."
+    );
+
+
+    updateDisplay();
+
+
+    movePlane(0);
+
+
+    animationFrame =
+        requestAnimationFrame(
+            updateFlight
+        );
 }
 
 
-/* =========================
+/* =========================================================
    FLIGHT ANIMATION
-========================= */
+========================================================= */
 
 function updateFlight(now){
 
     if(!gameRunning){
-
         return;
     }
+
 
     const elapsed =
         (
@@ -2155,12 +3146,12 @@ function updateFlight(now){
             startTime
         ) / 1000;
 
-    /*
-        Smooth exponential multiplier.
 
-        This controls only the animation
-        speed. It does NOT determine the
-        crash point.
+    /*
+        Visual multiplier growth.
+
+        This does NOT determine
+        the crash point.
     */
 
     multiplier =
@@ -2169,10 +3160,9 @@ function updateFlight(now){
             elapsed * 2.8
         );
 
+
     /*
-        The independently calculated
-        crash point decides when the
-        flight ends.
+        Crash check.
     */
 
     if(
@@ -2183,21 +3173,31 @@ function updateFlight(now){
         multiplier =
             crashPoint;
 
+
         updateDisplay();
 
+
         crashFlight();
+
 
         return;
     }
 
+
     updateDisplay();
 
-    movePlane(
+
+    const progress =
         Math.min(
             elapsed / 10,
             1
-        )
+        );
+
+
+    movePlane(
+        progress
     );
+
 
     animationFrame =
         requestAnimationFrame(
@@ -2206,82 +3206,95 @@ function updateFlight(now){
 }
 
 
-/* =========================
+/* =========================================================
    UPDATE DISPLAY
-========================= */
+========================================================= */
 
 function updateDisplay(){
 
-    const multiplierText =
+    const text =
         multiplier.toFixed(2) +
         "x";
 
+
     multiplierEl.textContent =
-        multiplierText;
+        text;
+
 
     currentMultiplierEl.textContent =
-        multiplierText;
+        text;
+
 
     if(hasBet){
 
         payoutEl.textContent =
-            (
+            formatCredits(
                 currentBet *
                 multiplier
-            ).toFixed(2) +
-            " CR";
+            );
 
     }else{
 
         payoutEl.textContent =
-            "0.00 CR";
+            formatCredits(0);
     }
 }
 
 
-/* =========================
+/* =========================================================
    PLANE MOVEMENT
-========================= */
+========================================================= */
 
 function movePlane(progress){
 
     const p =
         Math.min(
-            Math.max(progress, 0),
+            Math.max(progress,0),
             1
         );
+
 
     const x =
         8 +
         p * 80;
 
+
     const bottom =
         13 +
         p * 68;
 
-    planeEl.style.left =
+
+    aircraft.style.left =
         x + "%";
 
-    planeEl.style.bottom =
+
+    aircraft.style.bottom =
         bottom + "%";
 
-    planeEl.style.transform =
+
+    aircraft.style.transform =
         "rotate(-18deg) scale(" +
-        (1 + p * .28) +
+        (
+            1 +
+            p * .28
+        ) +
         ")";
 
-    trailEl.style.width =
-        (p * 82) +
-        "%";
 
-    trailEl.style.transform =
+    trail.style.width =
+        (
+            p * 82
+        ) + "%";
+
+
+    trail.style.transform =
         "rotate(-27deg)";
 }
 
 
-/* =========================
+/* =========================================================
    CASH OUT
-========================= */
+========================================================= */
 
 function cashOut(){
 
@@ -2293,172 +3306,205 @@ function cashOut(){
         return;
     }
 
+
     const payout =
         currentBet *
         multiplier;
 
-    balance +=
-        payout;
+
+    balance += payout;
+
 
     updateBalance();
 
-    messageEl.textContent =
+
+    setMessage(
+
         "Cashed out at " +
         multiplier.toFixed(2) +
         "x — " +
         payout.toFixed(2) +
-        " CR returned.";
+        " CR returned."
+
+    );
+
 
     hasBet =
         false;
 
+
     currentBet =
         0;
 
+
     yourBetEl.textContent =
-        "0.00 CR";
+        formatCredits(0);
+
 
     payoutEl.textContent =
-        "0.00 CR";
+        formatCredits(0);
+
 
     cashoutButton.disabled =
         true;
 }
 
 
-/* =========================
+/* =========================================================
    CRASH
-========================= */
+========================================================= */
 
 function crashFlight(){
 
     gameRunning =
         false;
 
+
     cancelAnimationFrame(
         animationFrame
     );
+
+
+    multiplierEl.classList.remove(
+        "running"
+    );
+
 
     multiplierEl.classList.add(
         "crashed"
     );
 
-    roundStatusEl.textContent =
+
+    statusText.textContent =
         "CRASHED AT " +
         crashPoint.toFixed(2) +
         "x";
 
-    roundStatusEl.style.color =
-        "#ff386d";
-
-    gameStatusEl.textContent =
-        "Crashed";
-
-    /*
-        Add the actual round result
-        to the public history.
-    */
 
     addHistory(
         crashPoint
     );
 
+
     if(hasBet){
 
-        messageEl.textContent =
+        setMessage(
+
             "The flight crashed before your cash-out. " +
-            "Your virtual bet was lost.";
+            "Your virtual bet was lost."
+
+        );
+
     }
+
 
     hasBet =
         false;
 
+
     currentBet =
         0;
 
+
     yourBetEl.textContent =
-        "0.00 CR";
+        formatCredits(0);
+
 
     payoutEl.textContent =
-        "0.00 CR";
+        formatCredits(0);
+
 
     cashoutButton.disabled =
         true;
 
-    /*
-        Keep the result visible before
-        starting the next round.
-    */
 
-    setTimeout(
-        resetFlight,
-        3000
-    );
+    resetTimer =
+        setTimeout(
+            resetFlight,
+            3000
+        );
 }
 
 
-/* =========================
-   RESET
-========================= */
+/* =========================================================
+   RESET FLIGHT
+========================================================= */
 
 function resetFlight(){
 
     multiplier =
         1;
 
+
     multiplierEl.classList.remove(
         "crashed"
     );
 
+
+    multiplierEl.classList.remove(
+        "running"
+    );
+
+
     multiplierEl.textContent =
         "1.00x";
+
 
     currentMultiplierEl.textContent =
         "1.00x";
 
-    roundStatusEl.textContent =
+
+    statusText.textContent =
         "NEXT FLIGHT READY";
 
-    roundStatusEl.style.color =
-        "#8c95ad";
 
-    gameStatusEl.textContent =
-        "Waiting";
+    aircraft.style.left =
+        "8%";
 
-    planeEl.style.left =
-        "9%";
 
-    planeEl.style.bottom =
+    aircraft.style.bottom =
         "14%";
 
-    planeEl.style.transform =
-        "rotate(-18deg)";
 
-    trailEl.style.width =
+    aircraft.style.transform =
+        "rotate(-17deg)";
+
+
+    trail.style.width =
         "0";
+
 
     betButton.disabled =
         false;
 
+
     betAmountEl.disabled =
         false;
 
-    messageEl.textContent =
-        "Place a virtual bet to participate in the next demo round.";
+
+    cashoutButton.disabled =
+        true;
+
+
+    setMessage(
+        "Place a virtual bet to participate in the next demo round."
+    );
 }
 
 
-/* =========================
+/* =========================================================
    HISTORY
-========================= */
+========================================================= */
 
 function addHistory(value){
 
     const result =
         document.createElement("div");
 
+
     result.className =
         "result";
+
 
     if(value < 2){
 
@@ -2473,141 +3519,167 @@ function addHistory(value){
         );
     }
 
+
     result.textContent =
         value.toFixed(2) +
         "x";
 
-    resultsEl.prepend(
+
+    historyEl.prepend(
         result
     );
+
 
     /*
         Keep last 12 results.
     */
 
     while(
-        resultsEl.children.length >
+        historyEl.children.length >
         12
     ){
 
-        resultsEl.removeChild(
-            resultsEl.lastChild
+        historyEl.removeChild(
+            historyEl.lastElementChild
         );
     }
 }
 
 
-/* =========================
-   COPY ROUND HASH
-========================= */
-
-async function copyHash(){
-
-    if(!currentRoundHash){
-
-        return;
-    }
-
-    try{
-
-        await navigator.clipboard.writeText(
-            currentRoundHash
-        );
-
-        copyHashButton.textContent =
-            "COPIED ✓";
-
-        setTimeout(
-            () => {
-                copyHashButton.textContent =
-                    "COPY HASH";
-            },
-            1500
-        );
-
-    }catch(error){
-
-        messageEl.textContent =
-            "Unable to copy hash.";
-    }
-}
-
-
-/* =========================
-   VERIFY ROUND
-========================= */
+/* =========================================================
+   VERIFY CURRENT ROUND
+========================================================= */
 
 async function verifyCurrentRound(){
 
-    if(!currentRoundHash){
+    if(
+        !currentRoundHash ||
+        !serverSeed ||
+        !clientSeed ||
+        nonce <= 0
+    ){
 
-        verificationEl.textContent =
-            "No round available.";
+        verifyResultEl.textContent =
+            "No completed round available.";
+
+        verifyResultEl.style.color =
+            "#7e879d";
 
         return;
     }
 
+
+    verifyResultEl.textContent =
+        "Verifying...";
+
+
+    verifyResultEl.style.color =
+        "#7e879d";
+
+
     try{
+
+        /*
+            Recalculate HMAC.
+        */
 
         const calculatedHash =
             await hmacSHA256(
+
                 serverSeed,
+
                 clientSeed +
                 ":" +
                 nonce
             );
 
-        const verified =
+
+        /*
+            Verify commitment.
+        */
+
+        const calculatedCommitment =
+            await sha256(
+                serverSeed
+            );
+
+
+        const hashMatches =
             calculatedHash ===
             currentRoundHash;
 
-        verificationEl.textContent =
-            verified
-            ? "✓ HASH VERIFIED"
-            : "✕ HASH MISMATCH";
 
-        verificationEl.style.color =
-            verified
-            ? "#35e6a1"
-            : "#ff386d";
+        const commitmentMatches =
+            calculatedCommitment ===
+            serverCommitment;
+
+
+        if(
+            hashMatches &&
+            commitmentMatches
+        ){
+
+            verifyResultEl.textContent =
+                "✓ VERIFIED — commitment and HMAC match.";
+
+            verifyResultEl.style.color =
+                "#35e6a1";
+
+        }else{
+
+            verifyResultEl.textContent =
+                "✕ VERIFICATION FAILED.";
+
+            verifyResultEl.style.color =
+                "#ff386d";
+        }
 
     }catch(error){
 
-        verificationEl.textContent =
+        console.error(
+            "Verification error:",
+            error
+        );
+
+
+        verifyResultEl.textContent =
             "Verification failed.";
+
+        verifyResultEl.style.color =
+            "#ff386d";
     }
 }
 
 
-/* =========================
+/* =========================================================
    EVENTS
-========================= */
+========================================================= */
 
 betButton.addEventListener(
     "click",
     placeBet
 );
 
+
 cashoutButton.addEventListener(
     "click",
     cashOut
 );
 
-copyHashButton.addEventListener(
-    "click",
-    copyHash
-);
 
 verifyButton.addEventListener(
     "click",
     verifyCurrentRound
 );
 
+
 betAmountEl.addEventListener(
     "keydown",
     event => {
 
-        if(event.key === "Enter"){
+        if(
+            event.key === "Enter"
+        ){
 
             placeBet();
         }
@@ -2615,77 +3687,124 @@ betAmountEl.addEventListener(
 );
 
 
-/* =========================
-   QUICK BET BUTTONS
-========================= */
-
-document
-    .querySelectorAll(
-        "[data-bet]"
-    )
-    .forEach(button => {
-
-        button.addEventListener(
-            "click",
-            () => {
-
-                betAmountEl.value =
-                    button.dataset.bet;
-            }
-        );
-
-    });
-
-
-/* =========================
+/* =========================================================
    INITIALIZE
-========================= */
+========================================================= */
 
 async function initialize(){
 
-    /*
-        Generate a new server seed
-        for the demo session.
-    */
+    try{
 
-    serverSeed =
-        generateServerSeed();
+        /*
+            Generate seed once.
+        */
 
-    clientSeed =
-        generateClientSeed();
+        serverSeed =
+            generateServerSeed();
 
-    nonce =
-        0;
 
-    updateBalance();
+        clientSeed =
+            generateClientSeed();
 
-    await prepareRound();
 
-    /*
-        Initial visual history only.
-        These are not used by the formula.
-    */
+        nonce =
+            0;
 
-    const initialResults = [
-        1.24,
-        2.18,
-        1.07,
-        3.41,
-        1.63,
-        5.72,
-        2.91,
-        1.36
-    ];
 
-    initialResults.forEach(
-        addHistory
-    );
+        /*
+            Create commitment.
+        */
 
-    updateRoundDetails();
+        serverCommitment =
+            await sha256(
+                serverSeed
+            );
+
+
+        serverHashEl.textContent =
+            serverCommitment;
+
+
+        clientSeedEl.textContent =
+            clientSeed;
+
+
+        nonceEl.textContent =
+            nonce;
+
+
+        /*
+            Visual stars.
+        */
+
+        createStars();
+
+
+        /*
+            Initial history.
+        */
+
+        const initialResults = [
+
+            1.24,
+            2.18,
+            1.07,
+            3.41,
+            1.63,
+            5.72,
+            2.91,
+            1.36
+
+        ];
+
+
+        initialResults.forEach(
+            addHistory
+        );
+
+
+        /*
+            Prepare first round.
+        */
+
+        await prepareRound();
+
+
+        /*
+            First round is ready,
+            but no bet is active.
+        */
+
+        updateBalance();
+
+
+        statusText.textContent =
+            "NEXT FLIGHT READY";
+
+
+        setMessage(
+            "Place a virtual bet to participate in the next demo round."
+        );
+
+
+    }catch(error){
+
+        console.error(
+            "Initialization error:",
+            error
+        );
+
+
+        setMessage(
+            "Initialization failed. Check browser console."
+        );
+    }
 }
 
 
-/* Start application */
+/* =========================================================
+   START
+========================================================= */
 
 initialize();
 
