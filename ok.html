@@ -5255,4 +5255,4496 @@ function drawMouth(
         accent
       );
 
-      px
+            px(
+        ctx,
+        15,
+        y,
+        accent
+      );
+
+      px(
+        ctx,
+        16,
+        y,
+        accent
+      );
+
+      px(
+        ctx,
+        17,
+        y,
+        accent
+      );
+
+      px(
+        ctx,
+        18,
+        y,
+        accent
+      );
+
+      px(
+        ctx,
+        19,
+        y,
+        accent
+      );
+
+      px(
+        ctx,
+        20,
+        y,
+        accent
+      );
+
+      break;
+
+    case "double":
+
+      px(
+        ctx,
+        15,
+        y,
+        accent
+      );
+
+      px(
+        ctx,
+        17,
+        y,
+        accent
+      );
+
+      px(
+        ctx,
+        19,
+        y,
+        accent
+      );
+
+      px(
+        ctx,
+        21,
+        y,
+        accent
+      );
+
+      break;
+
+    case "scan":
+
+      for (
+        let x = 15;
+        x <= 21;
+        x++
+      ) {
+        px(
+          ctx,
+          x,
+          y,
+          accent
+        );
+      }
+
+      if (
+        y % 2 === 0
+      ) {
+        px(
+          ctx,
+          18,
+          y + 1,
+          accent
+        );
+      }
+
+      break;
+
+    case "signal":
+
+      px(
+        ctx,
+        15,
+        y,
+        accent
+      );
+
+      px(
+        ctx,
+        16,
+        y - 1,
+        accent
+      );
+
+      px(
+        ctx,
+        17,
+        y,
+        accent
+      );
+
+      px(
+        ctx,
+        18,
+        y + 1,
+        accent
+      );
+
+      px(
+        ctx,
+        19,
+        y,
+        accent
+      );
+
+      px(
+        ctx,
+        20,
+        y - 1,
+        accent
+      );
+
+      px(
+        ctx,
+        21,
+        y,
+        accent
+      );
+
+      break;
+
+    case "diamond":
+
+      px(
+        ctx,
+        18,
+        y - 2,
+        accent
+      );
+
+      px(
+        ctx,
+        17,
+        y - 1,
+        accent
+      );
+
+      px(
+        ctx,
+        18,
+        y - 1,
+        accent
+      );
+
+      px(
+        ctx,
+        19,
+        y - 1,
+        accent
+      );
+
+      px(
+        ctx,
+        16,
+        y,
+        accent
+      );
+
+      px(
+        ctx,
+        17,
+        y,
+        accent
+      );
+
+      px(
+        ctx,
+        18,
+        y,
+        accent
+      );
+
+      px(
+        ctx,
+        19,
+        y,
+        accent
+      );
+
+      px(
+        ctx,
+        20,
+        y,
+        accent
+      );
+
+      px(
+        ctx,
+        17,
+        y + 1,
+        accent
+      );
+
+      px(
+        ctx,
+        18,
+        y + 1,
+        accent
+      );
+
+      px(
+        ctx,
+        19,
+        y + 1,
+        accent
+      );
+
+      px(
+        ctx,
+        18,
+        y + 2,
+        accent
+      );
+
+      break;
+
+    case "cross":
+
+      px(
+        ctx,
+        18,
+        y - 2,
+        accent
+      );
+
+      px(
+        ctx,
+        18,
+        y - 1,
+        accent
+      );
+
+      px(
+        ctx,
+        15,
+        y,
+        accent
+      );
+
+      px(
+        ctx,
+        16,
+        y,
+        accent
+      );
+
+      px(
+        ctx,
+        17,
+        y,
+        accent
+      );
+
+      px(
+        ctx,
+        18,
+        y,
+        accent
+      );
+
+      px(
+        ctx,
+        19,
+        y,
+        accent
+      );
+
+      px(
+        ctx,
+        20,
+        y,
+        accent
+      );
+
+      px(
+        ctx,
+        21,
+        y,
+        accent
+      );
+
+      px(
+        ctx,
+        18,
+        y + 1,
+        accent
+      );
+
+      px(
+        ctx,
+        18,
+        y + 2,
+        accent
+      );
+
+      break;
+
+    case "broken":
+
+      px(
+        ctx,
+        15,
+        y,
+        accent
+      );
+
+      px(
+        ctx,
+        16,
+        y,
+        accent
+      );
+
+      px(
+        ctx,
+        18,
+        y,
+        accent
+      );
+
+      px(
+        ctx,
+        19,
+        y,
+        accent
+      );
+
+      px(
+        ctx,
+        21,
+        y,
+        accent
+      );
+
+      break;
+
+    case "terminal":
+
+      for (
+        let x = 15;
+        x <= 21;
+        x++
+      ) {
+
+        if (
+          x === 17 ||
+          x === 20
+        ) {
+          continue;
+        }
+
+        px(
+          ctx,
+          x,
+          y,
+          accent
+        );
+      }
+
+      break;
+
+    default:
+
+      px(
+        ctx,
+        18,
+        y,
+        accent
+      );
+
+      break;
+  }
+
+  /* --------------------------------------------------
+     MICRO GLITCH DETAILS
+  -------------------------------------------------- */
+
+  if (
+    style !== "clean" &&
+    rng() < 0.28
+  ) {
+
+    const gx =
+      13 +
+      Math.floor(
+        rng() * 11
+      );
+
+    const gy =
+      y +
+      Math.floor(
+        rng() * 3
+      ) - 1;
+
+    px(
+      ctx,
+      gx,
+      gy,
+      accent
+    );
+  }
+
+  if (
+    rng() < 0.12
+  ) {
+
+    const gx =
+      12 +
+      Math.floor(
+        rng() * 14
+      );
+
+    px(
+      ctx,
+      gx,
+      y,
+      secondary
+    );
+  }
+
+  break;
+
+
+case "grid":
+
+  for (
+    let x = 14;
+    x <= 22;
+    x += 2
+  ) {
+
+    px(
+      ctx,
+      x,
+      y,
+      accent
+    );
+
+    if (
+      y % 2 === 0
+    ) {
+
+      px(
+        ctx,
+        x,
+        y + 1,
+        accent
+      );
+    }
+  }
+
+  break;
+
+
+case "wave":
+
+  px(
+    ctx,
+    14,
+    y,
+    accent
+  );
+
+  px(
+    ctx,
+    15,
+    y - 1,
+    accent
+  );
+
+  px(
+    ctx,
+    16,
+    y - 1,
+    accent
+  );
+
+  px(
+    ctx,
+    17,
+    y,
+    accent
+  );
+
+  px(
+    ctx,
+    18,
+    y + 1,
+    accent
+  );
+
+  px(
+    ctx,
+    19,
+    y + 1,
+    accent
+  );
+
+  px(
+    ctx,
+    20,
+    y,
+    accent
+  );
+
+  px(
+    ctx,
+    21,
+    y - 1,
+    accent
+  );
+
+  px(
+    ctx,
+    22,
+    y - 1,
+    accent
+  );
+
+  break;
+
+
+case "arrow":
+
+  px(
+    ctx,
+    14,
+    y,
+    accent
+  );
+
+  px(
+    ctx,
+    15,
+    y,
+    accent
+  );
+
+  px(
+    ctx,
+    16,
+    y,
+    accent
+  );
+
+  px(
+    ctx,
+    17,
+    y,
+    accent
+  );
+
+  px(
+    ctx,
+    18,
+    y,
+    accent
+  );
+
+  px(
+    ctx,
+    19,
+    y,
+    accent
+  );
+
+  px(
+    ctx,
+    20,
+    y,
+    accent
+  );
+
+  px(
+    ctx,
+    21,
+    y - 1,
+    accent
+  );
+
+  px(
+    ctx,
+    21,
+    y + 1,
+    accent
+  );
+
+  px(
+    ctx,
+    22,
+    y - 2,
+    accent
+  );
+
+  px(
+    ctx,
+    22,
+    y + 2,
+    accent
+  );
+
+  break;
+
+
+case "barcode":
+
+  for (
+    let x = 14;
+    x <= 22;
+    x++
+  ) {
+
+    if (
+      rng() < 0.5
+    ) {
+
+      px(
+        ctx,
+        x,
+        y,
+        accent
+      );
+
+    }
+
+  }
+
+  break;
+
+
+case "matrix":
+
+  for (
+    let x = 14;
+    x <= 22;
+    x++
+  ) {
+
+    for (
+      let yy = 0;
+      yy < 3;
+      yy++
+    ) {
+
+      if (
+        rng() < 0.48
+      ) {
+
+        px(
+          ctx,
+          x,
+          y + yy,
+          accent
+        );
+
+      }
+
+    }
+
+  }
+
+  break;
+
+
+case "orbit":
+
+  px(
+    ctx,
+    18,
+    y - 2,
+    accent
+  );
+
+  px(
+    ctx,
+    20,
+    y - 1,
+    accent
+  );
+
+  px(
+    ctx,
+    21,
+    y,
+    accent
+  );
+
+  px(
+    ctx,
+    20,
+    y + 1,
+    accent
+  );
+
+  px(
+    ctx,
+    18,
+    y + 2,
+    accent
+  );
+
+  px(
+    ctx,
+    16,
+    y + 1,
+    accent
+  );
+
+  px(
+    ctx,
+    15,
+    y,
+    accent
+  );
+
+  px(
+    ctx,
+    16,
+    y - 1,
+    accent
+  );
+
+  break;
+
+
+case "star":
+
+  px(
+    ctx,
+    18,
+    y - 2,
+    accent
+  );
+
+  px(
+    ctx,
+    17,
+    y - 1,
+    accent
+  );
+
+  px(
+    ctx,
+    18,
+    y - 1,
+    accent
+  );
+
+  px(
+    ctx,
+    19,
+    y - 1,
+    accent
+  );
+
+  px(
+    ctx,
+    15,
+    y,
+    accent
+  );
+
+  px(
+    ctx,
+    16,
+    y,
+    accent
+  );
+
+  px(
+    ctx,
+    17,
+    y,
+    accent
+  );
+
+  px(
+    ctx,
+    18,
+    y,
+    accent
+  );
+
+  px(
+    ctx,
+    19,
+    y,
+    accent
+  );
+
+  px(
+    ctx,
+    20,
+    y,
+    accent
+  );
+
+  px(
+    ctx,
+    21,
+    y,
+    accent
+  );
+
+  px(
+    ctx,
+    17,
+    y + 1,
+    accent
+  );
+
+  px(
+    ctx,
+    18,
+    y + 1,
+    accent
+  );
+
+  px(
+    ctx,
+    19,
+    y + 1,
+    accent
+  );
+
+  px(
+    ctx,
+    18,
+    y + 2,
+    accent
+  );
+
+  break;
+
+
+case "noise":
+
+  for (
+    let x = 13;
+    x <= 23;
+    x++
+  ) {
+
+    if (
+      rng() < 0.62
+    ) {
+
+      px(
+        ctx,
+        x,
+        y +
+          Math.floor(
+            rng() * 3
+          ) - 1,
+        accent
+      );
+
+    }
+
+  }
+
+  break;
+
+
+case "portal":
+
+  px(
+    ctx,
+    17,
+    y - 2,
+    accent
+  );
+
+  px(
+    ctx,
+    18,
+    y - 2,
+    accent
+  );
+
+  px(
+    ctx,
+    19,
+    y - 2,
+    accent
+  );
+
+  px(
+    ctx,
+    16,
+    y - 1,
+    accent
+  );
+
+  px(
+    ctx,
+    20,
+    y - 1,
+    accent
+  );
+
+  px(
+    ctx,
+    15,
+    y,
+    accent
+  );
+
+  px(
+    ctx,
+    21,
+    y,
+    accent
+  );
+
+  px(
+    ctx,
+    16,
+    y + 1,
+    accent
+  );
+
+  px(
+    ctx,
+    20,
+    y + 1,
+    accent
+  );
+
+  px(
+    ctx,
+    17,
+    y + 2,
+    accent
+  );
+
+  px(
+    ctx,
+    18,
+    y + 2,
+    accent
+  );
+
+  px(
+    ctx,
+    19,
+    y + 2,
+    accent
+  );
+
+  break;
+
+
+case "circuit":
+
+  px(
+    ctx,
+    14,
+    y,
+    accent
+  );
+
+  px(
+    ctx,
+    15,
+    y,
+    accent
+  );
+
+  px(
+    ctx,
+    16,
+    y,
+    accent
+  );
+
+  px(
+    ctx,
+    16,
+    y - 1,
+    accent
+  );
+
+  px(
+    ctx,
+    16,
+    y - 2,
+    accent
+  );
+
+  px(
+    ctx,
+    17,
+    y - 2,
+    accent
+  );
+
+  px(
+    ctx,
+    18,
+    y - 2,
+    accent
+  );
+
+  px(
+    ctx,
+    20,
+    y,
+    accent
+  );
+
+  px(
+    ctx,
+    21,
+    y,
+    accent
+  );
+
+  px(
+    ctx,
+    22,
+    y,
+    accent
+  );
+
+  px(
+    ctx,
+    20,
+    y + 1,
+    accent
+  );
+
+  px(
+    ctx,
+    20,
+    y + 2,
+    accent
+  );
+
+  px(
+    ctx,
+    19,
+    y + 2,
+    accent
+  );
+
+  break;
+
+
+case "minimal":
+
+  px(
+    ctx,
+    18,
+    y,
+    accent
+  );
+
+  if (
+    rng() < 0.5
+  ) {
+
+    px(
+      ctx,
+      18,
+      y + 1,
+      accent
+    );
+
+  }
+
+  break;
+
+
+case "slash":
+
+  px(
+    ctx,
+    14,
+    y - 2,
+    accent
+  );
+
+  px(
+    ctx,
+    15,
+    y - 1,
+    accent
+  );
+
+  px(
+    ctx,
+    16,
+    y,
+    accent
+  );
+
+  px(
+    ctx,
+    17,
+    y + 1,
+    accent
+  );
+
+  px(
+    ctx,
+    18,
+    y + 2,
+    accent
+  );
+
+  px(
+    ctx,
+    20,
+    y - 2,
+    secondary
+  );
+
+  px(
+    ctx,
+    21,
+    y - 1,
+    secondary
+  );
+
+  px(
+    ctx,
+    22,
+    y,
+    secondary
+  );
+
+  break;
+
+
+case "runes":
+
+  px(
+    ctx,
+    15,
+    y - 1,
+    accent
+  );
+
+  px(
+    ctx,
+    15,
+    y,
+    accent
+  );
+
+  px(
+    ctx,
+    15,
+    y + 1,
+    accent
+  );
+
+  px(
+    ctx,
+    16,
+    y - 1,
+    accent
+  );
+
+  px(
+    ctx,
+    17,
+    y,
+    accent
+  );
+
+  px(
+    ctx,
+    18,
+    y + 1,
+    accent
+  );
+
+  px(
+    ctx,
+    19,
+    y - 1,
+    accent
+  );
+
+  px(
+    ctx,
+    20,
+    y,
+    accent
+  );
+
+  px(
+    ctx,
+    21,
+    y + 1,
+    accent
+  );
+
+  break;
+
+
+case "byte":
+
+  const bits = [
+    1,0,1,1,0,1,0,1
+  ];
+
+  bits.forEach(
+    (bit, index) => {
+
+      if(bit){
+
+        px(
+          ctx,
+          14 + index,
+          y,
+          accent
+        );
+
+      }
+
+    }
+  );
+
+  break;
+
+
+case "pulse":
+
+  px(
+    ctx,
+    14,
+    y,
+    accent
+  );
+
+  px(
+    ctx,
+    15,
+    y,
+    accent
+  );
+
+  px(
+    ctx,
+    16,
+    y - 1,
+    accent
+  );
+
+  px(
+    ctx,
+    17,
+    y - 1,
+    accent
+  );
+
+  px(
+    ctx,
+    18,
+    y,
+    accent
+  );
+
+  px(
+    ctx,
+    19,
+    y + 1,
+    accent
+  );
+
+  px(
+    ctx,
+    20,
+    y + 1,
+    accent
+  );
+
+  px(
+    ctx,
+    21,
+    y,
+    accent
+  );
+
+  px(
+    ctx,
+    22,
+    y,
+    accent
+  );
+
+  break;
+
+
+case "eyes":
+
+  px(
+    ctx,
+    15,
+    y - 1,
+    accent
+  );
+
+  px(
+    ctx,
+    16,
+    y,
+    accent
+  );
+
+  px(
+    ctx,
+    17,
+    y + 1,
+    accent
+  );
+
+  px(
+    ctx,
+    19,
+    y + 1,
+    accent
+  );
+
+  px(
+    ctx,
+    20,
+    y,
+    accent
+  );
+
+  px(
+    ctx,
+    21,
+    y - 1,
+    accent
+  );
+
+  break;
+
+
+case "lock":
+
+  px(
+    ctx,
+    16,
+    y - 2,
+    accent
+  );
+
+  px(
+    ctx,
+    17,
+    y - 2,
+    accent
+  );
+
+  px(
+    ctx,
+    18,
+    y - 2,
+    accent
+  );
+
+  px(
+    ctx,
+    19,
+    y - 2,
+    accent
+  );
+
+  px(
+    ctx,
+    20,
+    y - 2,
+    accent
+  );
+
+  px(
+    ctx,
+    16,
+    y - 1,
+    accent
+  );
+
+  px(
+    ctx,
+    20,
+    y - 1,
+    accent
+  );
+
+  px(
+    ctx,
+    15,
+    y,
+    accent
+  );
+
+  px(
+    ctx,
+    16,
+    y,
+    accent
+  );
+
+  px(
+    ctx,
+    17,
+    y,
+    accent
+  );
+
+  px(
+    ctx,
+    18,
+    y,
+    accent
+  );
+
+  px(
+    ctx,
+    19,
+    y,
+    accent
+  );
+
+  px(
+    ctx,
+    20,
+    y,
+    accent
+  );
+
+  px(
+    ctx,
+    21,
+    y,
+    accent
+  );
+
+  px(
+    ctx,
+    15,
+    y + 1,
+    accent
+  );
+
+  px(
+    ctx,
+    21,
+    y + 1,
+    accent
+  );
+
+  px(
+    ctx,
+    15,
+    y + 2,
+    accent
+  );
+
+  px(
+    ctx,
+    16,
+    y + 2,
+    accent
+  );
+
+  px(
+    ctx,
+    17,
+    y + 2,
+    accent
+  );
+
+  px(
+    ctx,
+    18,
+    y + 2,
+    accent
+  );
+
+  px(
+    ctx,
+    19,
+    y + 2,
+    accent
+  );
+
+  px(
+    ctx,
+    20,
+    y + 2,
+    accent
+  );
+
+  px(
+    ctx,
+    21,
+    y + 2,
+    accent
+  );
+
+  break;
+
+
+case "diamond_small":
+
+  px(
+    ctx,
+    18,
+    y - 1,
+    accent
+  );
+
+  px(
+    ctx,
+    17,
+    y,
+    accent
+  );
+
+  px(
+    ctx,
+    18,
+    y,
+    accent
+  );
+
+  px(
+    ctx,
+    19,
+    y,
+    accent
+  );
+
+  px(
+    ctx,
+    18,
+    y + 1,
+    accent
+  );
+
+  break;
+
+
+case "dots":
+
+  px(
+    ctx,
+    14,
+    y,
+    accent
+  );
+
+  px(
+    ctx,
+    16,
+    y,
+    accent
+  );
+
+  px(
+    ctx,
+    18,
+    y,
+    accent
+  );
+
+  px(
+    ctx,
+    20,
+    y,
+    accent
+  );
+
+  px(
+    ctx,
+    22,
+    y,
+    accent
+  );
+
+  break;
+
+
+case "ladder":
+
+  for (
+    let yy = -2;
+    yy <= 2;
+    yy++
+  ) {
+
+    px(
+      ctx,
+      15,
+      y + yy,
+      accent
+    );
+
+    px(
+      ctx,
+      21,
+      y + yy,
+      accent
+    );
+
+  }
+
+  for (
+    let yy = -2;
+    yy <= 2;
+    yy += 2
+  ) {
+
+    for (
+      let x = 15;
+      x <= 21;
+      x++
+    ) {
+
+      px(
+        ctx,
+        x,
+        y + yy,
+        accent
+      );
+
+    }
+
+  }
+
+  break;
+
+
+case "frame":
+
+  for (
+    let x = 15;
+    x <= 21;
+    x++
+  ) {
+
+    px(
+      ctx,
+      x,
+      y - 2,
+      accent
+    );
+
+    px(
+      ctx,
+      x,
+      y + 2,
+      accent
+    );
+
+  }
+
+  for (
+    let yy = -2;
+    yy <= 2;
+    yy++
+  ) {
+
+    px(
+      ctx,
+      15,
+      y + yy,
+      accent
+    );
+
+    px(
+      ctx,
+      21,
+      y + yy,
+      accent
+    );
+
+  }
+
+  break;
+
+
+case "horizon":
+
+  for (
+    let x = 13;
+    x <= 23;
+    x++
+  ) {
+
+    px(
+      ctx,
+      x,
+      y,
+      accent
+    );
+
+  }
+
+  if (
+    rng() < 0.5
+  ) {
+
+    px(
+      ctx,
+      17,
+      y - 1,
+      secondary
+    );
+
+    px(
+      ctx,
+      18,
+      y - 1,
+      secondary
+    );
+
+    px(
+      ctx,
+      19,
+      y - 1,
+      secondary
+    );
+
+  }
+
+  break;
+
+
+case "zigzag":
+
+  px(
+    ctx,
+    14,
+    y - 1,
+    accent
+  );
+
+  px(
+    ctx,
+    15,
+    y,
+    accent
+  );
+
+  px(
+    ctx,
+    16,
+    y + 1,
+    accent
+  );
+
+  px(
+    ctx,
+    17,
+    y,
+    accent
+  );
+
+  px(
+    ctx,
+    18,
+    y - 1,
+    accent
+  );
+
+  px(
+    ctx,
+    19,
+    y,
+    accent
+  );
+
+  px(
+    ctx,
+    20,
+    y + 1,
+    accent
+  );
+
+  px(
+    ctx,
+    21,
+    y,
+    accent
+  );
+
+  px(
+    ctx,
+    22,
+    y - 1,
+    accent
+  );
+
+  break;
+
+
+case "pulse_ring":
+
+  for (
+    let x = 16;
+    x <= 20;
+    x++
+  ) {
+
+    px(
+      ctx,
+      x,
+      y - 2,
+      accent
+    );
+
+    px(
+      ctx,
+      x,
+      y + 2,
+      accent
+    );
+
+  }
+
+  px(
+    ctx,
+    15,
+    y - 1,
+    accent
+  );
+
+  px(
+    ctx,
+    15,
+    y,
+    accent
+  );
+
+  px(
+    ctx,
+    15,
+    y + 1,
+    accent
+  );
+
+  px(
+    ctx,
+    21,
+    y - 1,
+    accent
+  );
+
+  px(
+    ctx,
+    21,
+    y,
+    accent
+  );
+
+  px(
+    ctx,
+    21,
+    y + 1,
+    accent
+  );
+
+  px(
+    ctx,
+    18,
+    y,
+    secondary
+  );
+
+  break;
+
+
+case "checksum":
+
+  const checksum =
+    Math.floor(
+      rng() * 16
+    )
+      .toString(16)
+      .toUpperCase();
+
+  drawTinyGlyph(
+    ctx,
+    checksum,
+    15,
+    y,
+    accent
+  );
+
+  break;
+
+
+case "hash":
+
+  for (
+    let i = 0;
+    i < 9;
+    i++
+  ) {
+
+    if (
+      rng() < 0.55
+    ) {
+
+      px(
+        ctx,
+        14 + i,
+        y +
+          (
+            i % 2 === 0
+              ? -1
+              : 1
+          ),
+        accent
+      );
+
+    }
+
+  }
+
+  break;
+
+
+case "constellation":
+
+  const points = [
+    [15,-1],
+    [17,1],
+    [19,-1],
+    [21,1]
+  ];
+
+  for (
+    let i = 0;
+    i < points.length;
+    i++
+  ) {
+
+    const [
+      x,
+      yy
+    ] = points[i];
+
+    px(
+      ctx,
+      x,
+      y + yy,
+      accent
+    );
+
+    if (
+      i <
+      points.length - 1
+    ) {
+
+      const [
+        nx,
+        ny
+      ] =
+        points[i + 1];
+
+      const dx =
+        nx - x;
+
+      const dy =
+        ny - yy;
+
+      for (
+        let s = 1;
+        s < dx;
+        s++
+      ) {
+
+        px(
+          ctx,
+          x + s,
+          y +
+            Math.round(
+              yy +
+              dy *
+                (s / dx)
+            ),
+          secondary
+        );
+
+      }
+
+    }
+
+  }
+
+  break;
+
+
+case "portal_core":
+
+  px(
+    ctx,
+    16,
+    y - 1,
+    accent
+  );
+
+  px(
+    ctx,
+    17,
+    y - 1,
+    accent
+  );
+
+  px(
+    ctx,
+    18,
+    y - 1,
+    accent
+  );
+
+  px(
+    ctx,
+    19,
+    y - 1,
+    accent
+  );
+
+  px(
+    ctx,
+    20,
+    y - 1,
+    accent
+  );
+
+  px(
+    ctx,
+    16,
+    y,
+    accent
+  );
+
+  px(
+    ctx,
+    20,
+    y,
+    accent
+  );
+
+  px(
+    ctx,
+    16,
+    y + 1,
+    accent
+  );
+
+  px(
+    ctx,
+    17,
+    y + 1,
+    accent
+  );
+
+  px(
+    ctx,
+    18,
+    y + 1,
+    secondary
+  );
+
+  px(
+    ctx,
+    19,
+    y + 1,
+    accent
+  );
+
+  px(
+    ctx,
+    20,
+    y + 1,
+    accent
+  );
+
+  break;
+
+
+case "barcode_large":
+
+  for (
+    let x = 13;
+    x <= 23;
+    x++
+  ) {
+
+    const height =
+      1 +
+      Math.floor(
+        rng() * 3
+      );
+
+    const offsetY =
+      Math.floor(
+        (3 - height) / 2
+      );
+
+    for (
+      let yy = 0;
+      yy < height;
+      yy++
+    ) {
+
+      if (
+        rng() < 0.72
+      ) {
+
+        px(
+          ctx,
+          x,
+          y +
+            offsetY +
+            yy,
+          accent
+        );
+
+      }
+
+    }
+
+  }
+
+  break;
+
+
+case "static":
+
+  for (
+    let x = 13;
+    x <= 23;
+    x++
+  ) {
+
+    for (
+      let yy = -1;
+      yy <= 1;
+      yy++
+    ) {
+
+      if (
+        rng() < 0.36
+      ) {
+
+        px(
+          ctx,
+          x,
+          y + yy,
+          rng() < 0.5
+            ? accent
+            : secondary
+        );
+
+      }
+
+    }
+
+  }
+
+  break;
+
+
+case "neon":
+
+  for (
+    let x = 14;
+    x <= 22;
+    x++
+  ) {
+
+    px(
+      ctx,
+      x,
+      y,
+      accent
+    );
+
+    if (
+      x === 14 ||
+      x === 22
+    ) {
+
+      px(
+        ctx,
+        x,
+        y - 1,
+        secondary
+      );
+
+      px(
+        ctx,
+        x,
+        y + 1,
+        secondary
+      );
+
+    }
+
+  }
+
+  break;
+
+
+case "terminal_cursor":
+
+  px(
+    ctx,
+    15,
+    y,
+    accent
+  );
+
+  px(
+    ctx,
+    16,
+    y,
+    accent
+  );
+
+  px(
+    ctx,
+    17,
+    y,
+    accent
+  );
+
+  px(
+    ctx,
+    18,
+    y,
+    accent
+  );
+
+  px(
+    ctx,
+    19,
+    y,
+    accent
+  );
+
+  px(
+    ctx,
+    20,
+    y,
+    accent
+  );
+
+  px(
+    ctx,
+    21,
+    y,
+    accent
+  );
+
+  px(
+    ctx,
+    21,
+    y + 1,
+    accent
+  );
+
+  break;
+
+
+case "dna":
+
+  px(
+    ctx,
+    15,
+    y - 2,
+    accent
+  );
+
+  px(
+    ctx,
+    16,
+    y - 1,
+    accent
+  );
+
+  px(
+    ctx,
+    17,
+    y,
+    accent
+  );
+
+  px(
+    ctx,
+    18,
+    y + 1,
+    accent
+  );
+
+  px(
+    ctx,
+    19,
+    y + 2,
+    accent
+  );
+
+  px(
+    ctx,
+    21,
+    y - 2,
+    secondary
+  );
+
+  px(
+    ctx,
+    20,
+    y - 1,
+    secondary
+  );
+
+  px(
+    ctx,
+    19,
+    y,
+    secondary
+  );
+
+  px(
+    ctx,
+    18,
+    y + 1,
+    secondary
+  );
+
+  px(
+    ctx,
+    17,
+    y + 2,
+    secondary
+  );
+
+  break;
+
+
+case "key":
+
+  px(
+    ctx,
+    15,
+    y,
+    accent
+  );
+
+  px(
+    ctx,
+    16,
+    y,
+    accent
+  );
+
+  px(
+    ctx,
+    17,
+    y,
+    accent
+  );
+
+  px(
+    ctx,
+    18,
+    y,
+    accent
+  );
+
+  px(
+    ctx,
+    19,
+    y,
+    accent
+  );
+
+  px(
+    ctx,
+    20,
+    y,
+    accent
+  );
+
+  px(
+    ctx,
+    20,
+    y + 1,
+    accent
+  );
+
+  px(
+    ctx,
+    21,
+    y + 1,
+    accent
+  );
+
+  px(
+    ctx,
+    21,
+    y + 2,
+    accent
+  );
+
+  px(
+    ctx,
+    22,
+    y + 2,
+    accent
+  );
+
+  px(
+    ctx,
+    15,
+    y - 1,
+    accent
+  );
+
+  px(
+    ctx,
+    15,
+    y + 1,
+    accent
+  );
+
+  break;
+
+
+case "crown":
+
+  px(
+    ctx,
+    15,
+    y + 1,
+    accent
+  );
+
+  px(
+    ctx,
+    15,
+    y,
+    accent
+  );
+
+  px(
+    ctx,
+    16,
+    y + 1,
+    accent
+  );
+
+  px(
+    ctx,
+    17,
+    y,
+    accent
+  );
+
+  px(
+    ctx,
+    18,
+    y + 1,
+    accent
+  );
+
+  px(
+    ctx,
+    19,
+    y,
+    accent
+  );
+
+  px(
+    ctx,
+    20,
+    y + 1,
+    accent
+  );
+
+  px(
+    ctx,
+    21,
+    y,
+    accent
+  );
+
+  px(
+    ctx,
+    21,
+    y + 1,
+    accent
+  );
+
+  break;
+
+
+case "comet":
+
+  px(
+    ctx,
+    22,
+    y - 2,
+    accent
+  );
+
+  px(
+    ctx,
+    21,
+    y - 1,
+    accent
+  );
+
+  px(
+    ctx,
+    20,
+    y,
+    accent
+  );
+
+  px(
+    ctx,
+    19,
+    y,
+    accent
+  );
+
+  px(
+    ctx,
+    18,
+    y + 1,
+    secondary
+  );
+
+  px(
+    ctx,
+    17,
+    y + 1,
+    secondary
+  );
+
+  px(
+    ctx,
+    16,
+    y + 2,
+    secondary
+  );
+
+  px(
+    ctx,
+    15,
+    y + 2,
+    secondary
+  );
+
+  break;
+
+
+case "shield":
+
+  px(
+    ctx,
+    17,
+    y - 2,
+    accent
+  );
+
+  px(
+    ctx,
+    18,
+    y - 2,
+    accent
+  );
+
+  px(
+    ctx,
+    19,
+    y - 2,
+    accent
+  );
+
+  px(
+    ctx,
+    16,
+    y - 1,
+    accent
+  );
+
+  px(
+    ctx,
+    20,
+    y - 1,
+    accent
+  );
+
+  px(
+    ctx,
+    16,
+    y,
+    accent
+  );
+
+  px(
+    ctx,
+    20,
+    y,
+    accent
+  );
+
+  px(
+    ctx,
+    17,
+    y + 1,
+    accent
+  );
+
+  px(
+    ctx,
+    19,
+    y + 1,
+    accent
+  );
+
+  px(
+    ctx,
+    18,
+    y + 2,
+    accent
+  );
+
+  break;
+
+
+case "spiral":
+
+  px(
+    ctx,
+    17,
+    y - 2,
+    accent
+  );
+
+  px(
+    ctx,
+    18,
+    y - 2,
+    accent
+  );
+
+  px(
+    ctx,
+    19,
+    y - 2,
+    accent
+  );
+
+  px(
+    ctx,
+    20,
+    y - 1,
+    accent
+  );
+
+  px(
+    ctx,
+    20,
+    y,
+    accent
+  );
+
+  px(
+    ctx,
+    19,
+    y + 1,
+    accent
+  );
+
+  px(
+    ctx,
+    18,
+    y + 1,
+    accent
+  );
+
+  px(
+    ctx,
+    17,
+    y,
+    accent
+  );
+
+  px(
+    ctx,
+    16,
+    y - 1,
+    accent
+  );
+
+  px(
+    ctx,
+    16,
+    y,
+    accent
+  );
+
+  break;
+
+
+case "pulse_dot":
+
+  px(
+    ctx,
+    18,
+    y,
+    accent
+  );
+
+  if (
+    rng() < 0.7
+  ) {
+
+    px(
+      ctx,
+      17,
+      y,
+      secondary
+    );
+
+    px(
+      ctx,
+      19,
+      y,
+      secondary
+    );
+
+  }
+
+  if (
+    rng() < 0.35
+  ) {
+
+    px(
+      ctx,
+      18,
+      y - 1,
+      secondary
+    );
+
+    px(
+      ctx,
+      18,
+      y + 1,
+      secondary
+    );
+
+  }
+
+  break;
+
+
+case "triad":
+
+  px(
+    ctx,
+    17,
+    y - 1,
+    accent
+  );
+
+  px(
+    ctx,
+    19,
+    y - 1,
+    accent
+  );
+
+  px(
+    ctx,
+    18,
+    y + 1,
+    accent
+  );
+
+  px(
+    ctx,
+    17,
+    y,
+    secondary
+  );
+
+  px(
+    ctx,
+    18,
+    y,
+    secondary
+  );
+
+  px(
+    ctx,
+    19,
+    y,
+    secondary
+  );
+
+  break;
+
+
+case "pixel_smile":
+
+  px(
+    ctx,
+    15,
+    y,
+    accent
+  );
+
+  px(
+    ctx,
+    16,
+    y + 1,
+    accent
+  );
+
+  px(
+    ctx,
+    17,
+    y + 1,
+    accent
+  );
+
+  px(
+    ctx,
+    18,
+    y + 1,
+    accent
+  );
+
+  px(
+    ctx,
+    19,
+    y + 1,
+    accent
+  );
+
+  px(
+    ctx,
+    20,
+    y + 1,
+    accent
+  );
+
+  px(
+    ctx,
+    21,
+    y,
+    accent
+  );
+
+  break;
+
+
+case "signal_bars":
+
+  for (
+    let x = 15;
+    x <= 21;
+    x++
+  ) {
+
+    const height =
+      1 +
+      (
+        (x - 15) % 4
+      );
+
+    for (
+      let yy = 0;
+      yy < height;
+      yy++
+    ) {
+
+      px(
+        ctx,
+        x,
+        y + yy,
+        accent
+      );
+
+    }
+
+  }
+
+  break;
+
+
+case "ripple":
+
+  px(
+    ctx,
+    18,
+    y,
+    accent
+  );
+
+  px(
+    ctx,
+    17,
+    y,
+    secondary
+  );
+
+  px(
+    ctx,
+    19,
+    y,
+    secondary
+  );
+
+  px(
+    ctx,
+    16,
+    y,
+    secondary
+  );
+
+  px(
+    ctx,
+    20,
+    y,
+    secondary
+  );
+
+  if (
+    rng() < 0.5
+  ) {
+
+    px(
+      ctx,
+      15,
+      y,
+      accent
+    );
+
+    px(
+      ctx,
+      21,
+      y,
+      accent
+    );
+
+  }
+
+  break;
+
+
+case "brackets":
+
+  px(
+    ctx,
+    15,
+    y - 1,
+    accent
+  );
+
+  px(
+    ctx,
+    14,
+    y,
+    accent
+  );
+
+  px(
+    ctx,
+    15,
+    y + 1,
+    accent
+  );
+
+  px(
+    ctx,
+    21,
+    y - 1,
+    accent
+  );
+
+  px(
+    ctx,
+    22,
+    y,
+    accent
+  );
+
+  px(
+    ctx,
+    21,
+    y + 1,
+    accent
+  );
+
+  break;
+
+
+case "equals":
+
+  for (
+    let x = 15;
+    x <= 21;
+    x++
+  ) {
+
+    px(
+      ctx,
+      x,
+      y - 1,
+      accent
+    );
+
+    px(
+      ctx,
+      x,
+      y + 1,
+      accent
+    );
+
+  }
+
+  break;
+
+
+case "plus":
+
+  for (
+    let yy = -2;
+    yy <= 2;
+    yy++
+  ) {
+
+    px(
+      ctx,
+      18,
+      y + yy,
+      accent
+    );
+
+  }
+
+  for (
+    let x = 16;
+    x <= 20;
+    x++
+  ) {
+
+    px(
+      ctx,
+      x,
+      y,
+      accent
+    );
+
+  }
+
+  break;
+
+
+case "minus":
+
+  for (
+    let x = 15;
+    x <= 21;
+    x++
+  ) {
+
+    px(
+      ctx,
+      x,
+      y,
+      accent
+    );
+
+  }
+
+  break;
+
+
+case "terminal":
+
+  drawTinyGlyph(
+    ctx,
+    ">",
+    15,
+    y,
+    accent
+  );
+
+  for (
+    let x = 18;
+    x <= 22;
+    x++
+  ) {
+
+    px(
+      ctx,
+      x,
+      y + 1,
+      accent
+    );
+
+  }
+
+  break;
+
+
+case "random":
+
+  for (
+    let i = 0;
+    i < 14;
+    i++
+  ) {
+
+    if (
+      rng() < 0.55
+    ) {
+
+      px(
+        ctx,
+        13 +
+          Math.floor(
+            rng() * 11
+          ),
+        y +
+          Math.floor(
+            rng() * 5
+          ) - 2,
+        rng() < 0.5
+          ? accent
+          : secondary
+      );
+
+    }
+
+  }
+
+  break;
+
+}
+
+return ctx;
+}
+
+/* =========================================================
+   ADVANCED TRAIT ENGINE
+   ========================================================= */
+
+const TRAIT_LIBRARY = {
+
+  aura: [
+    {
+      value:"none",
+      weight:52,
+      tier:"common"
+    },
+    {
+      value:"soft",
+      weight:20,
+      tier:"common"
+    },
+    {
+      value:"electric",
+      weight:12,
+      tier:"rare"
+    },
+    {
+      value:"violet",
+      weight:8,
+      tier:"rare"
+    },
+    {
+      value:"solar",
+      weight:5,
+      tier:"epic"
+    },
+    {
+      value:"void",
+      weight:2,
+      tier:"legendary"
+    },
+    {
+      value:"prismatic",
+      weight:1,
+      tier:"legendary"
+    }
+  ],
+
+  background: [
+    {
+      value:"paper",
+      weight:35,
+      tier:"common"
+    },
+    {
+      value:"grid",
+      weight:20,
+      tier:"common"
+    },
+    {
+      value:"dots",
+      weight:15,
+      tier:"common"
+    },
+    {
+      value:"sunburst",
+      weight:10,
+      tier:"rare"
+    },
+    {
+      value:"orbit",
+      weight:8,
+      tier:"rare"
+    },
+    {
+      value:"noise",
+      weight:6,
+      tier:"epic"
+    },
+    {
+      value:"portal",
+      weight:4,
+      tier:"epic"
+    },
+    {
+      value:"void",
+      weight:2,
+      tier:"legendary"
+    }
+  ],
+
+  texture: [
+    {
+      value:"clean",
+      weight:45,
+      tier:"common"
+    },
+    {
+      value:"grain",
+      weight:25,
+      tier:"common"
+    },
+    {
+      value:"scanlines",
+      weight:12,
+      tier:"rare"
+    },
+    {
+      value:"glitch",
+      weight:10,
+      tier:"rare"
+    },
+    {
+      value:"static",
+      weight:5,
+      tier:"epic"
+    },
+    {
+      value:"fracture",
+      weight:2,
+      tier:"legendary"
+    },
+    {
+      value:"quantum",
+      weight:1,
+      tier:"legendary"
+    }
+  ],
+
+  eyeEffect: [
+    {
+      value:"none",
+      weight:58,
+      tier:"common"
+    },
+    {
+      value:"spark",
+      weight:18,
+      tier:"common"
+    },
+    {
+      value:"laser",
+      weight:9,
+      tier:"rare"
+    },
+    {
+      value:"holo",
+      weight:7,
+      tier:"rare"
+    },
+    {
+      value:"void",
+      weight:5,
+      tier:"epic"
+    },
+    {
+      value:"cosmic",
+      weight:2,
+      tier:"legendary"
+    },
+    {
+      value:"singularity",
+      weight:1,
+      tier:"legendary"
+    }
+  ],
+
+  accessory: [
+    {
+      value:"none",
+      weight:42,
+      tier:"common"
+    },
+    {
+      value:"earring",
+      weight:18,
+      tier:"common"
+    },
+    {
+      value:"pin",
+      weight:12,
+      tier:"common"
+    },
+    {
+      value:"visor",
+      weight:9,
+      tier:"rare"
+    },
+    {
+      value:"chain",
+      weight:8,
+      tier:"rare"
+    },
+    {
+      value:"halo",
+      weight:5,
+      tier:"epic"
+    },
+    {
+      value:"crown",
+      weight:3,
+      tier:"epic"
+    },
+    {
+      value:"artifact",
+      weight:2,
+      tier:"legendary"
+    },
+    {
+      value:"relic",
+      weight:1,
+      tier:"legendary"
+    }
+  ],
+
+  expression: [
+    {
+      value:"neutral",
+      weight:32,
+      tier:"common"
+    },
+    {
+      value:"smirk",
+      weight:20,
+      tier:"common"
+    },
+    {
+      value:"happy",
+      weight:18,
+      tier:"common"
+    },
+    {
+      value:"serious",
+      weight:12,
+      tier:"rare"
+    },
+    {
+      value:"mysterious",
+      weight:10,
+      tier:"rare"
+    },
+    {
+      value:"chaotic",
+      weight:5,
+      tier:"epic"
+    },
+    {
+      value:"transcendent",
+      weight:2,
+      tier:"legendary"
+    },
+    {
+      value:"glitched",
+      weight:1,
+      tier:"legendary"
+    }
+  ],
+
+  pattern: [
+    {
+      value:"none",
+      weight:50,
+      tier:"common"
+    },
+    {
+      value:"stripe",
+      weight:18,
+      tier:"common"
+    },
+    {
+      value:"checker",
+      weight:12,
+      tier:"rare"
+    },
+    {
+      value:"circuit",
+      weight:8,
+      tier:"rare"
+    },
+    {
+      value:"rune",
+      weight:6,
+      tier:"epic"
+    },
+    {
+      value:"ancient",
+      weight:4,
+      tier:"epic"
+    },
+    {
+      value:"celestial",
+      weight:2,
+      tier:"legendary"
+    }
+  ]
+
+};
+
+/* =========================================================
+   RARE COMBINATION DETECTOR
+   ========================================================= */
+
+function detectCombo(traits){
+
+  const combo = [];
+
+  if(
+    traits.palette === "gold" &&
+    traits.hair === "mohawk"
+  ){
+    combo.push(
+      "GOLDEN_REBEL"
+    );
+  }
+
+  if(
+    traits.palette === "lavender" &&
+    traits.eyes === "shades"
+  ){
+    combo.push(
+      "VIOLET_SIGNAL"
+    );
+  }
+
+  if(
+    traits.palette === "blue" &&
+    traits.mark === "glasses" &&
+    traits.clothing === "zip"
+  ){
+    combo.push(
+      "CYBER_OPERATOR"
+    );
+  }
+
+  if(
+    traits.palette === "mint" &&
+    traits.hair === "flow" &&
+    traits.form === "athletic"
+  ){
+    combo.push(
+      "NEON_RUNNER"
+    );
+  }
+
+  if(
+    traits.palette === "peach" &&
+    traits.hair === "knot" &&
+    traits.facial === "none"
+  ){
+    combo.push(
+      "SUNSET_MONK"
+    );
+  }
+
+  if(
+    traits.palette === "mono" &&
+    traits.eyes === "shades" &&
+    traits.clothing === "hoodie"
+  ){
+    combo.push(
+      "NULL_AGENT"
+    );
+  }
+
+  if(
+    traits.hair === "shag" &&
+    traits.mark === "freckles" &&
+    traits.mouth === "grin"
+  ){
+    combo.push(
+      "STREET_ORACLE"
+    );
+  }
+
+  if(
+    traits.facial === "beard" &&
+    traits.hair === "mohawk" &&
+    traits.form === "broad"
+  ){
+    combo.push(
+      "IRON_ELDER"
+    );
+  }
+
+  return combo;
+}
+
+
+/* =========================================================
+   EXTENDED SCORE SYSTEM
+   ========================================================= */
+
+const RANK_THRESHOLDS = {
+  common:0,
+  rare:22,
+  epic:38,
+  legendary:65
+};
+
+function calculateExtendedScore(
+  tiers,
+  traits
+){
+
+  let score = 0;
+
+  Object
+    .values(tiers)
+    .forEach(
+      tier => {
+        score +=
+          TIER_POINTS[tier] || 1;
+      }
+    );
+
+  /*
+   * Bonus for cross-trait combinations.
+   */
+
+  const combos =
+    detectCombo(traits);
+
+  score +=
+    combos.length * 7;
+
+  /*
+   * Palette prestige.
+   */
+
+  if(
+    traits.palette === "gold"
+  ){
+    score += 8;
+  }
+
+  /*
+   * Hair prestige.
+   */
+
+  if(
+    traits.hair === "mohawk"
+  ){
+    score += 9;
+  }
+
+  /*
+   * Eye prestige.
+   */
+
+  if(
+    traits.eyes === "shades"
+  ){
+    score += 7;
+  }
+
+  /*
+   * Beard + rare build synergy.
+   */
+
+  if(
+    traits.facial === "beard" &&
+    (
+      traits.form === "broad" ||
+      traits.form === "athletic"
+    )
+  ){
+    score += 4;
+  }
+
+  return score;
+}
+
+function rankFromScore(score){
+
+  if(
+    score >= 82
+  ){
+    return "legendary";
+  }
+
+  if(
+    score >= 48
+  ){
+    return "epic";
+  }
+
+  if(
+    score >= 27
+  ){
+    return "rare";
+  }
+
+  return "common";
+}
+
+
+/* =========================================================
+   COLLECTION IDENTITY
+   ========================================================= */
+
+const COLLECTION_NAME =
+  "PixelFolk";
+
+const COLLECTION_VERSION =
+  "PF-2.0";
+
+const COLLECTION_DESCRIPTION =
+  "A deterministic generative pixel portrait collection built from layered traits, rarity, color systems, procedural texture and cryptographic-style seed identities.";
+
+
+/* =========================================================
+   HASH UTILITIES
+   ========================================================= */
+
+function hashString64(str){
+
+  let h1 =
+    0xdeadbeef;
+
+  let h2 =
+    0x41c6ce57;
+
+  for(
+    let i = 0;
+    i < str.length;
+    i++
+  ){
+
+    const ch =
+      str.charCodeAt(i);
+
+    h1 =
+      Math.imul(
+        h1 ^ ch,
+        2654435761
+      );
+
+    h2 =
+      Math.imul(
+        h2 ^ ch,
+        1597334677
+      );
+
+  }
+
+  h1 =
+    Math.imul(
+      h1 ^
+        (h1 >>> 16),
+      2246822507
+    );
+
+  h2 =
+    Math.imul(
+      h2 ^
+        (h2 >>> 13),
+      3266489909
+    );
+
+  return (
+    (
+      h1 >>> 0
+    ).toString(16)
+      .padStart(
+        8,
+        "0"
+      )
+  ) +
+  (
+    (
+      h2 >>> 0
+    ).toString(16)
+      .padStart(
+        8,
+        "0"
+      )
+  );
+
+}
+
+
+/* =========================================================
+   TRAIT FINGERPRINT
+   ========================================================= */
+
+function createFingerprint(
+  traits
+){
+
+  const ordered =
+    Object
+      .keys(traits)
+      .sort()
+      .map(
+        key =>
+          `${key}:${traits[key]}`
+      )
+      .join("|");
+
+  return hashString64(
+    ordered
+  );
+
+}
+
+
+/* =========================================================
+   DNA GENERATOR
+   ========================================================= */
+
+function createDNA(
+  seed,
+  index,
+  traits
+){
+
+  const fingerprint =
+    createFingerprint(
+      traits
+    );
+
+  return hashString64(
+    [
+      COLLECTION_VERSION,
+      seed,
+      index,
+      fingerprint
+    ].join(":")
+  );
+
+}
+
+
+/* =========================================================
+   TRAIT COUNT
+   ========================================================= */
+
+function countTraits(){
+
+  return Object.keys(
+    POOL
+  ).length +
+  Object.keys(
+    TRAIT_LIBRARY
+  ).length;
+
+}
+
+
+/* =========================================================
+   RARITY DISPLAY
+   ========================================================= */
+
+const RARITY_LABELS = {
+
+  common:{
+    label:"Common",
+    color:"#737784"
+  },
+
+  rare:{
+    label:"Rare",
+    color:"#4E8CFF"
+  },
+
+  epic:{
+    label:"Epic",
+    color:"#B26CFF"
+  },
+
+  legendary:{
+    label:"Legendary",
+    color:"#F0B23A"
+  }
+
+};
+
+
+/* =========================================================
+   METADATA FACTORY
+   ========================================================= */
+
+function createMetadata(
+  index,
+  seed,
+  traits,
+  tiers,
+  score
+){
+
+  const fingerprint =
+    createFingerprint(
+      traits
+    );
+
+  const dna =
+    createDNA(
+      seed,
+      index,
+      traits
+    );
+
+  const rank =
+    rankFromScore(
+      score
+    );
+
+  const combos =
+    detectCombo(
+      traits
+    );
+
+  return {
+
+    name:
+      `${COLLECTION_NAME} #${String(index).padStart(4,"0")}`,
+
+    collection:
+      COLLECTION_NAME,
+
+    version:
+      COLLECTION_VERSION,
+
+    description:
+      COLLECTION_DESCRIPTION,
+
+    tokenIndex:
+      index,
+
+    seed:
+
+      seed,
+
+    dna:
+      dna,
+
+    fingerprint:
+      fingerprint,
+
+    score:
+      score,
+
+    rank:
+      rank,
+
+    rarity:
+      RARITY_LABELS[
+        rank
+      ].label,
+
+    traits:
+      Object.keys(
+        traits
+      ).map(
+        key => ({
+          trait_type:
+            LABELS[key] ||
+            key,
+          value:
+            traits[key],
+          rarity:
+            tiers[key]
+        })
+      ),
+
+    specialCombinations:
+      combos,
+
+    generatedAt:
+      new Date().toISOString()
+
+  };
+
+}
+
+
+/* =========================================================
+   UNIQUE COLLECTION GENERATOR
+   ========================================================= */
+
+function generateCollection(
+  seed,
+  count
+){
+
+  const collection =
+    [];
+
+  const fingerprints =
+    new Set();
+
+  const dnaSet =
+    new Set();
+
+  for(
+    let index = 1;
+    index <= count;
+    index++
+  ){
+
+    let attempt = 0;
+
+    let result;
+
+    while(
+      attempt < 100
+    ){
+
+      const localSeed =
+        `${seed}:NFT:${index}:${attempt}`;
+
+      const numericSeed =
+        hashSeed(
+          localSeed
+        );
+
+      const rng =
+        mulberry32(
+          numericSeed
+        );
+
+      const rolled =
+        rollTraits(
+          rng
+        );
+
+      const fingerprint =
+        createFingerprint(
+          rolled.values
+        );
+
+      if(
+        fingerprints.has(
+          fingerprint
+        )
+      ){
+
+        attempt++;
+
+        continue;
+
+      }
+
+      const score =
+        calculateExtendedScore(
+          rolled.tiers,
+          rolled.values
+        );
+
+      const metadata =
+        createMetadata(
+          index,
+          seed,
+          rolled.values,
+          rolled.tiers,
+          score
+        );
+
+      if(
+        dnaSet.has(
+          metadata.dna
+        )
+      ){
+
+        attempt++;
+
+        continue;
+
+      }
+
+      fingerprints.add(
+        fingerprint
+      );
+
+      dnaSet.add(
+        metadata.dna
+      );
+
+      collection.push({
+        ...metadata,
+        _seed:
+          numericSeed,
+        _traits:
+          rolled.values,
+        _tiers:
+          rolled.tiers
+      });
+
+      break;
+
+    }
+
+  }
+
+  return collection;
+
+}
+
+
+/* =========================================================
+   COLLECTION STATISTICS
+   ========================================================= */
+
+function calculateCollectionStats(
+  collection
+){
+
+  const stats = {
+
+    total:
+      collection.length,
+
+    common:0,
+
+    rare:0,
+
+    epic:0,
+
+    legendary:0,
+
+    averageScore:0,
+
+    highestScore:0,
+
+    lowestScore:
+      Infinity,
+
+    uniqueDNA:
+      new Set(),
+
+    special:
+      0
+
+  };
+
+  collection.forEach(
+    item => {
+
+      stats[
+        item.rank
+      ]++;
+
+      stats.averageScore +=
+        item.score;
+
+      stats.highestScore =
+        Math.max(
+          stats.highestScore,
+          item.score
+        );
+
+      stats.lowestScore =
+        Math.min(
+          stats.lowestScore,
+          item.score
+        );
+
+      stats.uniqueDNA.add(
+        item.dna
+      );
+
+      if(
+        item.specialCombinations &&
+        item.specialCombinations.length
+      ){
+
+        stats.special++;
+
+      }
+
+    }
+  );
+
+  if(
+    collection.length
+  ){
+
+    stats.averageScore =
+      Math.round(
+        (
+          stats.averageScore /
+          collection.length
+        ) *
+        100
+      ) / 100;
+
+  }
+
+  return stats;
+
+}
+
+
+/* =========================================================
+   SAFE HTML
+   ========================================================= */
+
+function escapeHTML(
+  value
+){
+
+  return String(
+    value
+  )
+    .replace(
+      /&/g,
+      "&amp;"
+    )
+    .replace(
+      /</g,
+      "&lt;"
+    )
+    .replace(
+      />/g,
+      "&gt;"
+    )
+    .replace(
+      /"/g,
+      "&quot;"
+    )
+    .replace(
+      /'/g,
+      "&#039;"
+    );
+
+}
+
+
+/* =========================================================
+   ATTRIBUTE FORMATTER
+   ========================================================= */
+
+function formatTraitValue(
+  value
+){
+
+  return String(
+    value
+  )
+    .replace(
+      /_/g,
+      " "
+    )
+    .replace(
+      /\b\w/g,
+      char =>
+        char.toUpperCase()
+    );
+
+}
+
+
+/* =========================================================
+   RANK COLOR
+   ========================================================= */
+
+function getRankColor(
+  rank
+){
+
+  return (
+    RARITY_LABELS[
+      rank
+    ] ||
+    RARITY_LABELS.common
+  ).color;
+
+}
+
+
+/* =========================================================
+   COLLECTION EXPORT
+   ========================================================= */
+
+function downloadJSON(
+  data,
+  filename
+){
+
+  const blob =
+    new Blob(
+      [
+        JSON.stringify(
+          data,
+          null,
+          2
+        )
+      ],
+      {
+        type:
+          "application/json"
+      }
+    );
+
+  const url =
+    URL.createObjectURL(
+      blob
+    );
+
+  const anchor =
+    document.createElement(
+      "a"
+    );
+
+  anchor.href =
+    url;
+
+  anchor.download =
+    filename;
+
+  document.body.appendChild(
+    anchor
+  );
+
+  anchor.click();
+
+  anchor.remove();
+
+  setTimeout(
+    () =>
+      URL.revokeObjectURL(
+        url
+      ),
+    1000
+  );
+
+}
+
+
+/* =========================================================
+   CSV EXPORT
+   ========================================================= */
+
+function csvEscape(
+  value
+){
+
+  const text =
+    String(
+      value ?? ""
+    );
+
+  if(
+    /[",\n]/.test(
+      text
+    )
+  ){
+
+    return (
+      '"' +
+      text.replace(
+        /"/g,
+        '""'
+      ) +
+      '"'
+    );
+
+  }
+
+  return text;
+
+}
+
+function collectionToCSV(
+  collection
+){
+
+  const headers = [
+    "Token",
+    "Name",
+    "DNA",
+    "Fingerprint",
+    "Rank",
+    "Score",
+    "Shape",
+    "Hair",
+    "Brow",
+    "Eyes",
+    "Nose",
+    "Mouth",
+    "Mark",
+    "Facial",
+    "Build",
+    "Wear",
+    "Palette"
+  ];
+
+  const rows =
+    collection.map(
+      item => [
+
+        item.tokenIndex,
+
+        item.name,
+
+        item.dna,
+
+        item.fingerprint,
+
+        item.rank,
+
+        item.score,
+
+        item._traits.shape,
+
+        item._traits.hair,
+
+        item._traits.brow,
+
+        item._traits.eyes,
+
+        item._traits.nose,
+
+        item._traits.mouth,
+
+        item._traits.mark,
+
+        item._traits.facial,
+
+        item._traits.form,
+
+        item._traits.clothing,
+
+        item._traits.palette
+
+      ]
+    );
+
+  return [
+    headers,
+    ...rows
+  ]
+    .map(
+      row =>
+        row
+          .map(
+            csvEscape
+          )
+          .join(",")
+    )
+    .join("\n");
+
+}
+
+function downloadCSV(
+  collection,
+  filename
+){
+
+  const blob =
+    new Blob(
+      [
+        collectionToCSV(
+          collection
+        )
+      ],
+      {
+        type:
+          "text/csv;charset=utf-8"
+      }
+    );
+
+  const url =
+    URL.createObjectURL(
+      blob
+    );
+
+  const anchor =
+    document.createElement(
+      "a"
+    );
+
+  anchor.href =
+    url;
+
+  anchor.download =
+    filename;
+
+  document.body.appendChild(
+    anchor
+  );
+
+  anchor.click();
+
+  anchor.remove();
+
+  setTimeout(
+    () =>
+      URL.revokeObjectURL(
+        url
+      ),
+    1000
+  );
+
+}
+
+
+/* =========================================================
+   END OF GENERATED MODULE
+   ========================================================= */
