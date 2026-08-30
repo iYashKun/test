@@ -441,7 +441,7 @@ body {
     width: 0;
     height: 4px;
     transform-origin: left center;
-    transform: rotate(-28deg);
+    transform: rotate(-29deg);
     background: linear-gradient(90deg, transparent, rgba(255,42,109,0.3), var(--pink));
     box-shadow: 0 0 25px var(--pink);
 }
@@ -515,38 +515,38 @@ body {
     border-radius: 9999px;
 }
 
-/* risk grid */
+/* risk grid - 10 modes */
 .risk-grid {
     display: grid;
-    grid-template-columns: repeat(10, 1fr);
-    gap: 6px;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
     margin-bottom: 16px;
 }
 
 .risk {
-    padding: 10px 4px;
-    border-radius: 10px;
+    padding: 12px 8px;
+    border-radius: 12px;
     border: 1px solid var(--line);
     background: rgba(17,23,42,0.6);
     color: #7f889e;
-    font-size: 9.5px;
+    font-size: 11px;
     font-weight: 900;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     overflow: hidden;
 }
 
 .risk:hover {
-    transform: scale(1.08) translateY(-2px);
+    transform: scale(1.1) translateY(-3px);
     border-color: var(--pink);
-    box-shadow: 0 0 25px rgba(255,42,109,0.3);
+    box-shadow: 0 0 30px rgba(255,42,109,0.4);
 }
 
 .risk.active {
     color: #fff;
     border-color: var(--pink);
     background: linear-gradient(135deg, rgba(255,42,109,0.35), rgba(168,0,255,0.2));
-    box-shadow: 0 0 30px rgba(255,42,109,0.4);
+    box-shadow: 0 0 35px rgba(255,42,109,0.5);
     box-shadow: inset 0 0 20px rgba(255,42,109,0.25);
 }
 
@@ -827,7 +827,7 @@ body {
     <div class="logo">
         <div class="logo-mark">✈</div>
         <div class="logo-text">AEROX</div>
-        <div class="demo-tag">NEXT-LEVEL PROVABLY FAIR</div>
+        <div class="demo-tag">10 MODES • HOLO-DEMO</div>
     </div>
 
     <div class="header-right">
@@ -899,7 +899,7 @@ body {
                 <span>RISK HOLO-ENGINE v3.1</span>
             </div>
 
-            <!-- RISK -->
+            <!-- RISK - 10 MODES -->
             <div class="risk-grid" id="riskGrid">
                 <!-- populated by JS -->
             </div>
@@ -1016,7 +1016,7 @@ crash = 1 / (1 - fraction) * 100
 <script>
 /*
 ============================================================
-AEROX — NEXT-LEVEL HOLO PROVABLY FAIR CRASH DEMO
+AEROX — 10 MODES HOLO PROVABLY FAIR CRASH DEMO
 ============================================================
 */
 
@@ -1098,19 +1098,19 @@ async function generateClientSeed() {
     return bytesToHex(bytes);
 }
 
-/* ====================== RISK SYSTEM ====================== */
+/* ====================== RISK SYSTEM - 10 MODES ====================== */
 
 const riskData = {
-    1: { label: "LOW RISK", desc: "Conservative Holo Mode", speed: 1.00 },
-    2: { label: "LOW+", desc: "Slightly aggressive", speed: 1.06 },
-    3: { label: "BALANCED", desc: "Balanced Holo", speed: 1.12 },
-    4: { label: "MEDIUM", desc: "Fast growth", speed: 1.18 },
-    5: { label: "MEDIUM+", desc: "Aggressive", speed: 1.25 },
-    6: { label: "HIGH", desc: "High-speed Holo", speed: 1.33 },
-    7: { label: "HIGH+", desc: "Very aggressive", speed: 1.42 },
-    8: { label: "EXTREME", desc: "Extreme Holo", speed: 1.52 },
-    9: { label: "ULTRA", desc: "Ultra-fast", speed: 1.63 },
-    10: { label: "MAX", desc: "Maximum demo chaos", speed: 1.75 }
+    1:  { label: "LOW RISK",        desc: "Conservative Holo",        speed: 1.00, col: "#35e6a1" },
+    2:  { label: "LOW+",            desc: "Slightly aggressive",      speed: 1.06, col: "#35e6a1" },
+    3:  { label: "BALANCED",        desc: "Balanced Holo",            speed: 1.12, col: "#35e6a1" },
+    4:  { label: "MEDIUM",          desc: "Fast growth",              speed: 1.18, col: "#ffd96a" },
+    5:  { label: "MEDIUM+",         desc: "Aggressive",               speed: 1.25, col: "#ffd96a" },
+    6:  { label: "HIGH",            desc: "High-speed Holo",          speed: 1.33, col: "#ff6b91" },
+    7:  { label: "HIGH+",           desc: "Very aggressive",          speed: 1.42, col: "#ff6b91" },
+    8:  { label: "EXTREME",         desc: "Extreme Holo",             speed: 1.52, col: "#ff2d5e" },
+    9:  { label: "ULTRA",           desc: "Ultra-fast",               speed: 1.63, col: "#ff2d5e" },
+    10: { label: "MAX",             desc: "Maximum demo chaos",       speed: 1.75, col: "#ff2d5e" }
 };
 
 function createRiskButtons() {
@@ -1135,7 +1135,7 @@ function createRiskButtons() {
 
 createRiskButtons();
 
-/* ====================== CALCULATION ====================== */
+/* ====================== CALCULATION (10 modes) ====================== */
 
 function hashToFraction(hash) {
     const hex = hash.substring(0, 13);
@@ -1145,8 +1145,25 @@ function hashToFraction(hash) {
 function calculateCrash(fraction, risk) {
     const safe = Math.max(0.0000000001, Math.min(0.9999999999, fraction));
     const base = Math.floor((1 / (1 - safe)) * 100) / 100;
-    const factor = 1 - (risk - 1) * 0.048;
-    return Math.min(1000, Math.max(1.01, base * factor));
+
+    const modeConfig = {
+        1:  { factor: 0.92, min: 1.01, max: 4.5 },
+        2:  { factor: 0.89, min: 1.01, max: 5.2 },
+        3:  { factor: 0.85, min: 1.01, max: 6.0 },
+        4:  { factor: 0.80, min: 1.01, max: 7.5 },
+        5:  { factor: 0.75, min: 1.01, max: 9.0 },
+        6:  { factor: 0.68, min: 1.01, max: 12.0 },
+        7:  { factor: 0.62, min: 1.01, max: 15.0 },
+        8:  { factor: 0.55, min: 1.01, max: 20.0 },
+        9:  { factor: 0.48, min: 1.01, max: 30.0 },
+        10: { factor: 0.40, min: 1.01, max: 50.0 }
+    };
+
+    const cfg = modeConfig[risk] || modeConfig[1];
+    const factor = 1 - (risk - 1) * cfg.factor;
+    const adjusted = Math.max(cfg.min, base * factor);
+
+    return Math.min(cfg.max, adjusted);
 }
 
 /* ====================== PREPARE ROUND ====================== */
