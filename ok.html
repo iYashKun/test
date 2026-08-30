@@ -3,7 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Trobi</title>
+
+  <meta name="theme-color" content="#050304" />
+  <meta
+    name="description"
+    content="Trobi — Priority can't be bought. Speed can."
+  />
+
+  <title>Trobi — Speed Can.</title>
 
   <style>
     * {
@@ -14,45 +21,189 @@
 
     :root {
       --lime: #b8ff00;
-      --bg: #050705;
-      --text: #f3f3f3;
-      --muted: #777b75;
-      --border: #303330;
+      --lime-soft: #d1ff52;
+
+      --pink: #ff145b;
+      --rose: #c50045;
+      --magenta: #ff006a;
+
+      --bg: #050304;
+      --surface: rgba(18, 12, 15, 0.72);
+      --surface-2: rgba(255, 255, 255, 0.035);
+
+      --text: #f7f4f5;
+      --muted: #898186;
+      --muted-2: #5f595d;
+
+      --border: rgba(255, 255, 255, 0.09);
+      --border-hover: rgba(184, 255, 0, 0.25);
     }
 
-    html,
-    body {
+    html {
       width: 100%;
       min-height: 100%;
       background: var(--bg);
+      scroll-behavior: smooth;
     }
 
     body {
-      color: var(--text);
-      font-family: Arial, Helvetica, sans-serif;
+      width: 100%;
+      min-height: 100vh;
       overflow-x: hidden;
+
+      color: var(--text);
+      font-family:
+        Inter,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Arial,
+        sans-serif;
+
+      background:
+        /* TOP LEFT */
+        radial-gradient(
+          ellipse 55% 45% at -5% -5%,
+          rgba(197, 0, 69, 0.32),
+          transparent 72%
+        ),
+
+        /* TOP RIGHT */
+        radial-gradient(
+          ellipse 55% 45% at 105% -5%,
+          rgba(255, 20, 91, 0.26),
+          transparent 72%
+        ),
+
+        /* BOTTOM LEFT */
+        radial-gradient(
+          ellipse 55% 50% at -5% 105%,
+          rgba(255, 0, 106, 0.22),
+          transparent 72%
+        ),
+
+        /* BOTTOM RIGHT */
+        radial-gradient(
+          ellipse 55% 50% at 105% 105%,
+          rgba(197, 0, 69, 0.30),
+          transparent 72%
+        ),
+
+        /* CENTER ROSE */
+        radial-gradient(
+          circle at 50% 45%,
+          rgba(92, 0, 34, 0.20),
+          transparent 55%
+        ),
+
+        /* 80% BLACK OVERLAY FEEL */
+        linear-gradient(
+          135deg,
+          rgba(0, 0, 0, 0.86) 0%,
+          rgba(5, 3, 4, 0.78) 45%,
+          rgba(0, 0, 0, 0.88) 100%
+        ),
+
+        #050304;
     }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 20;
+
+      background:
+        linear-gradient(
+          rgba(255, 255, 255, 0.012) 1px,
+          transparent 1px
+        ),
+        linear-gradient(
+          90deg,
+          rgba(255, 255, 255, 0.012) 1px,
+          transparent 1px
+        );
+
+      background-size: 80px 80px;
+
+      mask-image: linear-gradient(
+        to bottom,
+        black,
+        transparent 85%
+      );
+
+      opacity: 0.25;
+    }
+
+    /* ---------------- PAGE ---------------- */
 
     .page {
       width: 100%;
-      max-width: 528px;
-      min-height: 762px;
+      max-width: 620px;
+      min-height: 100vh;
+
       margin: 0 auto;
-      padding: 26px 24px 40px;
+      padding: 28px 26px 48px;
+
       position: relative;
+      isolation: isolate;
+
       background:
         radial-gradient(
-          circle at 82% 7%,
-          rgba(184, 255, 0, 0.025),
-          transparent 20%
-        ),
-        #050705;
+          circle at 50% 38%,
+          rgba(255, 20, 91, 0.035),
+          transparent 42%
+        );
+    }
+
+    /* Ambient floating glow */
+
+    .ambient {
+      position: fixed;
+      width: 340px;
+      height: 340px;
+
+      border-radius: 50%;
+
+      background: var(--pink);
+      filter: blur(140px);
+
+      opacity: 0.055;
+      pointer-events: none;
+
+      z-index: -1;
+
+      animation: floatGlow 9s ease-in-out infinite;
+    }
+
+    .ambient.one {
+      top: 10%;
+      left: -180px;
+    }
+
+    .ambient.two {
+      right: -180px;
+      bottom: 5%;
+      animation-delay: -4s;
+    }
+
+    @keyframes floatGlow {
+      0%,
+      100% {
+        transform: translate3d(0, 0, 0);
+      }
+
+      50% {
+        transform: translate3d(35px, -25px, 0);
+      }
     }
 
     /* ---------------- HEADER ---------------- */
 
     header {
       height: 70px;
+
       display: flex;
       align-items: flex-start;
       justify-content: space-between;
@@ -61,42 +212,65 @@
     .brand {
       display: flex;
       align-items: center;
-      gap: 19px;
-      padding-top: 28px;
+      gap: 17px;
+
+      padding-top: 19px;
     }
+
+    /* Modern Trobi mark */
 
     .logo {
       width: 39px;
-      height: 9px;
+      height: 18px;
+
       position: relative;
+
       display: flex;
       align-items: center;
+      justify-content: center;
+
       gap: 4px;
     }
 
     .logo::before {
       content: "";
+
       position: absolute;
-      left: 0;
-      top: 3px;
-      width: 27px;
+      left: 1px;
+      top: 8px;
+
+      width: 34px;
       height: 2px;
-      background: var(--lime);
-      opacity: 0.95;
+
+      background: linear-gradient(
+        90deg,
+        transparent,
+        var(--lime),
+        var(--lime)
+      );
+
+      box-shadow:
+        0 0 8px rgba(184, 255, 0, 0.55),
+        0 0 20px rgba(184, 255, 0, 0.18);
     }
 
     .dot {
       position: relative;
       z-index: 2;
-      width: 6px;
-      height: 6px;
+
+      width: 5px;
+      height: 5px;
+
       background: var(--lime);
       border-radius: 50%;
-      box-shadow: 0 0 7px rgba(184, 255, 0, 0.55);
+
+      box-shadow:
+        0 0 7px rgba(184, 255, 0, 0.85),
+        0 0 14px rgba(184, 255, 0, 0.35);
     }
 
     .dot:nth-child(1) {
-      margin-left: 7px;
+      margin-left: 5px;
     }
 
     .dot:nth-child(2) {
@@ -105,168 +279,495 @@
     }
 
     .dot:nth-child(3) {
-      width: 9px;
-      height: 9px;
+      width: 10px;
+      height: 10px;
     }
 
     .brand-name {
       font-size: 20px;
       line-height: 1;
-      font-weight: 700;
-      letter-spacing: -0.4px;
+
+      font-weight: 750;
+      letter-spacing: -0.7px;
+
+      color: #fafafa;
     }
 
     .launch {
-      width: 120px;
-      height: 69px;
-      border: 0;
-      border-radius: 3px;
-      background: var(--lime);
-      color: #070907;
-      font-size: 12px;
-      font-weight: 500;
-      letter-spacing: 0.15px;
+      position: relative;
+      overflow: hidden;
+
+      width: 132px;
+      height: 64px;
+
+      border: 1px solid rgba(184, 255, 0, 0.35);
+      border-radius: 4px;
+
+      background:
+        linear-gradient(
+          145deg,
+          #c5ff21,
+          var(--lime) 55%,
+          #a5e600
+        );
+
+      color: #050604;
+
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.7px;
+
       cursor: pointer;
+
       box-shadow:
-        0 12px 24px rgba(184, 255, 0, 0.13),
-        0 0 20px rgba(184, 255, 0, 0.07);
+        0 14px 38px rgba(184, 255, 0, 0.11),
+        inset 0 1px 0 rgba(255, 255, 255, 0.35);
+
+      transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease;
+    }
+
+    .launch::after {
+      content: "";
+
+      position: absolute;
+      top: 0;
+      left: -100%;
+
+      width: 70%;
+      height: 100%;
+
+      background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.5),
+        transparent
+      );
+
+      transform: skewX(-20deg);
+
+      transition: left 0.55s ease;
     }
 
     .launch:hover {
-      background: #c3ff29;
+      transform: translateY(-3px);
+
+      box-shadow:
+        0 18px 45px rgba(184, 255, 0, 0.19),
+        0 0 25px rgba(184, 255, 0, 0.08);
+    }
+
+    .launch:hover::after {
+      left: 140%;
+    }
+
+    .launch:active {
+      transform: translateY(0);
     }
 
     /* ---------------- HERO ---------------- */
 
     .hero {
-      margin-top: 134px;
+      margin-top: 126px;
+      position: relative;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+
+      margin-bottom: 19px;
+
+      color: #777075;
+
+      font-family:
+        "Courier New",
+        Courier,
+        monospace;
+
+      font-size: 10px;
+      font-weight: 700;
+
+      letter-spacing: 1.7px;
+      text-transform: uppercase;
+    }
+
+    .eyebrow::before {
+      content: "";
+
+      width: 22px;
+      height: 1px;
+
+      background: var(--lime);
+
+      box-shadow: 0 0 8px rgba(184, 255, 0, 0.7);
     }
 
     h1 {
-      font-family: Arial, Helvetica, sans-serif;
-      font-size: 40px;
-      line-height: 0.99;
-      letter-spacing: -1.65px;
-      font-weight: 800;
+      max-width: 500px;
+
+      font-size: clamp(42px, 10vw, 62px);
+      line-height: 0.91;
+
+      letter-spacing: -3.5px;
+      font-weight: 900;
+
       text-transform: uppercase;
-      max-width: 390px;
+
+      color: #f6f3f4;
+
+      text-wrap: balance;
     }
 
     h1 .lime {
       color: var(--lime);
+
+      text-shadow:
+        0 0 18px rgba(184, 255, 0, 0.12),
+        0 0 40px rgba(184, 255, 0, 0.05);
     }
 
     .subtitle {
-      margin-top: 25px;
-      color: #7b8179;
-      font-family: "Courier New", Courier, monospace;
+      margin-top: 28px;
+
+      color: #81797e;
+
+      font-family:
+        "Courier New",
+        Courier,
+        monospace;
+
       font-size: 13px;
       line-height: 22px;
-      letter-spacing: -0.2px;
+
+      letter-spacing: -0.25px;
+    }
+
+    .subtitle .chain {
+      color: #b7adb2;
     }
 
     /* ---------------- SPEED ---------------- */
 
     .speed {
-      margin-top: 55px;
+      margin-top: 57px;
+
       display: flex;
       align-items: center;
-      gap: 49px;
+
+      gap: 35px;
     }
 
     .speed-line {
       height: 2px;
       flex: 1;
+
       position: relative;
-      background: var(--lime);
+
+      background: linear-gradient(
+        90deg,
+        rgba(184, 255, 0, 0.12),
+        var(--lime)
+      );
+
       box-shadow:
-        0 0 7px rgba(184, 255, 0, 0.34),
-        0 0 18px rgba(184, 255, 0, 0.08);
+        0 0 8px rgba(184, 255, 0, 0.35),
+        0 0 22px rgba(184, 255, 0, 0.09);
     }
 
     .speed-line::before {
       content: "";
+
       position: absolute;
+
       left: 0;
-      right: 0;
-      top: 0;
-      height: 2px;
+      top: -4px;
+
+      width: 65px;
+      height: 10px;
+
       background: linear-gradient(
         90deg,
-        rgba(184, 255, 0, 0.05),
-        rgba(184, 255, 0, 0.85)
+        transparent,
+        rgba(184, 255, 0, 0.14),
+        transparent
       );
-      transform: translateX(-1px);
+
+      filter: blur(2px);
+
+      animation: scan 2.5s linear infinite;
+    }
+
+    @keyframes scan {
+      from {
+        transform: translateX(-70px);
+      }
+
+      to {
+        transform: translateX(calc(100vw));
+      }
     }
 
     .knob {
       position: absolute;
-      right: -1px;
+
+      right: -2px;
       top: 50%;
+
       transform: translateY(-50%);
+
       width: 13px;
       height: 13px;
+
       border-radius: 50%;
+
       background: var(--lime);
+
       box-shadow:
-        0 0 9px rgba(184, 255, 0, 0.8),
-        0 0 20px rgba(184, 255, 0, 0.45);
+        0 0 8px rgba(184, 255, 0, 0.95),
+        0 0 20px rgba(184, 255, 0, 0.55),
+        0 0 36px rgba(184, 255, 0, 0.18);
     }
 
     .latency {
       color: var(--lime);
-      font-family: "Courier New", monospace;
+
+      font-family:
+        "Courier New",
+        Courier,
+        monospace;
+
       font-size: 13px;
-      font-weight: 700;
+      font-weight: 800;
+
+      letter-spacing: 0.2px;
+
       white-space: nowrap;
     }
 
     /* ---------------- FORM ---------------- */
 
     .form {
-      margin-top: 37px;
+      margin-top: 38px;
+
+      position: relative;
+    }
+
+    .input-wrap {
+      position: relative;
     }
 
     .address {
       width: 100%;
-      height: 70px;
-      padding: 0 30px;
+      height: 72px;
+
+      padding: 0 27px;
+
       border: 1px solid var(--border);
-      border-radius: 3px;
+      border-radius: 5px;
+
       outline: none;
-      background: #101210;
-      color: #d7d9d5;
-      font-family: "Courier New", Courier, monospace;
-      font-size: 16px;
-      letter-spacing: -0.3px;
-      box-shadow: inset 0 0 12px rgba(255, 255, 255, 0.008);
+
+      background:
+        linear-gradient(
+          135deg,
+          rgba(255, 255, 255, 0.045),
+          rgba(255, 255, 255, 0.015)
+        );
+
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+
+      color: #e9e5e7;
+
+      font-family:
+        "Courier New",
+        Courier,
+        monospace;
+
+      font-size: 14px;
+      letter-spacing: -0.25px;
+
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.025),
+        0 10px 35px rgba(0, 0, 0, 0.18);
+
+      transition:
+        border-color 0.25s ease,
+        background 0.25s ease,
+        box-shadow 0.25s ease;
     }
 
     .address::placeholder {
-      color: #666a65;
+      color: #625d60;
       opacity: 1;
     }
 
+    .address:hover {
+      border-color: rgba(255, 255, 255, 0.14);
+    }
+
     .address:focus {
-      border-color: #4a4f49;
+      border-color: var(--border-hover);
+
+      background:
+        linear-gradient(
+          135deg,
+          rgba(184, 255, 0, 0.035),
+          rgba(255, 255, 255, 0.018)
+        );
+
+      box-shadow:
+        0 0 0 3px rgba(184, 255, 0, 0.035),
+        0 15px 45px rgba(0, 0, 0, 0.28);
+    }
+
+    .input-status {
+      position: absolute;
+
+      right: 18px;
+      top: 50%;
+
+      transform: translateY(-50%);
+
+      width: 7px;
+      height: 7px;
+
+      border-radius: 50%;
+
+      background: #343034;
+
+      transition:
+        background 0.25s ease,
+        box-shadow 0.25s ease;
+    }
+
+    .address:focus ~ .input-status {
+      background: var(--lime);
+
+      box-shadow:
+        0 0 8px rgba(184, 255, 0, 0.9),
+        0 0 16px rgba(184, 255, 0, 0.3);
     }
 
     .submit {
       width: 100%;
-      height: 70px;
-      margin-top: 12px;
-      border: 0;
-      border-radius: 2px;
-      background: #191b1a;
-      color: #555956;
-      font-size: 13px;
-      font-weight: 700;
+      height: 72px;
+
+      margin-top: 11px;
+
+      border: 1px solid rgba(255, 255, 255, 0.055);
+      border-radius: 4px;
+
+      background:
+        linear-gradient(
+          135deg,
+          #171417,
+          #101011
+        );
+
+      color: #676267;
+
+      font-size: 11px;
+      font-weight: 800;
+
+      letter-spacing: 1.1px;
+
       cursor: pointer;
+
+      position: relative;
+      overflow: hidden;
+
+      transition:
+        color 0.25s ease,
+        border-color 0.25s ease,
+        background 0.25s ease,
+        transform 0.25s ease;
+    }
+
+    .submit::before {
+      content: "";
+
+      position: absolute;
+
+      inset: 0;
+
+      background:
+        linear-gradient(
+          90deg,
+          transparent,
+          rgba(184, 255, 0, 0.045),
+          transparent
+        );
+
+      transform: translateX(-100%);
+      transition: transform 0.5s ease;
     }
 
     .submit:hover {
-      color: #777b77;
-      background: #1d201e;
+      color: var(--lime);
+
+      border-color: rgba(184, 255, 0, 0.16);
+
+      background:
+        linear-gradient(
+          135deg,
+          #191d18,
+          #111510
+        );
+
+      transform: translateY(-2px);
+
+      box-shadow:
+        0 12px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .submit:hover::before {
+      transform: translateX(100%);
+    }
+
+    .submit:active {
+      transform: translateY(0);
+    }
+
+    /* ---------------- MICRO FOOTER ---------------- */
+
+    .micro {
+      margin-top: 24px;
+
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      color: #454145;
+
+      font-family:
+        "Courier New",
+        Courier,
+        monospace;
+
+      font-size: 9px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    .micro span {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .micro i {
+      width: 4px;
+      height: 4px;
+
+      border-radius: 50%;
+
+      background: var(--lime);
+
+      box-shadow: 0 0 7px rgba(184, 255, 0, 0.7);
     }
 
     /* ---------------- RESPONSIVE ---------------- */
@@ -275,49 +776,115 @@
       .page {
         min-height: 100vh;
       }
+
+      .hero {
+        margin-top: 112px;
+      }
     }
 
-    @media (max-width: 400px) {
+    @media (max-width: 430px) {
       .page {
-        padding-left: 20px;
-        padding-right: 20px;
+        padding: 22px 20px 40px;
       }
 
       .launch {
-        width: 112px;
+        width: 116px;
+        height: 60px;
+      }
+
+      .brand {
+        padding-top: 18px;
+      }
+
+      h1 {
+        font-size: 41px;
+        letter-spacing: -2.5px;
+      }
+
+      .speed {
+        gap: 25px;
+      }
+
+      .address,
+      .submit {
+        height: 68px;
+      }
+    }
+
+    @media (max-width: 350px) {
+      .brand-name {
+        font-size: 18px;
+      }
+
+      .launch {
+        width: 105px;
+        font-size: 10px;
       }
 
       h1 {
         font-size: 36px;
       }
 
-      .speed {
-        gap: 35px;
+      .subtitle {
+        font-size: 12px;
+      }
+    }
+
+    /* ---------------- REDUCED MOTION ---------------- */
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
       }
     }
   </style>
 </head>
 
 <body>
+
+  <div class="ambient one"></div>
+  <div class="ambient two"></div>
+
   <main class="page">
 
+    <!-- HEADER -->
     <header>
+
       <div class="brand">
-        <div class="logo">
+
+        <div class="logo" aria-hidden="true">
           <span class="dot"></span>
           <span class="dot"></span>
           <span class="dot"></span>
         </div>
 
-        <div class="brand-name">Trobi</div>
+        <div class="brand-name">
+          Trobi
+        </div>
+
       </div>
 
-      <button class="launch" onclick="launchApp()">
+      <button
+        class="launch"
+        type="button"
+        onclick="launchApp()"
+      >
         LAUNCH APP
       </button>
+
     </header>
 
+
+    <!-- HERO -->
     <section class="hero">
+
+      <div class="eyebrow">
+        LOW LATENCY NETWORK
+      </div>
 
       <h1>
         PRIORITY CAN’T<br />
@@ -326,42 +893,90 @@
 
       <p class="subtitle">
         Speed can.<br />
-        Only on Robinhood Chain.
+        <span class="chain">Only on Robinhood Chain.</span>
       </p>
 
     </section>
 
-    <section class="speed">
+
+    <!-- SPEED -->
+    <section
+      class="speed"
+      aria-label="Network latency"
+    >
+
       <div class="speed-line">
         <span class="knob"></span>
       </div>
 
-      <span class="latency">12ms</span>
+      <span class="latency">
+        12ms
+      </span>
+
     </section>
 
-    <form class="form" onsubmit="submitAddress(event)">
 
-      <input
-        id="address"
-        class="address"
-        type="text"
-        placeholder="Your EVM (0x...) Address"
-        autocomplete="off"
-        spellcheck="false"
-      />
+    <!-- FORM -->
+    <form
+      class="form"
+      onsubmit="submitAddress(event)"
+    >
 
-      <button class="submit" type="submit">
-        SUBMIT
+      <div class="input-wrap">
+
+        <input
+          id="address"
+          class="address"
+          type="text"
+          inputmode="text"
+          placeholder="Your EVM (0x...) Address"
+          autocomplete="off"
+          autocapitalize="off"
+          spellcheck="false"
+          aria-label="Your EVM address"
+        />
+
+        <span
+          class="input-status"
+          aria-hidden="true"
+        ></span>
+
+      </div>
+
+      <button
+        class="submit"
+        type="submit"
+      >
+        SUBMIT ADDRESS
       </button>
 
     </form>
 
+
+    <!-- MICRO INFO -->
+    <div class="micro">
+      <span>
+        <i></i>
+        NETWORK ONLINE
+      </span>
+
+      <span>
+        EVM READY
+      </span>
+    </div>
+
   </main>
+
 
   <script>
     function launchApp() {
-      alert("Launching app...");
+      // Replace this with your real app URL.
+      // Example:
+      // window.location.href = "https://your-app.com";
+
+      alert("Launching Trobi...");
     }
+
 
     function submitAddress(event) {
       event.preventDefault();
@@ -374,8 +989,51 @@
         return;
       }
 
-      console.log("Submitted address:", address);
+      /*
+        Basic EVM address validation.
+        This checks the normal 0x + 40 hex character format.
+      */
+
+      const evmRegex = /^0x[a-fA-F0-9]{40}$/;
+
+      if (!evmRegex.test(address)) {
+        input.focus();
+
+        input.style.borderColor = "rgba(255, 20, 91, 0.55)";
+        input.style.boxShadow =
+          "0 0 0 3px rgba(255, 20, 91, 0.05)";
+
+        setTimeout(() => {
+          input.style.borderColor = "";
+          input.style.boxShadow = "";
+        }, 900);
+
+        return;
+      }
+
+      console.log("Submitted EVM address:", address);
+
+      /*
+        Put your API / wallet submission logic here.
+
+        Example:
+
+        fetch("/api/submit", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            address: address
+          })
+        });
+      */
+
+      input.value = "";
+
+      alert("Address submitted.");
     }
   </script>
+
 </body>
 </html>
