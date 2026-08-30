@@ -1,1039 +1,5258 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-  <meta name="theme-color" content="#050304" />
-  <meta
-    name="description"
-    content="Trobi — Priority can't be bought. Speed can."
-  />
-
-  <title>Trobi — Speed Can.</title>
-
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    :root {
-      --lime: #b8ff00;
-      --lime-soft: #d1ff52;
-
-      --pink: #ff145b;
-      --rose: #c50045;
-      --magenta: #ff006a;
-
-      --bg: #050304;
-      --surface: rgba(18, 12, 15, 0.72);
-      --surface-2: rgba(255, 255, 255, 0.035);
-
-      --text: #f7f4f5;
-      --muted: #898186;
-      --muted-2: #5f595d;
-
-      --border: rgba(255, 255, 255, 0.09);
-      --border-hover: rgba(184, 255, 0, 0.25);
-    }
-
-    html {
-      width: 100%;
-      min-height: 100%;
-      background: var(--bg);
-      scroll-behavior: smooth;
-    }
-
-    body {
-      width: 100%;
-      min-height: 100vh;
-      overflow-x: hidden;
-
-      color: var(--text);
-      font-family:
-        Inter,
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        Arial,
-        sans-serif;
-
-      background:
-        /* TOP LEFT */
-        radial-gradient(
-          ellipse 55% 45% at -5% -5%,
-          rgba(197, 0, 69, 0.32),
-          transparent 72%
-        ),
-
-        /* TOP RIGHT */
-        radial-gradient(
-          ellipse 55% 45% at 105% -5%,
-          rgba(255, 20, 91, 0.26),
-          transparent 72%
-        ),
-
-        /* BOTTOM LEFT */
-        radial-gradient(
-          ellipse 55% 50% at -5% 105%,
-          rgba(255, 0, 106, 0.22),
-          transparent 72%
-        ),
-
-        /* BOTTOM RIGHT */
-        radial-gradient(
-          ellipse 55% 50% at 105% 105%,
-          rgba(197, 0, 69, 0.30),
-          transparent 72%
-        ),
-
-        /* CENTER ROSE */
-        radial-gradient(
-          circle at 50% 45%,
-          rgba(92, 0, 34, 0.20),
-          transparent 55%
-        ),
-
-        /* 80% BLACK OVERLAY FEEL */
-        linear-gradient(
-          135deg,
-          rgba(0, 0, 0, 0.86) 0%,
-          rgba(5, 3, 4, 0.78) 45%,
-          rgba(0, 0, 0, 0.88) 100%
-        ),
-
-        #050304;
-    }
-
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 20;
-
-      background:
-        linear-gradient(
-          rgba(255, 255, 255, 0.012) 1px,
-          transparent 1px
-        ),
-        linear-gradient(
-          90deg,
-          rgba(255, 255, 255, 0.012) 1px,
-          transparent 1px
-        );
-
-      background-size: 80px 80px;
-
-      mask-image: linear-gradient(
-        to bottom,
-        black,
-        transparent 85%
-      );
-
-      opacity: 0.25;
-    }
-
-    /* ---------------- PAGE ---------------- */
-
-    .page {
-      width: 100%;
-      max-width: 620px;
-      min-height: 100vh;
-
-      margin: 0 auto;
-      padding: 28px 26px 48px;
-
-      position: relative;
-      isolation: isolate;
-
-      background:
-        radial-gradient(
-          circle at 50% 38%,
-          rgba(255, 20, 91, 0.035),
-          transparent 42%
-        );
-    }
-
-    /* Ambient floating glow */
-
-    .ambient {
-      position: fixed;
-      width: 340px;
-      height: 340px;
-
-      border-radius: 50%;
-
-      background: var(--pink);
-      filter: blur(140px);
-
-      opacity: 0.055;
-      pointer-events: none;
-
-      z-index: -1;
-
-      animation: floatGlow 9s ease-in-out infinite;
-    }
-
-    .ambient.one {
-      top: 10%;
-      left: -180px;
-    }
-
-    .ambient.two {
-      right: -180px;
-      bottom: 5%;
-      animation-delay: -4s;
-    }
-
-    @keyframes floatGlow {
-      0%,
-      100% {
-        transform: translate3d(0, 0, 0);
-      }
-
-      50% {
-        transform: translate3d(35px, -25px, 0);
-      }
-    }
-
-    /* ---------------- HEADER ---------------- */
-
-    header {
-      height: 70px;
-
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 17px;
-
-      padding-top: 19px;
-    }
-
-    /* Modern Trobi mark */
-
-    .logo {
-      width: 39px;
-      height: 18px;
-
-      position: relative;
-
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-      gap: 4px;
-    }
-
-    .logo::before {
-      content: "";
-
-      position: absolute;
-      left: 1px;
-      top: 8px;
-
-      width: 34px;
-      height: 2px;
-
-      background: linear-gradient(
-        90deg,
-        transparent,
-        var(--lime),
-        var(--lime)
-      );
-
-      box-shadow:
-        0 0 8px rgba(184, 255, 0, 0.55),
-        0 0 20px rgba(184, 255, 0, 0.18);
-    }
-
-    .dot {
-      position: relative;
-      z-index: 2;
-
-      width: 5px;
-      height: 5px;
-
-      background: var(--lime);
-      border-radius: 50%;
-
-      box-shadow:
-        0 0 7px rgba(184, 255, 0, 0.85),
-        0 0 14px rgba(184, 255, 0, 0.35);
-    }
-
-    .dot:nth-child(1) {
-      margin-left: 5px;
-    }
-
-    .dot:nth-child(2) {
-      width: 7px;
-      height: 7px;
-    }
-
-    .dot:nth-child(3) {
-      width: 10px;
-      height: 10px;
-    }
-
-    .brand-name {
-      font-size: 20px;
-      line-height: 1;
-
-      font-weight: 750;
-      letter-spacing: -0.7px;
-
-      color: #fafafa;
-    }
-
-    .launch {
-      position: relative;
-      overflow: hidden;
-
-      width: 132px;
-      height: 64px;
-
-      border: 1px solid rgba(184, 255, 0, 0.35);
-      border-radius: 4px;
-
-      background:
-        linear-gradient(
-          145deg,
-          #c5ff21,
-          var(--lime) 55%,
-          #a5e600
-        );
-
-      color: #050604;
-
-      font-size: 11px;
-      font-weight: 800;
-      letter-spacing: 0.7px;
-
-      cursor: pointer;
-
-      box-shadow:
-        0 14px 38px rgba(184, 255, 0, 0.11),
-        inset 0 1px 0 rgba(255, 255, 255, 0.35);
-
-      transition:
-        transform 0.25s ease,
-        box-shadow 0.25s ease;
-    }
-
-    .launch::after {
-      content: "";
-
-      position: absolute;
-      top: 0;
-      left: -100%;
-
-      width: 70%;
-      height: 100%;
-
-      background: linear-gradient(
-        90deg,
-        transparent,
-        rgba(255, 255, 255, 0.5),
-        transparent
-      );
-
-      transform: skewX(-20deg);
-
-      transition: left 0.55s ease;
-    }
-
-    .launch:hover {
-      transform: translateY(-3px);
-
-      box-shadow:
-        0 18px 45px rgba(184, 255, 0, 0.19),
-        0 0 25px rgba(184, 255, 0, 0.08);
-    }
-
-    .launch:hover::after {
-      left: 140%;
-    }
-
-    .launch:active {
-      transform: translateY(0);
-    }
-
-    /* ---------------- HERO ---------------- */
-
-    .hero {
-      margin-top: 126px;
-      position: relative;
-    }
-
-    .eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: 9px;
-
-      margin-bottom: 19px;
-
-      color: #777075;
-
-      font-family:
-        "Courier New",
-        Courier,
-        monospace;
-
-      font-size: 10px;
-      font-weight: 700;
-
-      letter-spacing: 1.7px;
-      text-transform: uppercase;
-    }
-
-    .eyebrow::before {
-      content: "";
-
-      width: 22px;
-      height: 1px;
-
-      background: var(--lime);
-
-      box-shadow: 0 0 8px rgba(184, 255, 0, 0.7);
-    }
-
-    h1 {
-      max-width: 500px;
-
-      font-size: clamp(42px, 10vw, 62px);
-      line-height: 0.91;
-
-      letter-spacing: -3.5px;
-      font-weight: 900;
-
-      text-transform: uppercase;
-
-      color: #f6f3f4;
-
-      text-wrap: balance;
-    }
-
-    h1 .lime {
-      color: var(--lime);
-
-      text-shadow:
-        0 0 18px rgba(184, 255, 0, 0.12),
-        0 0 40px rgba(184, 255, 0, 0.05);
-    }
-
-    .subtitle {
-      margin-top: 28px;
-
-      color: #81797e;
-
-      font-family:
-        "Courier New",
-        Courier,
-        monospace;
-
-      font-size: 13px;
-      line-height: 22px;
-
-      letter-spacing: -0.25px;
-    }
-
-    .subtitle .chain {
-      color: #b7adb2;
-    }
-
-    /* ---------------- SPEED ---------------- */
-
-    .speed {
-      margin-top: 57px;
-
-      display: flex;
-      align-items: center;
-
-      gap: 35px;
-    }
-
-    .speed-line {
-      height: 2px;
-      flex: 1;
-
-      position: relative;
-
-      background: linear-gradient(
-        90deg,
-        rgba(184, 255, 0, 0.12),
-        var(--lime)
-      );
-
-      box-shadow:
-        0 0 8px rgba(184, 255, 0, 0.35),
-        0 0 22px rgba(184, 255, 0, 0.09);
-    }
-
-    .speed-line::before {
-      content: "";
-
-      position: absolute;
-
-      left: 0;
-      top: -4px;
-
-      width: 65px;
-      height: 10px;
-
-      background: linear-gradient(
-        90deg,
-        transparent,
-        rgba(184, 255, 0, 0.14),
-        transparent
-      );
-
-      filter: blur(2px);
-
-      animation: scan 2.5s linear infinite;
-    }
-
-    @keyframes scan {
-      from {
-        transform: translateX(-70px);
-      }
-
-      to {
-        transform: translateX(calc(100vw));
-      }
-    }
-
-    .knob {
-      position: absolute;
-
-      right: -2px;
-      top: 50%;
-
-      transform: translateY(-50%);
-
-      width: 13px;
-      height: 13px;
-
-      border-radius: 50%;
-
-      background: var(--lime);
-
-      box-shadow:
-        0 0 8px rgba(184, 255, 0, 0.95),
-        0 0 20px rgba(184, 255, 0, 0.55),
-        0 0 36px rgba(184, 255, 0, 0.18);
-    }
-
-    .latency {
-      color: var(--lime);
-
-      font-family:
-        "Courier New",
-        Courier,
-        monospace;
-
-      font-size: 13px;
-      font-weight: 800;
-
-      letter-spacing: 0.2px;
-
-      white-space: nowrap;
-    }
-
-    /* ---------------- FORM ---------------- */
-
-    .form {
-      margin-top: 38px;
-
-      position: relative;
-    }
-
-    .input-wrap {
-      position: relative;
-    }
-
-    .address {
-      width: 100%;
-      height: 72px;
-
-      padding: 0 27px;
-
-      border: 1px solid var(--border);
-      border-radius: 5px;
-
-      outline: none;
-
-      background:
-        linear-gradient(
-          135deg,
-          rgba(255, 255, 255, 0.045),
-          rgba(255, 255, 255, 0.015)
-        );
-
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-
-      color: #e9e5e7;
-
-      font-family:
-        "Courier New",
-        Courier,
-        monospace;
-
-      font-size: 14px;
-      letter-spacing: -0.25px;
-
-      box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.025),
-        0 10px 35px rgba(0, 0, 0, 0.18);
-
-      transition:
-        border-color 0.25s ease,
-        background 0.25s ease,
-        box-shadow 0.25s ease;
-    }
-
-    .address::placeholder {
-      color: #625d60;
-      opacity: 1;
-    }
-
-    .address:hover {
-      border-color: rgba(255, 255, 255, 0.14);
-    }
-
-    .address:focus {
-      border-color: var(--border-hover);
-
-      background:
-        linear-gradient(
-          135deg,
-          rgba(184, 255, 0, 0.035),
-          rgba(255, 255, 255, 0.018)
-        );
-
-      box-shadow:
-        0 0 0 3px rgba(184, 255, 0, 0.035),
-        0 15px 45px rgba(0, 0, 0, 0.28);
-    }
-
-    .input-status {
-      position: absolute;
-
-      right: 18px;
-      top: 50%;
-
-      transform: translateY(-50%);
-
-      width: 7px;
-      height: 7px;
-
-      border-radius: 50%;
-
-      background: #343034;
-
-      transition:
-        background 0.25s ease,
-        box-shadow 0.25s ease;
-    }
-
-    .address:focus ~ .input-status {
-      background: var(--lime);
-
-      box-shadow:
-        0 0 8px rgba(184, 255, 0, 0.9),
-        0 0 16px rgba(184, 255, 0, 0.3);
-    }
-
-    .submit {
-      width: 100%;
-      height: 72px;
-
-      margin-top: 11px;
-
-      border: 1px solid rgba(255, 255, 255, 0.055);
-      border-radius: 4px;
-
-      background:
-        linear-gradient(
-          135deg,
-          #171417,
-          #101011
-        );
-
-      color: #676267;
-
-      font-size: 11px;
-      font-weight: 800;
-
-      letter-spacing: 1.1px;
-
-      cursor: pointer;
-
-      position: relative;
-      overflow: hidden;
-
-      transition:
-        color 0.25s ease,
-        border-color 0.25s ease,
-        background 0.25s ease,
-        transform 0.25s ease;
-    }
-
-    .submit::before {
-      content: "";
-
-      position: absolute;
-
-      inset: 0;
-
-      background:
-        linear-gradient(
-          90deg,
-          transparent,
-          rgba(184, 255, 0, 0.045),
-          transparent
-        );
-
-      transform: translateX(-100%);
-      transition: transform 0.5s ease;
-    }
-
-    .submit:hover {
-      color: var(--lime);
-
-      border-color: rgba(184, 255, 0, 0.16);
-
-      background:
-        linear-gradient(
-          135deg,
-          #191d18,
-          #111510
-        );
-
-      transform: translateY(-2px);
-
-      box-shadow:
-        0 12px 30px rgba(0, 0, 0, 0.3);
-    }
-
-    .submit:hover::before {
-      transform: translateX(100%);
-    }
-
-    .submit:active {
-      transform: translateY(0);
-    }
-
-    /* ---------------- MICRO FOOTER ---------------- */
-
-    .micro {
-      margin-top: 24px;
-
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-
-      color: #454145;
-
-      font-family:
-        "Courier New",
-        Courier,
-        monospace;
-
-      font-size: 9px;
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
-    }
-
-    .micro span {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .micro i {
-      width: 4px;
-      height: 4px;
-
-      border-radius: 50%;
-
-      background: var(--lime);
-
-      box-shadow: 0 0 7px rgba(184, 255, 0, 0.7);
-    }
-
-    /* ---------------- RESPONSIVE ---------------- */
-
-    @media (max-width: 560px) {
-      .page {
-        min-height: 100vh;
-      }
-
-      .hero {
-        margin-top: 112px;
-      }
-    }
-
-    @media (max-width: 430px) {
-      .page {
-        padding: 22px 20px 40px;
-      }
-
-      .launch {
-        width: 116px;
-        height: 60px;
-      }
-
-      .brand {
-        padding-top: 18px;
-      }
-
-      h1 {
-        font-size: 41px;
-        letter-spacing: -2.5px;
-      }
-
-      .speed {
-        gap: 25px;
-      }
-
-      .address,
-      .submit {
-        height: 68px;
-      }
-    }
-
-    @media (max-width: 350px) {
-      .brand-name {
-        font-size: 18px;
-      }
-
-      .launch {
-        width: 105px;
-        font-size: 10px;
-      }
-
-      h1 {
-        font-size: 36px;
-      }
-
-      .subtitle {
-        font-size: 12px;
-      }
-    }
-
-    /* ---------------- REDUCED MOTION ---------------- */
-
-    @media (prefers-reduced-motion: reduce) {
-      *,
-      *::before,
-      *::after {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        scroll-behavior: auto !important;
-      }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#f5f3ee">
+<title>PixelFolk — Generative Pixel Portrait Studio</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+/* =========================================================
+   PIXELFOLK
+   Premium Light NFT Generator
+   ========================================================= */
+
+:root {
+  --bg: #f4f2ed;
+  --bg-2: #ebe8e0;
+  --paper: #fffefa;
+  --paper-2: #f8f6f0;
+  --ink: #17171a;
+  --muted: #777671;
+  --muted-2: #9a9891;
+  --line: #dedbd3;
+  --line-strong: #c9c5bc;
+
+  --violet: #6d5dfc;
+  --violet-dark: #5547db;
+  --violet-soft: #ece9ff;
+
+  --cyan: #00a6b8;
+  --cyan-soft: #e2f7f8;
+
+  --common: #85847f;
+  --rare: #3478e5;
+  --epic: #934be8;
+  --legendary: #d58a13;
+
+  --common-bg: #efeee9;
+  --rare-bg: #e7f0ff;
+  --epic-bg: #f1e7ff;
+  --legendary-bg: #fff2d3;
+
+  --shadow-sm: 0 4px 14px rgba(28, 27, 24, .06);
+  --shadow-md: 0 16px 40px rgba(28, 27, 24, .10);
+  --shadow-lg: 0 26px 80px rgba(28, 27, 24, .14);
+
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 22px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--ink);
+  background:
+    radial-gradient(
+      circle at 0% 0%,
+      rgba(109, 93, 252, .08),
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at 100% 15%,
+      rgba(0, 166, 184, .07),
+      transparent 28%
+    ),
+    linear-gradient(
+      180deg,
+      #f8f6f1 0%,
+      #f3f1eb 45%,
+      #eeece5 100%
+    );
+  font-family: "DM Mono", monospace;
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+::selection {
+  background: var(--violet);
+  color: white;
+}
+
+/* =========================================================
+   TOP NAV
+   ========================================================= */
+
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  border-bottom: 1px solid rgba(201, 197, 188, .75);
+  background: rgba(248, 246, 241, .86);
+  backdrop-filter: blur(18px);
+}
+
+.nav-inner {
+  width: min(1440px, calc(100% - 32px));
+  margin: 0 auto;
+  min-height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  min-width: 0;
+}
+
+.brand-mark {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  background: var(--ink);
+  color: white;
+  font-family: "Space Grotesk", sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  box-shadow: var(--shadow-sm);
+}
+
+.brand-name {
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -.03em;
+}
+
+.brand-tag {
+  color: var(--muted);
+  font-size: 10px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.nav-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: .09em;
+}
+
+.status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #32b36c;
+  box-shadow: 0 0 0 4px rgba(50,179,108,.12);
+}
+
+/* =========================================================
+   APP
+   ========================================================= */
+
+.app {
+  width: min(1440px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 44px 0 90px;
+}
+
+/* =========================================================
+   HERO
+   ========================================================= */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(340px, .7fr);
+  gap: 48px;
+  align-items: end;
+  margin-bottom: 34px;
+}
+
+.eyebrow {
+  margin-bottom: 12px;
+  color: var(--violet);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+}
+
+.hero h1 {
+  margin: 0;
+  max-width: 850px;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: clamp(42px, 7vw, 82px);
+  line-height: .92;
+  letter-spacing: -.065em;
+  font-weight: 700;
+}
+
+.hero h1 span {
+  display: block;
+  color: transparent;
+  background:
+    linear-gradient(
+      95deg,
+      var(--violet),
+      #8c62f7 42%,
+      #00a6b8 100%
+    );
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+.hero-copy {
+  margin: 18px 0 0;
+  max-width: 700px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.85;
+}
+
+.hero-note {
+  justify-self: end;
+  max-width: 360px;
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: rgba(255,254,250,.68);
+  box-shadow: var(--shadow-sm);
+}
+
+.hero-note-title {
+  margin-bottom: 7px;
+  font-family: "Space Grotesk", sans-serif;
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.hero-note p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.7;
+}
+
+/* =========================================================
+   CONTROL PANEL
+   ========================================================= */
+
+.panel {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: rgba(255,254,250,.8);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+}
+
+.controls {
+  padding: 20px;
+  display: grid;
+  grid-template-columns: 1.4fr .35fr auto auto auto;
+  gap: 10px;
+  align-items: end;
+}
+
+.field {
+  min-width: 0;
+}
+
+.field label {
+  display: block;
+  margin-bottom: 7px;
+  color: var(--muted);
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: .12em;
+}
+
+.input-wrap {
+  position: relative;
+}
+
+input[type="text"],
+input[type="number"],
+select {
+  width: 100%;
+  height: 42px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  outline: none;
+  color: var(--ink);
+  background: #faf9f5;
+  padding: 0 12px;
+  transition:
+    border-color .15s ease,
+    box-shadow .15s ease,
+    background .15s ease;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+select:focus {
+  border-color: var(--violet);
+  background: white;
+  box-shadow: 0 0 0 4px rgba(109,93,252,.09);
+}
+
+input[type="number"] {
+  text-align: center;
+}
+
+.btn {
+  height: 42px;
+  padding: 0 17px;
+  border: 1px solid transparent;
+  border-radius: 9px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  white-space: nowrap;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  transition:
+    transform .15s ease,
+    box-shadow .15s ease,
+    background .15s ease,
+    border-color .15s ease;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+}
+
+.btn-primary {
+  color: white;
+  background: var(--ink);
+  box-shadow: 0 7px 18px rgba(23,23,26,.15);
+}
+
+.btn-primary:hover {
+  background: #29292d;
+}
+
+.btn-accent {
+  color: white;
+  background: var(--violet);
+  box-shadow: 0 7px 18px rgba(109,93,252,.20);
+}
+
+.btn-accent:hover {
+  background: var(--violet-dark);
+}
+
+.btn-soft {
+  color: var(--ink);
+  border-color: var(--line);
+  background: #f8f6f0;
+}
+
+.btn-soft:hover {
+  border-color: var(--line-strong);
+  background: white;
+}
+
+.btn-danger {
+  color: #a13737;
+  border-color: #eccaca;
+  background: #fff7f7;
+}
+
+/* =========================================================
+   TOOLBAR
+   ========================================================= */
+
+.toolbar {
+  padding: 14px 20px;
+  border-top: 1px solid var(--line);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(249,247,242,.72);
+}
+
+.toolbar-left,
+.toolbar-right {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.toolbar-label {
+  margin-right: 3px;
+  color: var(--muted);
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+}
+
+.chip {
+  height: 31px;
+  padding: 0 11px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--muted);
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: .07em;
+}
+
+.chip.active,
+.chip:hover {
+  color: var(--ink);
+  border-color: var(--ink);
+  background: white;
+}
+
+.stat-text {
+  color: var(--muted);
+  font-size: 9px;
+}
+
+/* =========================================================
+   COLLECTION STATS
+   ========================================================= */
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+  margin: 18px 0;
+}
+
+.stat {
+  min-height: 78px;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  background: rgba(255,254,250,.75);
+  box-shadow: var(--shadow-sm);
+}
+
+.stat-label {
+  color: var(--muted);
+  font-size: 8px;
+  text-transform: uppercase;
+  letter-spacing: .12em;
+}
+
+.stat-value {
+  margin-top: 8px;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -.04em;
+}
+
+/* =========================================================
+   GRID
+   ========================================================= */
+
+.collection-head {
+  margin: 34px 0 14px;
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 15px;
+}
+
+.collection-title {
+  margin: 0;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 20px;
+  letter-spacing: -.03em;
+}
+
+.collection-sub {
+  color: var(--muted);
+  font-size: 9px;
+}
+
+.faces-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+}
+
+/* =========================================================
+   NFT CARD
+   ========================================================= */
+
+.card {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 17px;
+  background: var(--paper);
+  box-shadow: var(--shadow-sm);
+  transition:
+    transform .2s ease,
+    box-shadow .2s ease,
+    border-color .2s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+  border-color: #cbc7bd;
+}
+
+.card.rank-rare {
+  border-color: rgba(52,120,229,.36);
+}
+
+.card.rank-epic {
+  border-color: rgba(147,75,232,.42);
+}
+
+.card.rank-legendary {
+  border-color: rgba(213,138,19,.5);
+}
+
+.canvas-wrap {
+  position: relative;
+  overflow: hidden;
+  background: #e8e4dc;
+}
+
+.canvas-wrap canvas {
+  width: 100%;
+  height: auto;
+  display: block;
+  image-rendering: pixelated;
+}
+
+.card-overlay {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255,255,255,.14),
+      transparent 22%,
+      transparent 76%,
+      rgba(0,0,0,.04)
+    );
+}
+
+.rank-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 3;
+  min-width: 66px;
+  padding: 5px 9px;
+  border-radius: 999px;
+  text-align: center;
+  font-size: 8px;
+  font-weight: 500;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  backdrop-filter: blur(7px);
+}
+
+.rank-badge.common {
+  color: #66645f;
+  background: rgba(239,238,233,.92);
+}
+
+.rank-badge.rare {
+  color: #2862b9;
+  background: rgba(231,240,255,.94);
+}
+
+.rank-badge.epic {
+  color: #7634bd;
+  background: rgba(241,231,255,.94);
+}
+
+.rank-badge.legendary {
+  color: #9b6207;
+  background: rgba(255,242,211,.95);
+}
+
+.card-meta {
+  padding: 14px;
+}
+
+.card-top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 13px;
+}
+
+.card-number {
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.card-dna {
+  max-width: 130px;
+  overflow: hidden;
+  color: var(--violet);
+  font-size: 8px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.traits {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px 10px;
+}
+
+.trait {
+  min-width: 0;
+  padding: 5px 0;
+  border-bottom: 1px dotted var(--line);
+}
+
+.trait-name {
+  color: var(--muted);
+  font-size: 7px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.trait-value {
+  margin-top: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
+  font-size: 8px;
+}
+
+.trait-value span:first-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tier {
+  flex: 0 0 auto;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+}
+
+.tier.common {
+  background: var(--common);
+}
+
+.tier.rare {
+  background: var(--rare);
+}
+
+.tier.epic {
+  background: var(--epic);
+}
+
+.tier.legendary {
+  background: var(--legendary);
+}
+
+.card-actions {
+  margin-top: 13px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+
+.mini-btn {
+  height: 31px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  color: var(--muted);
+  background: #faf9f5;
+  font-size: 8px;
+  text-transform: uppercase;
+  letter-spacing: .07em;
+}
+
+.mini-btn:hover {
+  color: var(--ink);
+  border-color: var(--line-strong);
+  background: white;
+}
+
+/* =========================================================
+   EMPTY
+   ========================================================= */
+
+.empty {
+  grid-column: 1 / -1;
+  padding: 70px 20px;
+  border: 1px dashed var(--line-strong);
+  border-radius: 17px;
+  text-align: center;
+  color: var(--muted);
+  background: rgba(255,254,250,.5);
+}
+
+.empty strong {
+  display: block;
+  margin-bottom: 7px;
+  color: var(--ink);
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 18px;
+}
+
+/* =========================================================
+   MODAL
+   ========================================================= */
+
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 500;
+  display: none;
+  place-items: center;
+  padding: 20px;
+  background: rgba(23,23,26,.42);
+  backdrop-filter: blur(9px);
+}
+
+.modal.open {
+  display: grid;
+}
+
+.modal-box {
+  width: min(760px, 100%);
+  max-height: calc(100vh - 40px);
+  overflow: auto;
+  border: 1px solid rgba(255,255,255,.55);
+  border-radius: 22px;
+  background: var(--paper);
+  box-shadow: 0 35px 100px rgba(0,0,0,.22);
+}
+
+.modal-head {
+  padding: 17px 19px;
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.modal-title {
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.close {
+  width: 31px;
+  height: 31px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--muted);
+}
+
+.close:hover {
+  color: var(--ink);
+  background: var(--paper-2);
+}
+
+.modal-body {
+  padding: 19px;
+}
+
+.modal-layout {
+  display: grid;
+  grid-template-columns: minmax(220px, .75fr) 1.25fr;
+  gap: 20px;
+}
+
+.modal-preview {
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  overflow: hidden;
+  background: #e9e6df;
+}
+
+.modal-preview canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  image-rendering: pixelated;
+}
+
+.dna-box {
+  padding: 13px;
+  border: 1px solid var(--line);
+  border-radius: 11px;
+  background: #faf9f5;
+  word-break: break-all;
+  color: var(--violet);
+  font-size: 9px;
+  line-height: 1.7;
+}
+
+.metadata-list {
+  margin-top: 12px;
+  display: grid;
+  gap: 5px;
+}
+
+.metadata-row {
+  padding: 8px 0;
+  border-bottom: 1px dotted var(--line);
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 9px;
+}
+
+.metadata-row span:first-child {
+  color: var(--muted);
+}
+
+/* =========================================================
+   TOAST
+   ========================================================= */
+
+.toast {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  z-index: 800;
+  max-width: 340px;
+  padding: 11px 14px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  color: var(--ink);
+  background: rgba(255,254,250,.95);
+  box-shadow: var(--shadow-lg);
+  font-size: 9px;
+  transform: translateY(20px);
+  opacity: 0;
+  pointer-events: none;
+  transition: .2s ease;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
+
+.footer {
+  margin-top: 55px;
+  padding-top: 20px;
+  border-top: 1px dashed var(--line-strong);
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 20px;
+  color: var(--muted);
+  font-size: 9px;
+  line-height: 1.8;
+}
+
+.footer strong {
+  color: var(--ink);
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 1150px) {
+  .faces-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .controls {
+    grid-template-columns: 1fr 100px;
+  }
+
+  .controls .btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 820px) {
+  .hero {
+    grid-template-columns: 1fr;
+    gap: 25px;
+  }
+
+  .hero-note {
+    justify-self: stretch;
+    max-width: none;
+  }
+
+  .faces-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .stats {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .modal-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 560px) {
+  .app,
+  .nav-inner {
+    width: min(100% - 20px, 1440px);
+  }
+
+  .app {
+    padding-top: 28px;
+  }
+
+  .hero h1 {
+    font-size: 48px;
+  }
+
+  .controls {
+    grid-template-columns: 1fr;
+  }
+
+  .faces-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .toolbar {
+    align-items: stretch;
+  }
+
+  .toolbar-left,
+  .toolbar-right {
+    width: 100%;
+  }
+
+  .footer {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
 </head>
 
 <body>
 
-  <div class="ambient one"></div>
-  <div class="ambient two"></div>
+<!-- =========================================================
+     NAVIGATION
+     ========================================================= -->
 
-  <main class="page">
+<nav class="nav">
+  <div class="nav-inner">
 
-    <!-- HEADER -->
-    <header>
+    <div class="brand">
+      <div class="brand-mark">PF</div>
 
-      <div class="brand">
-
-        <div class="logo" aria-hidden="true">
-          <span class="dot"></span>
-          <span class="dot"></span>
-          <span class="dot"></span>
-        </div>
-
-        <div class="brand-name">
-          Trobi
-        </div>
-
+      <div>
+        <div class="brand-name">PixelFolk</div>
+        <div class="brand-tag">Generative Portrait Studio</div>
       </div>
+    </div>
 
-      <button
-        class="launch"
-        type="button"
-        onclick="launchApp()"
-      >
-        LAUNCH APP
-      </button>
+    <div class="nav-status">
+      <span class="status-dot"></span>
+      Deterministic Engine Online
+    </div>
 
-    </header>
+  </div>
+</nav>
 
+<!-- =========================================================
+     MAIN
+     ========================================================= -->
 
-    <!-- HERO -->
-    <section class="hero">
+<main class="app">
+
+  <!-- HERO -->
+
+  <section class="hero">
+
+    <div>
 
       <div class="eyebrow">
-        LOW LATENCY NETWORK
+        On-chain inspired / deterministic / pixel-native
       </div>
 
       <h1>
-        PRIORITY CAN’T<br />
-        BE <span class="lime">BOUGHT.</span>
+        No two folk
+        <span>feel the same.</span>
       </h1>
 
-      <p class="subtitle">
-        Speed can.<br />
-        <span class="chain">Only on Robinhood Chain.</span>
+      <p class="hero-copy">
+        PixelFolk is a deterministic generative portrait engine designed
+        for collectible pixel identities. Every figure is assembled from
+        independent visual systems, rarity layers, palette families,
+        asymmetric details, backgrounds, accessories and procedural texture.
+        Same seed produces the same collection forever.
       </p>
 
-    </section>
+    </div>
 
+    <aside class="hero-note">
 
-    <!-- SPEED -->
-    <section
-      class="speed"
-      aria-label="Network latency"
-    >
-
-      <div class="speed-line">
-        <span class="knob"></span>
+      <div class="hero-note-title">
+        Collection DNA
       </div>
 
-      <span class="latency">
-        12ms
-      </span>
+      <p>
+        Trait collisions are checked against generated DNA signatures.
+        Rare traits also alter the visual language of the artwork rather
+        than existing only as metadata labels.
+      </p>
 
-    </section>
+    </aside>
 
+  </section>
 
-    <!-- FORM -->
-    <form
-      class="form"
-      onsubmit="submitAddress(event)"
-    >
+  <!-- CONTROL PANEL -->
 
-      <div class="input-wrap">
+  <section class="panel">
+
+    <div class="controls">
+
+      <div class="field">
+
+        <label for="seed">
+          Collection Seed
+        </label>
 
         <input
-          id="address"
-          class="address"
+          id="seed"
           type="text"
-          inputmode="text"
-          placeholder="Your EVM (0x...) Address"
           autocomplete="off"
-          autocapitalize="off"
           spellcheck="false"
-          aria-label="Your EVM address"
-        />
+          placeholder="Enter collection seed..."
+        >
 
-        <span
-          class="input-status"
-          aria-hidden="true"
-        ></span>
+      </div>
+
+      <div class="field">
+
+        <label for="count">
+          Supply
+        </label>
+
+        <input
+          id="count"
+          type="number"
+          min="1"
+          max="60"
+          value="16"
+        >
 
       </div>
 
       <button
-        class="submit"
-        type="submit"
+        id="generateBtn"
+        class="btn btn-accent"
       >
-        SUBMIT ADDRESS
+        Generate
       </button>
 
-    </form>
+      <button
+        id="randomBtn"
+        class="btn btn-primary"
+      >
+        Random Seed
+      </button>
 
+      <button
+        id="sheetBtn"
+        class="btn btn-soft"
+      >
+        Download Sheet
+      </button>
 
-    <!-- MICRO INFO -->
-    <div class="micro">
-      <span>
-        <i></i>
-        NETWORK ONLINE
-      </span>
-
-      <span>
-        EVM READY
-      </span>
     </div>
 
-  </main>
+    <div class="toolbar">
 
+      <div class="toolbar-left">
 
-  <script>
-    function launchApp() {
-      // Replace this with your real app URL.
-      // Example:
-      // window.location.href = "https://your-app.com";
+        <span class="toolbar-label">
+          Filter
+        </span>
 
-      alert("Launching Trobi...");
+        <button
+          class="chip active"
+          data-filter="all"
+        >
+          All
+        </button>
+
+        <button
+          class="chip"
+          data-filter="common"
+        >
+          Common
+        </button>
+
+        <button
+          class="chip"
+          data-filter="rare"
+        >
+          Rare
+        </button>
+
+        <button
+          class="chip"
+          data-filter="epic"
+        >
+          Epic
+        </button>
+
+        <button
+          class="chip"
+          data-filter="legendary"
+        >
+          Legendary
+        </button>
+
+      </div>
+
+      <div class="toolbar-right">
+
+        <span class="toolbar-label">
+          Sort
+        </span>
+
+        <select id="sortSelect">
+          <option value="number">Token order</option>
+          <option value="rarity">Rarity score</option>
+          <option value="rare-first">Rare first</option>
+          <option value="dna">DNA</option>
+        </select>
+
+        <button
+          id="jsonBtn"
+          class="btn btn-soft"
+        >
+          Export JSON
+        </button>
+
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- STATS -->
+
+  <section class="stats">
+
+    <div class="stat">
+      <div class="stat-label">Generated</div>
+      <div class="stat-value" id="statGenerated">0</div>
+    </div>
+
+    <div class="stat">
+      <div class="stat-label">Unique DNA</div>
+      <div class="stat-value" id="statUnique">0</div>
+    </div>
+
+    <div class="stat">
+      <div class="stat-label">Rare+</div>
+      <div class="stat-value" id="statRare">0</div>
+    </div>
+
+    <div class="stat">
+      <div class="stat-label">Highest Score</div>
+      <div class="stat-value" id="statScore">0</div>
+    </div>
+
+    <div class="stat">
+      <div class="stat-label">Collection Seed</div>
+      <div
+        class="stat-value"
+        id="statSeed"
+        style="font-size:12px;word-break:break-all;"
+      >
+        —
+      </div>
+    </div>
+
+  </section>
+
+  <!-- COLLECTION -->
+
+  <section>
+
+    <div class="collection-head">
+
+      <div>
+        <h2 class="collection-title">
+          Generated Folk
+        </h2>
+
+        <div class="collection-sub">
+          Pixel identities / deterministic edition
+        </div>
+      </div>
+
+      <div
+        class="collection-sub"
+        id="collectionCount"
+      >
+        0 pieces
+      </div>
+
+    </div>
+
+    <div
+      id="grid"
+      class="faces-grid"
+    ></div>
+
+  </section>
+
+  <!-- FOOTER -->
+
+  <footer class="footer">
+
+    <div>
+      <strong>PixelFolk Engine</strong><br>
+      A browser-native deterministic artwork generator.
+      No external generation service is required. The artwork is
+      produced locally from the collection seed.
+    </div>
+
+    <div>
+      Common × 1 · Rare × 3 · Epic × 8 · Legendary × 20
+    </div>
+
+  </footer>
+
+</main>
+
+<!-- =========================================================
+     DETAIL MODAL
+     ========================================================= -->
+
+<div
+  id="modal"
+  class="modal"
+  aria-hidden="true"
+>
+
+  <div class="modal-box">
+
+    <div class="modal-head">
+
+      <div
+        id="modalTitle"
+        class="modal-title"
+      >
+        Token
+      </div>
+
+      <button
+        id="closeModal"
+        class="close"
+        aria-label="Close"
+      >
+        ×
+      </button>
+
+    </div>
+
+    <div class="modal-body">
+
+      <div class="modal-layout">
+
+        <div class="modal-preview">
+          <canvas id="modalCanvas"></canvas>
+        </div>
+
+        <div>
+
+          <div
+            id="modalDna"
+            class="dna-box"
+          ></div>
+
+          <div
+            id="metadataList"
+            class="metadata-list"
+          ></div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<div
+  id="toast"
+  class="toast"
+></div>
+
+<script>
+/* =========================================================
+   PIXELFOLK ENGINE
+   ========================================================= */
+
+"use strict";
+
+/* =========================================================
+   BASIC UTILITIES
+   ========================================================= */
+
+const $ = selector => document.querySelector(selector);
+
+const $$ = selector =>
+  Array.from(document.querySelectorAll(selector));
+
+function clamp(value, min, max) {
+  return Math.max(min, Math.min(max, value));
+}
+
+function pad(value, length) {
+  return String(value).padStart(length, "0");
+}
+
+function titleCase(value) {
+  return String(value)
+    .replace(/[-_]/g, " ")
+    .replace(/\b\w/g, char => char.toUpperCase());
+}
+
+function downloadBlob(blob, filename) {
+  const url = URL.createObjectURL(blob);
+
+  const anchor = document.createElement("a");
+
+  anchor.href = url;
+  anchor.download = filename;
+
+  document.body.appendChild(anchor);
+
+  anchor.click();
+
+  anchor.remove();
+
+  setTimeout(() => {
+    URL.revokeObjectURL(url);
+  }, 1000);
+}
+
+function downloadText(text, filename) {
+  downloadBlob(
+    new Blob(
+      [text],
+      {
+        type: "application/json"
+      }
+    ),
+    filename
+  );
+}
+
+/* =========================================================
+   SEEDED HASH
+   ========================================================= */
+
+function hashString(value) {
+
+  let h1 = 0x811c9dc5;
+  let h2 = 0x9e3779b9;
+
+  for (let i = 0; i < value.length; i++) {
+
+    const code = value.charCodeAt(i);
+
+    h1 ^= code;
+
+    h1 =
+      Math.imul(
+        h1,
+        16777619
+      );
+
+    h2 ^= code + i;
+
+    h2 =
+      Math.imul(
+        h2,
+        2246822519
+      );
+  }
+
+  h1 =
+    Math.imul(
+      h1 ^ (h1 >>> 16),
+      2246822507
+    );
+
+  h1 ^=
+    Math.imul(
+      h2 ^ (h2 >>> 13),
+      3266489909
+    );
+
+  h2 =
+    Math.imul(
+      h2 ^ (h2 >>> 16),
+      2246822507
+    );
+
+  h2 ^=
+    Math.imul(
+      h1 ^ (h1 >>> 13),
+      3266489909
+    );
+
+  return [
+    h1 >>> 0,
+    h2 >>> 0
+  ];
+}
+
+function hashSeed(value) {
+
+  const [a] = hashString(value);
+
+  return a >>> 0;
+}
+
+/* =========================================================
+   SEEDED RNG
+   ========================================================= */
+
+function mulberry32(seed) {
+
+  let a = seed >>> 0;
+
+  return function random() {
+
+    a =
+      (a + 0x6D2B79F5)
+      | 0;
+
+    let t =
+      Math.imul(
+        a ^ (a >>> 15),
+        1 | a
+      );
+
+    t =
+      (t +
+        Math.imul(
+          t ^ (t >>> 7),
+          61 | t
+        ))
+      ^ t;
+
+    return (
+      (t ^ (t >>> 14))
+      >>> 0
+    ) / 4294967296;
+  };
+}
+
+function randomInt(rng, min, max) {
+
+  return Math.floor(
+    rng() * (max - min + 1)
+  ) + min;
+}
+
+function randomChoice(rng, array) {
+
+  return array[
+    Math.floor(
+      rng() * array.length
+    )
+  ];
+}
+
+/* =========================================================
+   WEIGHTED PICK
+   ========================================================= */
+
+function weightedPick(rng, entries) {
+
+  let total = 0;
+
+  for (const entry of entries) {
+    total += entry.weight;
+  }
+
+  let roll =
+    rng() * total;
+
+  for (const entry of entries) {
+
+    if (roll < entry.weight) {
+      return entry;
     }
 
+    roll -= entry.weight;
+  }
 
-    function submitAddress(event) {
-      event.preventDefault();
+  return entries[
+    entries.length - 1
+  ];
+}
 
-      const input = document.getElementById("address");
-      const address = input.value.trim();
+/* =========================================================
+   RARITY
+   ========================================================= */
 
-      if (!address) {
-        input.focus();
-        return;
-      }
+const TIER_POINTS = {
+  common: 1,
+  rare: 3,
+  epic: 8,
+  legendary: 20
+};
 
-      /*
-        Basic EVM address validation.
-        This checks the normal 0x + 40 hex character format.
-      */
+const TIER_ORDER = {
+  common: 0,
+  rare: 1,
+  epic: 2,
+  legendary: 3
+};
 
-      const evmRegex = /^0x[a-fA-F0-9]{40}$/;
+function tierScore(tier) {
+  return TIER_POINTS[tier] || 1;
+}
 
-      if (!evmRegex.test(address)) {
-        input.focus();
+function calculateRank(score) {
 
-        input.style.borderColor = "rgba(255, 20, 91, 0.55)";
-        input.style.boxShadow =
-          "0 0 0 3px rgba(255, 20, 91, 0.05)";
+  if (score >= 80) {
+    return "legendary";
+  }
 
-        setTimeout(() => {
-          input.style.borderColor = "";
-          input.style.boxShadow = "";
-        }, 900);
+  if (score >= 47) {
+    return "epic";
+  }
 
-        return;
-      }
+  if (score >= 27) {
+    return "rare";
+  }
 
-      console.log("Submitted EVM address:", address);
+  return "common";
+}
 
-      /*
-        Put your API / wallet submission logic here.
+/* =========================================================
+   PALETTES
+   ========================================================= */
 
-        Example:
+const PALETTES = {
 
-        fetch("/api/submit", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            address: address
-          })
-        });
-      */
+  ivory: {
+    bg: "#eee9dc",
+    skin: "#f7dfc1",
+    shadow: "#c99978",
+    ink: "#25242a",
+    accent: "#6d5dfc",
+    cloth: "#d7d0c2",
+    highlight: "#fff9ed"
+  },
 
-      input.value = "";
+  lavender: {
+    bg: "#e8e2f1",
+    skin: "#f2d4c4",
+    shadow: "#bb8e91",
+    ink: "#28222f",
+    accent: "#8959ef",
+    cloth: "#bca8d9",
+    highlight: "#fff8ff"
+  },
 
-      alert("Address submitted.");
+  ocean: {
+    bg: "#dcebef",
+    skin: "#f0cfb3",
+    shadow: "#a87767",
+    ink: "#1e2b31",
+    accent: "#168ba0",
+    cloth: "#81b8c3",
+    highlight: "#f6ffff"
+  },
+
+  peach: {
+    bg: "#f1dfd3",
+    skin: "#f3c6a9",
+    shadow: "#bd765e",
+    ink: "#302127",
+    accent: "#e36f64",
+    cloth: "#e8a18e",
+    highlight: "#fff7ef"
+  },
+
+  mint: {
+    bg: "#deece4",
+    skin: "#efd5bd",
+    shadow: "#a77e68",
+    ink: "#20312a",
+    accent: "#32a47f",
+    cloth: "#9dcbb8",
+    highlight: "#f5fff9"
+  },
+
+  lemon: {
+    bg: "#f0ebcf",
+    skin: "#efd0ae",
+    shadow: "#ae805c",
+    ink: "#2e2c20",
+    accent: "#d59a24",
+    cloth: "#d9c16b",
+    highlight: "#fffdf0"
+  },
+
+  rose: {
+    bg: "#efdde3",
+    skin: "#f1cfbe",
+    shadow: "#ad7775",
+    ink: "#332229",
+    accent: "#ca5376",
+    cloth: "#d59aac",
+    highlight: "#fff7fa"
+  },
+
+  graphite: {
+    bg: "#dededc",
+    skin: "#d8b99e",
+    shadow: "#8f7164",
+    ink: "#17181b",
+    accent: "#5c5d68",
+    cloth: "#6c6e75",
+    highlight: "#fafafa"
+  },
+
+  violet: {
+    bg: "#e5ddf4",
+    skin: "#eccdbb",
+    shadow: "#a8777c",
+    ink: "#27202e",
+    accent: "#7144d8",
+    cloth: "#9471ca",
+    highlight: "#fffaff"
+  },
+
+  cyber: {
+    bg: "#d9ecea",
+    skin: "#e8c8b1",
+    shadow: "#9e746b",
+    ink: "#13272a",
+    accent: "#00a6b8",
+    cloth: "#43aeb7",
+    highlight: "#f4ffff"
+  },
+
+  gold: {
+    bg: "#eee1be",
+    skin: "#efd0ac",
+    shadow: "#a9784c",
+    ink: "#302718",
+    accent: "#d28a16",
+    cloth: "#b98b3d",
+    highlight: "#fffbed"
+  }
+
+};
+
+const PALETTE_NAMES =
+  Object.keys(PALETTES);
+
+/* =========================================================
+   BACKGROUNDS
+   ========================================================= */
+
+const BACKGROUNDS = [
+
+  "paper",
+  "grid",
+  "dots",
+  "sunburst",
+  "cross",
+  "diagonal",
+  "halftone",
+  "rings",
+  "checker",
+  "noise",
+  "orbit",
+  "window"
+
+];
+
+/* =========================================================
+   BODY SHAPES
+   ========================================================= */
+
+const BODY_SHAPES = [
+
+  "slim",
+  "compact",
+  "tall",
+  "broad",
+  "round",
+  "athletic",
+  "angular",
+  "soft",
+  "hero",
+  "micro"
+
+];
+
+/* =========================================================
+   HEAD SHAPES
+   ========================================================= */
+
+const HEAD_SHAPES = [
+
+  "round",
+  "square",
+  "wide",
+  "narrow",
+  "diamond",
+  "soft",
+  "long",
+  "mask"
+
+];
+
+/* =========================================================
+   HAIR
+   ========================================================= */
+
+const HAIR_STYLES = [
+
+  "buzz",
+  "crop",
+  "swoop",
+  "flow",
+  "bob",
+  "shag",
+  "mop",
+  "spikes",
+  "mohawk",
+  "twin",
+  "knot",
+  "bangs",
+  "halo",
+  "sidecut",
+  "crown",
+  "antenna",
+  "visor",
+  "cloud",
+  "crest",
+  "wild"
+
+];
+
+/* =========================================================
+   EYES
+   ========================================================= */
+
+const EYE_STYLES = [
+
+  "normal",
+  "small",
+  "large",
+  "sleepy",
+  "wide",
+  "diamond",
+  "pixel",
+  "hollow",
+  "cross",
+  "mono",
+  "cyclops",
+  "glow",
+  "shutter",
+  "visor",
+  "stars",
+  "angry"
+
+];
+
+/* =========================================================
+   MOUTHS
+   ========================================================= */
+
+const MOUTH_STYLES = [
+
+  "flat",
+  "smile",
+  "open",
+  "grin",
+  "tiny",
+  "frown",
+  "fang",
+  "pixel",
+  "zig",
+  "mask",
+  "surprise",
+  "neutral"
+
+];
+
+/* =========================================================
+   NOSES
+   ========================================================= */
+
+const NOSE_STYLES = [
+
+  "none",
+  "dot",
+  "short",
+  "long",
+  "angle",
+  "shadow",
+  "pixel"
+
+];
+
+/* =========================================================
+   BROWS
+   ========================================================= */
+
+const BROW_STYLES = [
+
+  "none",
+  "flat",
+  "thick",
+  "angled",
+  "high",
+  "single",
+  "split"
+
+];
+
+/* =========================================================
+   ACCESSORIES
+   ========================================================= */
+
+const ACCESSORIES = [
+
+  "none",
+  "earring",
+  "double-earring",
+  "glasses",
+  "round-glasses",
+  "visor",
+  "headband",
+  "hairclip",
+  "starclip",
+  "chain",
+  "necklace",
+  "scarf",
+  "mask",
+  "horns",
+  "halo",
+  "crown",
+  "antenna",
+  "pixel-ear",
+  "monocle",
+  "gem"
+
+];
+
+/* =========================================================
+   CLOTHING
+   ========================================================= */
+
+const CLOTHING = [
+
+  "plain",
+  "collar",
+  "stripes",
+  "zip",
+  "hoodie",
+  "uniform",
+  "armor",
+  "jacket",
+  "poncho",
+  "tech",
+  "oversized",
+  "vest"
+
+];
+
+/* =========================================================
+   TEXTURES
+   ========================================================= */
+
+const TEXTURES = [
+
+  "clean",
+  "speckle",
+  "grain",
+  "scratches",
+  "scanlines",
+  "halftone",
+  "dust",
+  "glitch",
+  "stamps",
+  "stars"
+
+];
+
+/* =========================================================
+   MARKINGS
+   ========================================================= */
+
+const MARKINGS = [
+
+  "none",
+  "freckles",
+  "blush",
+  "cheek-dot",
+  "scar",
+  "stripe",
+  "under-eye",
+  "forehead",
+  "tattoo",
+  "pixel-mark",
+  "beauty-mark",
+  "paint"
+
+];
+
+/* =========================================================
+   EXPRESSIONS
+   ========================================================= */
+
+const EXPRESSIONS = [
+
+  "calm",
+  "happy",
+  "serious",
+  "sleepy",
+  "angry",
+  "curious",
+  "strange",
+  "robotic",
+  "mysterious"
+
+];
+
+/* =========================================================
+   TRAIT POOLS
+   ========================================================= */
+
+const POOLS = {
+
+  head: [
+    ["round", 28, "common"],
+    ["square", 18, "common"],
+    ["wide", 14, "common"],
+    ["narrow", 12, "rare"],
+    ["diamond", 9, "rare"],
+    ["soft", 8, "rare"],
+    ["long", 7, "epic"],
+    ["mask", 4, "legendary"]
+  ],
+
+  body: [
+    ["slim", 18, "common"],
+    ["compact", 16, "common"],
+    ["tall", 14, "common"],
+    ["broad", 12, "rare"],
+    ["round", 11, "rare"],
+    ["athletic", 10, "rare"],
+    ["angular", 7, "epic"],
+    ["soft", 5, "epic"],
+    ["hero", 4, "legendary"],
+    ["micro", 3, "legendary"]
+  ],
+
+  hair: [
+    ["buzz", 12, "common"],
+    ["crop", 10, "common"],
+    ["swoop", 9, "common"],
+    ["flow", 8, "common"],
+    ["bob", 8, "common"],
+    ["shag", 7, "rare"],
+    ["mop", 6, "rare"],
+    ["spikes", 6, "rare"],
+    ["twin", 5, "rare"],
+    ["bangs", 5, "rare"],
+    ["knot", 4, "epic"],
+    ["mohawk", 3, "epic"],
+    ["halo", 2, "epic"],
+    ["sidecut", 2, "epic"],
+    ["crown", 1.5, "legendary"],
+    ["antenna", 1, "legendary"],
+    ["visor", .8, "legendary"],
+    ["cloud", .7, "legendary"],
+    ["crest", .6, "legendary"],
+    ["wild", .5, "legendary"]
+  ],
+
+  eyes: [
+    ["normal", 25, "common"],
+    ["small", 13, "common"],
+    ["large", 12, "common"],
+    ["sleepy", 10, "common"],
+    ["wide", 8, "rare"],
+    ["diamond", 6, "rare"],
+    ["pixel", 6, "rare"],
+    ["hollow", 5, "rare"],
+    ["cross", 4, "epic"],
+    ["mono", 3, "epic"],
+    ["cyclops", 2, "epic"],
+    ["glow", 2, "epic"],
+    ["shutter", 1.5, "epic"],
+    ["visor", 1, "legendary"],
+    ["stars", .8, "legendary"],
+    ["angry", 4, "rare"]
+  ],
+
+  mouth: [
+    ["flat", 20, "common"],
+    ["smile", 20, "common"],
+    ["open", 12, "common"],
+    ["tiny", 11, "common"],
+    ["neutral", 10, "common"],
+    ["grin", 8, "rare"],
+    ["frown", 6, "rare"],
+    ["pixel", 5, "rare"],
+    ["zig", 3, "epic"],
+    ["fang", 2, "epic"],
+    ["mask", 1, "legendary"],
+    ["surprise", 2, "rare"]
+  ],
+
+  nose: [
+    ["none", 35, "common"],
+    ["dot", 30, "common"],
+    ["short", 15, "common"],
+    ["long", 8, "rare"],
+    ["angle", 6, "rare"],
+    ["shadow", 4, "epic"],
+    ["pixel", 2, "legendary"]
+  ],
+
+  brow: [
+    ["none", 20, "common"],
+    ["flat", 30, "common"],
+    ["thick", 20, "common"],
+    ["angled", 12, "rare"],
+    ["high", 8, "rare"],
+    ["single", 6, "epic"],
+    ["split", 4, "legendary"]
+  ],
+
+  accessory: [
+    ["none", 40, "common"],
+    ["earring", 9, "common"],
+    ["double-earring", 5, "rare"],
+    ["glasses", 7, "rare"],
+    ["round-glasses", 5, "rare"],
+    ["headband", 5, "rare"],
+    ["hairclip", 5, "common"],
+    ["chain", 4, "rare"],
+    ["necklace", 4, "rare"],
+    ["scarf", 3, "epic"],
+    ["visor", 2, "epic"],
+    ["mask", 2, "epic"],
+    ["horns", 1.5, "legendary"],
+    ["halo", 1, "legendary"],
+    ["crown", .7, "legendary"],
+    ["antenna", .8, "legendary"],
+    ["pixel-ear", 2, "epic"],
+    ["monocle", 1.2, "epic"],
+    ["gem", .8, "legendary"]
+  ],
+
+  clothing: [
+    ["plain", 22, "common"],
+    ["collar", 14, "common"],
+    ["stripes", 11, "common"],
+    ["zip", 10, "rare"],
+    ["hoodie", 8, "rare"],
+    ["uniform", 7, "rare"],
+    ["jacket", 6, "rare"],
+    ["vest", 5, "rare"],
+    ["oversized", 5, "epic"],
+    ["poncho", 4, "epic"],
+    ["tech", 4, "epic"],
+    ["armor", 2, "legendary"]
+  ],
+
+  marking: [
+    ["none", 46, "common"],
+    ["freckles", 12, "common"],
+    ["blush", 10, "common"],
+    ["cheek-dot", 8, "common"],
+    ["scar", 7, "rare"],
+    ["stripe", 5, "rare"],
+    ["under-eye", 4, "rare"],
+    ["forehead", 3, "epic"],
+    ["tattoo", 2, "epic"],
+    ["pixel-mark", 2, "epic"],
+    ["beauty-mark", 1, "rare"],
+    ["paint", 1, "legendary"]
+  ],
+
+  texture: [
+    ["clean", 30, "common"],
+    ["speckle", 16, "common"],
+    ["grain", 14, "common"],
+    ["dust", 12, "common"],
+    ["scratches", 9, "rare"],
+    ["scanlines", 7, "rare"],
+    ["halftone", 5, "rare"],
+    ["stamps", 3, "epic"],
+    ["glitch", 2, "epic"],
+    ["stars", 2, "legendary"]
+  ],
+
+  palette: [
+    ["ivory", 18, "common"],
+    ["lavender", 12, "common"],
+    ["ocean", 11, "common"],
+    ["peach", 10, "common"],
+    ["mint", 9, "common"],
+    ["lemon", 8, "rare"],
+    ["rose", 8, "rare"],
+    ["graphite", 7, "rare"],
+    ["violet", 6, "rare"],
+    ["cyber", 5, "epic"],
+    ["gold", 3, "legendary"]
+  ],
+
+  background: [
+    ["paper", 24, "common"],
+    ["grid", 12, "common"],
+    ["dots", 12, "common"],
+    ["diagonal", 10, "common"],
+    ["checker", 8, "rare"],
+    ["cross", 8, "rare"],
+    ["rings", 7, "rare"],
+    ["sunburst", 6, "rare"],
+    ["halftone", 5, "epic"],
+    ["noise", 4, "epic"],
+    ["orbit", 3, "epic"],
+    ["window", 1, "legendary"]
+  ],
+
+  expression: [
+    ["calm", 25, "common"],
+    ["happy", 18, "common"],
+    ["serious", 15, "common"],
+    ["sleepy", 10, "common"],
+    ["angry", 9, "rare"],
+    ["curious", 8, "rare"],
+    ["strange", 6, "epic"],
+    ["robotic", 5, "epic"],
+    ["mysterious", 4, "legendary"]
+  ]
+};
+
+/* =========================================================
+   CONVERT POOLS
+   ========================================================= */
+
+function normalizePool(pool) {
+
+  return pool.map(item => ({
+    value: item[0],
+    weight: item[1],
+    tier: item[2]
+  }));
+
+}
+
+const TRAIT_POOLS = {};
+
+for (const key in POOLS) {
+  TRAIT_POOLS[key] =
+    normalizePool(
+      POOLS[key]
+    );
+}
+
+/* =========================================================
+   PIXEL CANVAS SETTINGS
+   ========================================================= */
+
+const W = 32;
+const H = 38;
+
+const PIXEL = 12;
+
+/* =========================================================
+   PIXEL HELPERS
+   ========================================================= */
+
+function px(ctx, x, y, color) {
+
+  ctx.fillStyle = color;
+
+  ctx.fillRect(
+    x * PIXEL,
+    y * PIXEL,
+    PIXEL,
+    PIXEL
+  );
+}
+
+function rect(ctx, x, y, w, h, color) {
+
+  ctx.fillStyle = color;
+
+  ctx.fillRect(
+    x * PIXEL,
+    y * PIXEL,
+    w * PIXEL,
+    h * PIXEL
+  );
+}
+
+function line(ctx, x1, y1, x2, y2, color) {
+
+  ctx.fillStyle = color;
+
+  const dx = Math.abs(x2 - x1);
+  const dy = Math.abs(y2 - y1);
+
+  const sx =
+    x1 < x2 ? 1 : -1;
+
+  const sy =
+    y1 < y2 ? 1 : -1;
+
+  let err = dx - dy;
+
+  while (true) {
+
+    px(
+      ctx,
+      x1,
+      y1,
+      color
+    );
+
+    if (
+      x1 === x2 &&
+      y1 === y2
+    ) {
+      break;
     }
-  </script>
 
-</body>
-</html>
+    const e2 = 2 * err;
+
+    if (e2 > -dy) {
+      err -= dy;
+      x1 += sx;
+    }
+
+    if (e2 < dx) {
+      err += dx;
+      y1 += sy;
+    }
+  }
+}
+
+/* =========================================================
+   TRAIT ROLLING
+   ========================================================= */
+
+function rollTrait(rng, key) {
+
+  return weightedPick(
+    rng,
+    TRAIT_POOLS[key]
+  );
+}
+
+function rollTraits(rng) {
+
+  const values = {};
+  const tiers = {};
+
+  const keys = [
+    "head",
+    "body",
+    "hair",
+    "eyes",
+    "mouth",
+    "nose",
+    "brow",
+    "accessory",
+    "clothing",
+    "marking",
+    "texture",
+    "palette",
+    "background",
+    "expression"
+  ];
+
+  for (const key of keys) {
+
+    const result =
+      rollTrait(
+        rng,
+        key
+      );
+
+    values[key] =
+      result.value;
+
+    tiers[key] =
+      result.tier;
+  }
+
+  /*
+   * Additional micro DNA.
+   * These are not displayed as traditional traits,
+   * but materially change artwork.
+   */
+
+  values.skinTone =
+    randomInt(rng, 0, 7);
+
+  values.faceTilt =
+    randomInt(rng, -2, 2);
+
+  values.eyeGap =
+    randomInt(rng, 0, 2);
+
+  values.mouthOffset =
+    randomInt(rng, -1, 1);
+
+  values.hairOffset =
+    randomInt(rng, -2, 2);
+
+  values.accessorySide =
+    randomChoice(
+      rng,
+      [
+        "left",
+        "right",
+        "both"
+      ]
+    );
+
+  values.bgVariant =
+    randomInt(rng, 0, 15);
+
+  values.textureSeed =
+    randomInt(rng, 0, 999999);
+
+  values.faceAccent =
+    randomInt(rng, 0, 5);
+
+  return {
+    values,
+    tiers
+  };
+}
+
+/* =========================================================
+   DNA
+   ========================================================= */
+
+function makeDNA(values) {
+
+  const keys = Object.keys(values)
+    .sort();
+
+  return keys
+    .map(
+      key =>
+        key +
+        "=" +
+        values[key]
+    )
+    .join("|");
+}
+
+function dnaHash(dna) {
+
+  const [a, b] =
+    hashString(dna);
+
+  return (
+    a.toString(16).padStart(8, "0") +
+    b.toString(16).padStart(8, "0")
+  ).slice(0, 16);
+}
+
+/* =========================================================
+   SCORE
+   ========================================================= */
+
+function calculateScore(tiers) {
+
+  let score = 0;
+
+  for (const key in tiers) {
+    score +=
+      tierScore(
+        tiers[key]
+      );
+  }
+
+  return score;
+}
+
+/* =========================================================
+   SKIN COLORS
+   ========================================================= */
+
+const SKINS = [
+
+  ["#f8dfc3", "#c99578"],
+  ["#f2cdb0", "#b77d62"],
+  ["#e8b895", "#9c654e"],
+  ["#d99f78", "#8f5945"],
+  ["#c78661", "#754634"],
+  ["#b66f50", "#653a2d"],
+  ["#94563e", "#4e2b23"],
+  ["#70402f", "#3b211b"]
+
+];
+
+/* =========================================================
+   BUILD FACE GEOMETRY
+   ========================================================= */
+
+function getHeadBounds(head) {
+
+  switch (head) {
+
+    case "square":
+      return {
+        left: 7,
+        right: 24,
+        top: 6,
+        bottom: 22
+      };
+
+    case "wide":
+      return {
+        left: 5,
+        right: 26,
+        top: 7,
+        bottom: 21
+      };
+
+    case "narrow":
+      return {
+        left: 9,
+        right: 22,
+        top: 5,
+        bottom: 23
+      };
+
+    case "diamond":
+      return {
+        left: 7,
+        right: 24,
+        top: 5,
+        bottom: 23
+      };
+
+    case "long":
+      return {
+        left: 8,
+        right: 23,
+        top: 4,
+        bottom: 25
+      };
+
+    case "mask":
+      return {
+        left: 5,
+        right: 26,
+        top: 5,
+        bottom: 24
+      };
+
+    case "soft":
+      return {
+        left: 6,
+        right: 25,
+        top: 6,
+        bottom: 23
+      };
+
+    case "round":
+    default:
+      return {
+        left: 6,
+        right: 25,
+        top: 6,
+        bottom: 22
+      };
+  }
+}
+
+/* =========================================================
+   HEAD MASK
+   ========================================================= */
+
+function buildHeadMask(traits) {
+
+  const mask =
+    Array.from(
+      {
+        length: H
+      },
+      () =>
+        Array(W).fill(false)
+    );
+
+  const b =
+    getHeadBounds(
+      traits.head
+    );
+
+  for (
+    let y = b.top;
+    y <= b.bottom;
+    y++
+  ) {
+
+    for (
+      let x = b.left;
+      x <= b.right;
+      x++
+    ) {
+
+      let inside = true;
+
+      const nx =
+        (x - 16) /
+        Math.max(
+          1,
+          (b.right - b.left) / 2
+        );
+
+      const ny =
+        (y - ((b.top + b.bottom) / 2)) /
+        Math.max(
+          1,
+          (b.bottom - b.top) / 2
+        );
+
+      if (
+        traits.head === "round" ||
+        traits.head === "soft"
+      ) {
+        inside =
+          nx * nx +
+          ny * ny <=
+          1.08;
+      }
+
+      if (
+        traits.head === "diamond"
+      ) {
+        inside =
+          Math.abs(nx) +
+          Math.abs(ny) <=
+          1.12;
+      }
+
+      if (
+        traits.head === "narrow"
+      ) {
+        inside =
+          nx * nx +
+          ny * ny <=
+          1.02;
+      }
+
+      if (
+        traits.head === "long"
+      ) {
+        inside =
+          nx * nx +
+          ny * ny <=
+          1.06;
+      }
+
+      if (
+        traits.head === "square"
+      ) {
+        inside = true;
+      }
+
+      if (
+        traits.head === "wide"
+      ) {
+        inside =
+          Math.abs(nx) < 1.08 &&
+          Math.abs(ny) < .95;
+      }
+
+      if (
+        traits.head === "mask"
+      ) {
+        inside = true;
+      }
+
+      if (inside) {
+        mask[y][x] = true;
+      }
+    }
+  }
+
+  /*
+   * Pixel stair-step edits make the silhouette
+   * less mathematically smooth.
+   */
+
+  const rng =
+    mulberry32(
+      hashSeed(
+        makeDNA(traits)
+      )
+    );
+
+  for (
+    let y = 5;
+    y < 25;
+    y++
+  ) {
+
+    for (
+      let x = 4;
+      x < 28;
+      x++
+    ) {
+
+      if (
+        mask[y][x] &&
+        rng() < .045
+      ) {
+        mask[y][x] = false;
+      }
+    }
+  }
+
+  return mask;
+}
+
+/* =========================================================
+   BODY MASK
+   ========================================================= */
+
+function buildBodyMask(traits) {
+
+  const mask =
+    Array.from(
+      {
+        length: H
+      },
+      () =>
+        Array(W).fill(false)
+    );
+
+  const startY = 23;
+
+  for (
+    let y = startY;
+    y < H;
+    y++
+  ) {
+
+    const t =
+      (y - startY) /
+      (H - startY);
+
+    let halfWidth;
+
+    switch (traits.body) {
+
+      case "slim":
+        halfWidth =
+          5 + t * 2;
+        break;
+
+      case "compact":
+        halfWidth =
+          6 + t;
+        break;
+
+      case "tall":
+        halfWidth =
+          5.5 + t * 1.8;
+        break;
+
+      case "broad":
+        halfWidth =
+          8 + t;
+        break;
+
+      case "round":
+        halfWidth =
+          6 + Math.sin(t * Math.PI) * 3;
+        break;
+
+      case "athletic":
+        halfWidth =
+          6 + t * 3;
+        break;
+
+      case "angular":
+        halfWidth =
+          t < .45
+            ? 6
+            : 8;
+        break;
+
+      case "soft":
+        halfWidth =
+          7 + Math.sin(t * Math.PI) * 2;
+        break;
+
+      case "hero":
+        halfWidth =
+          8.5 + t * 1.5;
+        break;
+
+      case "micro":
+        halfWidth =
+          4.5 + t * 1.2;
+        break;
+
+      default:
+        halfWidth = 6;
+    }
+
+    const center =
+      16 +
+      (
+        traits.faceTilt || 0
+      ) * .25;
+
+    const left =
+      Math.floor(
+        center - halfWidth
+      );
+
+    const right =
+      Math.ceil(
+        center + halfWidth
+      );
+
+    for (
+      let x = left;
+      x <= right;
+      x++
+    ) {
+
+      if (
+        x >= 0 &&
+        x < W
+      ) {
+        mask[y][x] = true;
+      }
+    }
+  }
+
+  return mask;
+}
+
+/* =========================================================
+   BACKGROUND DRAWING
+   ========================================================= */
+
+function drawBackground(
+  ctx,
+  palette,
+  traits,
+  rng
+) {
+
+  const bg =
+    palette.bg;
+
+  ctx.fillStyle = bg;
+
+  ctx.fillRect(
+    0,
+    0,
+    W * PIXEL,
+    H * PIXEL
+  );
+
+  const dark =
+    palette.ink;
+
+  const accent =
+    palette.accent;
+
+  const variant =
+    traits.bgVariant || 0;
+
+  switch (
+    traits.background
+  ) {
+
+    case "grid":
+
+      for (
+        let x = 0;
+        x < W;
+        x += 4
+      ) {
+
+        for (
+          let y = 0;
+          y < H;
+          y += 4
+        ) {
+
+          if (
+            (x + y + variant) %
+            8 === 0
+          ) {
+            rect(
+              ctx,
+              x,
+              y,
+              1,
+              1,
+              accent
+            );
+          }
+        }
+      }
+
+      break;
+
+    case "dots":
+
+      for (
+        let y = 2;
+        y < H;
+        y += 4
+      ) {
+
+        for (
+          let x = 2;
+          x < W;
+          x += 4
+        ) {
+
+          px(
+            ctx,
+            x,
+            y,
+            variant % 2
+              ? accent
+              : dark
+          );
+        }
+      }
+
+      break;
+
+    case "cross":
+
+      for (
+        let i = 0;
+        i < 8;
+        i++
+      ) {
+
+        const x =
+          randomInt(
+            rng,
+            2,
+            W - 3
+          );
+
+        const y =
+          randomInt(
+            rng,
+            2,
+            H - 3
+          );
+
+        px(
+          ctx,
+          x,
+          y,
+          accent
+        );
+
+        px(
+          ctx,
+          x + 1,
+          y,
+          accent
+        );
+
+        px(
+          ctx,
+          x,
+          y + 1,
+          accent
+        );
+
+        px(
+          ctx,
+          x + 1,
+          y + 1,
+          accent
+        );
+      }
+
+      break;
+
+    case "diagonal":
+
+      for (
+        let i = -H;
+        i < W + H;
+        i += 4
+      ) {
+
+        line(
+          ctx,
+          i,
+          0,
+          i + H,
+          H,
+          accent
+        );
+      }
+
+      break;
+
+    case "checker":
+
+      for (
+        let y = 0;
+        y < H;
+        y += 4
+      ) {
+
+        for (
+          let x = 0;
+          x < W;
+          x += 4
+        ) {
+
+          if (
+            ((x / 4) +
+             (y / 4) +
+             variant) %
+            2 === 0
+          ) {
+
+            rect(
+              ctx,
+              x,
+              y,
+              4,
+              4,
+              accent
+            );
+          }
+        }
+      }
+
+      break;
+
+    case "rings":
+
+      for (
+        let r = 4;
+        r < 22;
+        r += 4
+      ) {
+
+        for (
+          let a = 0;
+          a < 360;
+          a += 12
+        ) {
+
+          const rad =
+            a *
+            Math.PI /
+            180;
+
+          const x =
+            Math.round(
+              16 +
+              Math.cos(rad) *
+              r
+            );
+
+          const y =
+            Math.round(
+              18 +
+              Math.sin(rad) *
+              r
+            );
+
+          if (
+            x >= 0 &&
+            x < W &&
+            y >= 0 &&
+            y < H
+          ) {
+
+            px(
+              ctx,
+              x,
+              y,
+              accent
+            );
+          }
+        }
+      }
+
+      break;
+
+    case "sunburst":
+
+      for (
+        let a = 0;
+        a < 360;
+        a += 15
+      ) {
+
+        const rad =
+          a *
+          Math.PI /
+          180;
+
+        line(
+          ctx,
+          16,
+          18,
+          Math.round(
+            16 +
+            Math.cos(rad) *
+            30
+          ),
+          Math.round(
+            18 +
+            Math.sin(rad) *
+            30
+          ),
+          accent
+        );
+      }
+
+      break;
+
+    case "halftone":
+
+      for (
+        let y = 1;
+        y < H;
+        y += 3
+      ) {
+
+        for (
+          let x = 1;
+          x < W;
+          x += 3
+        ) {
+
+          if (
+            (
+              x * 17 +
+              y * 31 +
+              variant
+            ) % 5 < 3
+          ) {
+
+            px(
+              ctx,
+              x,
+              y,
+              accent
+            );
+          }
+        }
+      }
+
+      break;
+
+    case "noise":
+
+      for (
+        let i = 0;
+        i < 180;
+        i++
+      ) {
+
+        const x =
+          randomInt(
+            rng,
+            0,
+            W - 1
+          );
+
+        const y =
+          randomInt(
+            rng,
+            0,
+            H - 1
+          );
+
+        px(
+          ctx,
+          x,
+          y,
+          randomChoice(
+            rng,
+            [
+              accent,
+              dark,
+              palette.highlight
+            ]
+          )
+        );
+      }
+
+      break;
+
+    case "orbit":
+
+      for (
+        let r = 5;
+        r < 18;
+        r += 3
+      ) {
+
+        for (
+          let a = 0;
+          a < 360;
+          a += 18
+        ) {
+
+          const rad =
+            (
+              a +
+              variant * 3
+            ) *
+            Math.PI /
+            180;
+
+          const x =
+            Math.round(
+              16 +
+              Math.cos(rad) *
+              r
+            );
+
+          const y =
+            Math.round(
+              18 +
+              Math.sin(rad) *
+              r *
+              .7
+            );
+
+          if (
+            x >= 0 &&
+            x < W &&
+            y >= 0 &&
+            y < H
+          ) {
+
+            px(
+              ctx,
+              x,
+              y,
+              accent
+            );
+          }
+        }
+      }
+
+      break;
+
+    case "window":
+
+      rect(
+        ctx,
+        3,
+        3,
+        26,
+        30,
+        palette.highlight
+      );
+
+      rect(
+        ctx,
+        5,
+        5,
+        22,
+        26,
+        bg
+      );
+
+      for (
+        let x = 6;
+        x < 27;
+        x += 4
+      ) {
+
+        line(
+          ctx,
+          x,
+          5,
+          x,
+          30,
+          accent
+        );
+      }
+
+      for (
+        let y = 6;
+        y < 30;
+        y += 4
+      ) {
+
+        line(
+          ctx,
+          5,
+          y,
+          27,
+          y,
+          accent
+        );
+      }
+
+      break;
+
+    case "paper":
+    default:
+      break;
+  }
+
+  /*
+   * Background framing.
+   */
+
+  rect(
+    ctx,
+    1,
+    1,
+    W - 2,
+    1,
+    palette.highlight
+  );
+
+  rect(
+    ctx,
+    1,
+    H - 2,
+    W - 2,
+    1,
+    dark
+  );
+}
+
+/* =========================================================
+   FACE DRAWING
+   ========================================================= */
+
+function drawFace(
+  ctx,
+  traits,
+  palette,
+  rng
+) {
+
+  const head =
+    buildHeadMask(
+      traits
+    );
+
+  const body =
+    buildBodyMask(
+      traits
+    );
+
+  const skinIndex =
+    clamp(
+      traits.skinTone || 0,
+      0,
+      SKINS.length - 1
+    );
+
+  const skin =
+    SKINS[skinIndex][0];
+
+  const skinShadow =
+    SKINS[skinIndex][1];
+
+  /*
+   * BODY
+   */
+
+  for (
+    let y = 23;
+    y < H;
+    y++
+  ) {
+
+    for (
+      let x = 0;
+      x < W;
+      x++
+    ) {
+
+      if (
+        body[y][x]
+      ) {
+
+        px(
+          ctx,
+          x,
+          y,
+          palette.cloth
+        );
+      }
+    }
+  }
+
+  /*
+   * BODY SHADOW
+   */
+
+  for (
+    let y = 24;
+    y < H;
+    y++
+  ) {
+
+    for (
+      let x = 0;
+      x < W;
+      x++
+    ) {
+
+      if (
+        body[y][x] &&
+        (
+          x < 7 ||
+          x > 24 ||
+          (
+            y % 5 === 0 &&
+            x % 3 === 0
+          )
+        )
+      ) {
+
+        px(
+          ctx,
+          x,
+          y,
+          palette.accent
+        );
+      }
+    }
+  }
+
+  /*
+   * HEAD
+   */
+
+  for (
+    let y = 0;
+    y < 26;
+    y++
+  ) {
+
+    for (
+      let x = 0;
+      x < W;
+      x++
+    ) {
+
+      if (
+        head[y][x]
+      ) {
+
+        px(
+          ctx,
+          x,
+          y,
+          skin
+        );
+      }
+    }
+  }
+
+  /*
+   * FACE SHADING
+   */
+
+  for (
+    let y = 8;
+    y < 23;
+    y++
+  ) {
+
+    for (
+      let x = 6;
+      x < 26;
+      x++
+    ) {
+
+      if (
+        head[y][x] &&
+        (
+          x < 8 ||
+          x > 23 ||
+          y > 20
+        )
+      ) {
+
+        px(
+          ctx,
+          x,
+          y,
+          skinShadow
+        );
+      }
+    }
+  }
+
+  /*
+   * CLOTHING
+   */
+
+  drawClothing(
+    ctx,
+    traits,
+    palette
+  );
+
+  /*
+   * HAIR
+   */
+
+  drawHair(
+    ctx,
+    traits,
+    palette,
+    rng
+  );
+
+  /*
+   * FACE FEATURES
+   */
+
+  drawBrows(
+    ctx,
+    traits,
+    palette
+  );
+
+  drawEyes(
+    ctx,
+    traits,
+    palette
+  );
+
+  drawNose(
+    ctx,
+    traits,
+    palette
+  );
+
+  drawMouth(
+    ctx,
+    traits,
+    palette
+  );
+
+  /*
+   * MARKING
+   */
+
+  drawMarking(
+    ctx,
+    traits,
+    palette
+  );
+
+  /*
+   * ACCESSORY
+   */
+
+  drawAccessory(
+    ctx,
+    traits,
+    palette
+  );
+
+  /*
+   * EXPRESSION MICRO MODIFIERS
+   */
+
+  applyExpression(
+    ctx,
+    traits,
+    palette
+  );
+}
+
+/* =========================================================
+   HAIR DRAWING
+   ========================================================= */
+
+function drawHair(
+  ctx,
+  traits,
+  palette,
+  rng
+) {
+
+  const hair =
+    palette.ink;
+
+  const accent =
+    palette.accent;
+
+  const off =
+    traits.hairOffset || 0;
+
+  switch (
+    traits.hair
+  ) {
+
+    case "buzz":
+
+      for (
+        let y = 5;
+        y <= 9;
+        y++
+      ) {
+
+        for (
+          let x = 8;
+          x <= 23;
+          x++
+        ) {
+
+          if (
+            (
+              x +
+              y
+            ) % 3 !== 0
+          ) {
+
+            px(
+              ctx,
+              x,
+              y,
+              hair
+            );
+          }
+        }
+      }
+
+      break;
+
+    case "crop":
+
+      rect(
+        ctx,
+        7 + off,
+        4,
+        18,
+        4,
+        hair
+      );
+
+      rect(
+        ctx,
+        8 + off,
+        8,
+        16,
+        2,
+        hair
+      );
+
+      break;
+
+    case "swoop":
+
+      rect(
+        ctx,
+        7,
+        4,
+        17,
+        3,
+        hair
+      );
+
+      rect(
+        ctx,
+        7,
+        6,
+        11,
+        3,
+        hair
+      );
+
+      rect(
+        ctx,
+        9,
+        8,
+        7,
+        2,
+        hair
+      );
+
+      break;
+
+    case "flow":
+
+      rect(
+        ctx,
+        6,
+        4,
+        18,
+        4,
+        hair
+      );
+
+      rect(
+        ctx,
+        6,
+        7,
+        4,
+        10,
+        hair
+      );
+
+      rect(
+        ctx,
+        22,
+        7,
+        3,
+        13,
+        hair
+      );
+
+      break;
+
+    case "bob":
+
+      rect(
+        ctx,
+        6,
+        5,
+        20,
+        5,
+        hair
+      );
+
+      rect(
+        ctx,
+        6,
+        8,
+        3,
+        12,
+        hair
+      );
+
+      rect(
+        ctx,
+        23,
+        8,
+        3,
+        12,
+        hair
+      );
+
+      break;
+
+    case "shag":
+
+      rect(
+        ctx,
+        6,
+        4,
+        20,
+        5,
+        hair
+      );
+
+      for (
+        let y = 8;
+        y < 18;
+        y += 2
+      ) {
+
+        rect(
+          ctx,
+          6,
+          y,
+          3,
+          3,
+          hair
+        );
+
+        rect(
+          ctx,
+          23,
+          y + 1,
+          3,
+          3,
+          hair
+        );
+      }
+
+      break;
+
+    case "mop":
+
+      rect(
+        ctx,
+        6,
+        4,
+        20,
+        5,
+        hair
+      );
+
+      for (
+        let x = 7;
+        x < 25;
+        x += 3
+      ) {
+
+        rect(
+          ctx,
+          x,
+          7,
+          2,
+          randomInt(
+            rng,
+            4,
+            8
+          ),
+          hair
+        );
+      }
+
+      break;
+
+    case "spikes":
+
+      rect(
+        ctx,
+        8,
+        6,
+        16,
+        3,
+        hair
+      );
+
+      for (
+        let x = 8;
+        x < 25;
+        x += 3
+      ) {
+
+        px(
+          ctx,
+          x,
+          5,
+          hair
+        );
+
+        if (
+          x % 2
+        ) {
+
+          px(
+            ctx,
+            x,
+            4,
+            hair
+          );
+        }
+      }
+
+      break;
+
+    case "mohawk":
+
+      for (
+        let y = 2;
+        y < 14;
+        y++
+      ) {
+
+        const width =
+          Math.max(
+            1,
+            Math.floor(
+              4 -
+              y * .18
+            )
+          );
+
+        rect(
+          ctx,
+          16 - width,
+          y,
+          width * 2,
+          2,
+          hair
+        );
+      }
+
+      break;
+
+    case "twin":
+
+      rect(
+        ctx,
+        6,
+        5,
+        6,
+        6,
+        hair
+      );
+
+      rect(
+        ctx,
+        20,
+        5,
+        6,
+        6,
+        hair
+      );
+
+      rect(
+        ctx,
+        6,
+        10,
+        3,
+        8,
+        hair
+      );
+
+      rect(
+        ctx,
+        23,
+        10,
+        3,
+        8,
+        hair
+      );
+
+      break;
+
+    case "knot":
+
+      rect(
+        ctx,
+        8,
+        5,
+        16,
+        4,
+        hair
+      );
+
+      rect(
+        ctx,
+        14,
+        2,
+        5,
+        5,
+        hair
+      );
+
+      rect(
+        ctx,
+        15,
+        1,
+        3,
+        2,
+        accent
+      );
+
+      break;
+
+    case "bangs":
+
+      rect(
+        ctx,
+        7,
+        4,
+        18,
+        5,
+        hair
+      );
+
+      for (
+        let x = 8;
+        x < 24;
+        x += 3
+      ) {
+
+        const height =
+          3 +
+          (
+            x % 4
+          );
+
+        rect(
+          ctx,
+          x,
+          8,
+          2,
+          height,
+          hair
+        );
+      }
+
+      break;
+
+    case "halo":
+
+      for (
+        let x = 7;
+        x <= 24;
+        x += 2
+      ) {
+
+        px(
+          ctx,
+          x,
+          2,
+          accent
+        );
+
+        px(
+          ctx,
+          x,
+          3,
+          accent
+        );
+      }
+
+      rect(
+        ctx,
+        8,
+        5,
+        16,
+        3,
+        hair
+      );
+
+      break;
+
+    case "sidecut":
+
+      rect(
+        ctx,
+        7,
+        4,
+        17,
+        4,
+        hair
+      );
+
+      rect(
+        ctx,
+        7,
+        7,
+        5,
+        7,
+        hair
+      );
+
+      break;
+
+    case "crown":
+
+      rect(
+        ctx,
+        9,
+        4,
+        14,
+        4,
+        hair
+      );
+
+      px(
+        ctx,
+        10,
+        3,
+        accent
+      );
+
+      px(
+        ctx,
+        13,
+        2,
+        accent
+      );
+
+      px(
+        ctx,
+        16,
+        3,
+        accent
+      );
+
+      px(
+        ctx,
+        19,
+        2,
+        accent
+      );
+
+      px(
+        ctx,
+        22,
+        3,
+        accent
+      );
+
+      break;
+
+    case "antenna":
+
+      rect(
+        ctx,
+        8,
+        5,
+        16,
+        4,
+        hair
+      );
+
+      line(
+        ctx,
+        16,
+        5,
+        16,
+        1,
+        hair
+      );
+
+      px(
+        ctx,
+        16,
+        0,
+        accent
+      );
+
+      break;
+
+    case "visor":
+
+      rect(
+        ctx,
+        6,
+        5,
+        20,
+        4,
+        hair
+      );
+
+      rect(
+        ctx,
+        8,
+        8,
+        16,
+        2,
+        accent
+      );
+
+      break;
+
+    case "cloud":
+
+      rect(
+        ctx,
+        7,
+        5,
+        18,
+        5,
+        hair
+      );
+
+      px(
+        ctx,
+        9,
+        3,
+        hair
+      );
+
+      px(
+        ctx,
+        12,
+        2,
+        hair
+      );
+
+      px(
+        ctx,
+        16,
+        3,
+        hair
+      );
+
+      px(
+        ctx,
+        20,
+        2,
+        hair
+      );
+
+      px(
+        ctx,
+        23,
+        3,
+        hair
+      );
+
+      break;
+
+    case "crest":
+
+      rect(
+        ctx,
+        8,
+        5,
+        16,
+        4,
+        hair
+      );
+
+      for (
+        let y = 1;
+        y < 6;
+        y++
+      ) {
+
+        const width =
+          y + 1;
+
+        rect(
+          ctx,
+          16 - Math.floor(width / 2),
+          y,
+          width,
+          1,
+          accent
+        );
+      }
+
+      break;
+
+    case "wild":
+
+      for (
+        let i = 0;
+        i < 35;
+        i++
+      ) {
+
+        const x =
+          randomInt(
+            rng,
+            6,
+            25
+          );
+
+        const y =
+          randomInt(
+            rng,
+            3,
+            12
+          );
+
+        px(
+          ctx,
+          x,
+          y,
+          hair
+        );
+      }
+
+      break;
+  }
+}
+
+/* =========================================================
+   BROWS
+   ========================================================= */
+
+function drawBrows(
+  ctx,
+  traits,
+  palette
+) {
+
+  const c =
+    palette.ink;
+
+  const leftX = 10;
+  const rightX = 19;
+
+  switch (
+    traits.brow
+  ) {
+
+    case "flat":
+
+      rect(
+        ctx,
+        leftX,
+        10,
+        5,
+        1,
+        c
+      );
+
+      rect(
+        ctx,
+        rightX,
+        10,
+        5,
+        1,
+        c
+      );
+
+      break;
+
+    case "thick":
+
+      rect(
+        ctx,
+        leftX,
+        10,
+        5,
+        2,
+        c
+      );
+
+      rect(
+        ctx,
+        rightX,
+        10,
+        5,
+        2,
+        c
+      );
+
+      break;
+
+    case "angled":
+
+      line(
+        ctx,
+        10,
+        11,
+        14,
+        9,
+        c
+      );
+
+      line(
+        ctx,
+        19,
+        9,
+        23,
+        11,
+        c
+      );
+
+      break;
+
+    case "high":
+
+      rect(
+        ctx,
+        leftX,
+        9,
+        5,
+        1,
+        c
+      );
+
+      rect(
+        ctx,
+        rightX,
+        9,
+        5,
+        1,
+        c
+      );
+
+      break;
+
+    case "single":
+
+      rect(
+        ctx,
+        10,
+        10,
+        14,
+        1,
+        c
+      );
+
+      break;
+
+    case "split":
+
+      rect(
+        ctx,
+        10,
+        10,
+        2,
+        1,
+        c
+      );
+
+      rect(
+        ctx,
+        13,
+        10,
+        2,
+        1,
+        c
+      );
+
+      rect(
+        ctx,
+        19,
+        10,
+        2,
+        1,
+        c
+      );
+
+      rect(
+        ctx,
+        22,
+        10,
+        2,
+        1,
+        c
+      );
+
+      break;
+  }
+}
+
+/* =========================================================
+   EYES
+   ========================================================= */
+
+function drawEyes(
+  ctx,
+  traits,
+  palette
+) {
+
+  const ink =
+    palette.ink;
+
+  const accent =
+    palette.accent;
+
+  let lx = 11;
+  let rx = 20;
+
+  const gap =
+    traits.eyeGap || 0;
+
+  lx -= gap;
+  rx += gap;
+
+  switch (
+    traits.eyes
+  ) {
+
+    case "normal":
+
+      rect(
+        ctx,
+        lx,
+        12,
+        3,
+        2,
+        ink
+      );
+
+      rect(
+        ctx,
+        rx,
+        12,
+        3,
+        2,
+        ink
+      );
+
+      break;
+
+    case "small":
+
+      rect(
+        ctx,
+        lx,
+        13,
+        2,
+        1,
+        ink
+      );
+
+      rect(
+        ctx,
+        rx,
+        13,
+        2,
+        1,
+        ink
+      );
+
+      break;
+
+    case "large":
+
+      rect(
+        ctx,
+        lx - 1,
+        11,
+        4,
+        4,
+        ink
+      );
+
+      rect(
+        ctx,
+        rx,
+        11,
+        4,
+        4,
+        ink
+      );
+
+      px(
+        ctx,
+        lx,
+        11,
+        palette.highlight
+      );
+
+      px(
+        ctx,
+        rx + 1,
+        11,
+        palette.highlight
+      );
+
+      break;
+
+    case "sleepy":
+
+      line(
+        ctx,
+        lx,
+        13,
+        lx + 3,
+        13,
+        ink
+      );
+
+      line(
+        ctx,
+        rx,
+        13,
+        rx + 3,
+        13,
+        ink
+      );
+
+      break;
+
+    case "wide":
+
+      rect(
+        ctx,
+        lx - 1,
+        11,
+        4,
+        3,
+        ink
+      );
+
+      rect(
+        ctx,
+        rx,
+        11,
+        4,
+        3,
+        ink
+      );
+
+      break;
+
+    case "diamond":
+
+      px(
+        ctx,
+        lx + 1,
+        11,
+        ink
+      );
+
+      px(
+        ctx,
+        lx,
+        12,
+        ink
+      );
+
+      px(
+        ctx,
+        lx + 1,
+        13,
+        ink
+      );
+
+      px(
+        ctx,
+        lx + 2,
+        12,
+        ink
+      );
+
+      px(
+        ctx,
+        rx + 1,
+        11,
+        ink
+      );
+
+      px(
+        ctx,
+        rx,
+        12,
+        ink
+      );
+
+      px(
+        ctx,
+        rx + 1,
+        13,
+        ink
+      );
+
+      px(
+        ctx,
+        rx + 2,
+        12,
+        ink
+      );
+
+      break;
+
+    case "pixel":
+
+      px(
+        ctx,
+        lx,
+        12,
+        accent
+      );
+
+      px(
+        ctx,
+        lx + 1,
+        12,
+        accent
+      );
+
+      px(
+        ctx,
+        rx,
+        12,
+        accent
+      );
+
+      px(
+        ctx,
+        rx + 1,
+        12,
+        accent
+      );
+
+      break;
+
+    case "hollow":
+
+      rect(
+        ctx,
+        lx,
+        11,
+        4,
+        3,
+        palette.highlight
+      );
+
+      rect(
+        ctx,
+        rx,
+        11,
+        4,
+        3,
+        palette.highlight
+      );
+
+      rect(
+        ctx,
+        lx,
+        11,
+        4,
+        1,
+        ink
+      );
+
+      rect(
+        ctx,
+        lx,
+        13,
+        4,
+        1,
+        ink
+      );
+
+      rect(
+        ctx,
+        rx,
+        11,
+        4,
+        1,
+        ink
+      );
+
+      rect(
+        ctx,
+        rx,
+        13,
+        4,
+        1,
+        ink
+      );
+
+      break;
+
+    case "cross":
+
+      line(
+        ctx,
+        lx,
+        11,
+        lx + 3,
+        14,
+        accent
+      );
+
+      line(
+        ctx,
+        lx + 3,
+        11,
+        lx,
+        14,
+        accent
+      );
+
+      line(
+        ctx,
+        rx,
+        11,
+        rx + 3,
+        14,
+        accent
+      );
+
+      line(
+        ctx,
+        rx + 3,
+        11,
+        rx,
+        14,
+        accent
+      );
+
+      break;
+
+    case "mono":
+
+      rect(
+        ctx,
+        13,
+        11,
+        7,
+        3,
+        ink
+      );
+
+      rect(
+        ctx,
+        15,
+        12,
+        3,
+        1,
+        accent
+      );
+
+      break;
+
+    case "cyclops":
+
+      rect(
+        ctx,
+        14,
+        11,
+        5,
+        4,
+        ink
+      );
+
+      px(
+        ctx,
+        16,
+        12,
+        accent
+      );
+
+      break;
+
+    case "glow":
+
+      rect(
+        ctx,
+        lx - 1,
+        11,
+        5,
+        4,
+        accent
+      );
+
+      rect(
+        ctx,
+        rx,
+        11,
+        5,
+        4,
+        accent
+      );
+
+      px(
+        ctx,
+        lx + 1,
+        12,
+        palette.highlight
+      );
+
+      px(
+        ctx,
+        rx + 2,
+        12,
+        palette.highlight
+      );
+
+      break;
+
+    case "shutter":
+
+      rect(
+        ctx,
+        lx,
+        11,
+        4,
+        4,
+        ink
+      );
+
+      rect(
+        ctx,
+        rx,
+        11,
+        4,
+        4,
+        ink
+      );
+
+      for (
+        let y = 11;
+        y < 15;
+        y += 2
+      ) {
+
+        rect(
+          ctx,
+          lx,
+          y,
+          4,
+          1,
+          accent
+        );
+
+        rect(
+          ctx,
+          rx,
+          y,
+          4,
+          1,
+          accent
+        );
+      }
+
+      break;
+
+    case "visor":
+
+      rect(
+        ctx,
+        8,
+        11,
+        16,
+        4,
+        ink
+      );
+
+      rect(
+        ctx,
+        9,
+        12,
+        14,
+        1,
+        accent
+      );
+
+      break;
+
+    case "stars":
+
+      const starColor =
+        palette.accent;
+
+      for (
+        const [x, y] of [
+          [12, 12],
+          [13, 11],
+          [21, 12],
+          [20, 11]
+        ]
+      ) {
+
+        px(
+          ctx,
+          x,
+          y,
+          starColor
+        );
+      }
+
+      break;
+
+    case "angry":
+
+      line(
+        ctx,
+        lx,
+        10,
+        lx + 4,
+        12,
+        ink
+      );
+
+      line(
+        ctx,
+        rx,
+        12,
+        rx + 4,
+        10,
+        ink
+      );
+
+      rect(
+        ctx,
+        lx + 1,
+        12,
+        2,
+        2,
+        ink
+      );
+
+      rect(
+        ctx,
+        rx + 1,
+        12,
+        2,
+        2,
+        ink
+      );
+
+      break;
+  }
+}
+
+/* =========================================================
+   NOSE
+   ========================================================= */
+
+function drawNose(
+  ctx,
+  traits,
+  palette
+) {
+
+  const c =
+    palette.shadow ||
+    SKINS[
+      traits.skinTone || 0
+    ][1];
+
+  switch (
+    traits.nose
+  ) {
+
+    case "dot":
+
+      px(
+        ctx,
+        16,
+        16,
+        c
+      );
+
+      break;
+
+    case "short":
+
+      rect(
+        ctx,
+        16,
+        15,
+        2,
+        2,
+        c
+      );
+
+      break;
+
+    case "long":
+
+      rect(
+        ctx,
+        16,
+        15,
+        1,
+        4,
+        c
+      );
+
+      px(
+        ctx,
+        17,
+        18,
+        c
+      );
+
+      break;
+
+    case "angle":
+
+      line(
+        ctx,
+        16,
+        15,
+        17,
+        17,
+        c
+      );
+
+      px(
+        ctx,
+        18,
+        17,
+        c
+      );
+
+      break;
+
+    case "shadow":
+
+      rect(
+        ctx,
+        15,
+        15,
+        3,
+        4,
+        c
+      );
+
+      break;
+
+    case "pixel":
+
+      rect(
+        ctx,
+        15,
+        15,
+        3,
+        3,
+        palette.accent
+      );
+
+      break;
+  }
+}
+
+/* =========================================================
+   MOUTH
+   ========================================================= */
+
+function drawMouth(
+  ctx,
+  traits,
+  palette
+) {
+
+  const c =
+    palette.ink;
+
+  const accent =
+    palette.accent;
+
+  const y =
+    19 +
+    (
+      traits.mouthOffset || 0
+    );
+
+  switch (
+    traits.mouth
+  ) {
+
+    case "flat":
+
+      rect(
+        ctx,
+        14,
+        y,
+        5,
+        1,
+        c
+      );
+
+      break;
+
+    case "smile":
+
+      px(
+        ctx,
+        14,
+        y,
+        c
+      );
+
+      rect(
+        ctx,
+        15,
+        y + 1,
+        3,
+        1,
+        c
+      );
+
+      px(
+        ctx,
+        18,
+        y,
+        c
+      );
+
+      break;
+
+    case "open":
+
+      rect(
+        ctx,
+        14,
+        y,
+        5,
+        2,
+        c
+      );
+
+      px(
+        ctx,
+        16,
+        y,
+        palette.highlight
+      );
+
+      break;
+
+    case "grin":
+
+      rect(
+        ctx,
+        13,
+        y,
+        7,
+        2,
+        c
+      );
+
+      for (
+        let x = 14;
+        x < 20;
+        x += 2
+      ) {
+
+        px(
+          ctx,
+          x,
+          y,
+          palette.highlight
+        );
+      }
+
+      break;
+
+    case "tiny":
+
+      rect(
+        ctx,
+        15,
+        y,
+        3,
+        1,
+        c
+      );
+
+      break;
+
+    case "frown":
+
+      px(
+        ctx,
+        14,
+        y + 1,
+        c
+      );
+
+      rect(
+        ctx,
+        15,
+        y,
+        3,
+        1,
+        c
+      );
+
+      px(
+        ctx,
+        18,
+        y + 1,
+        c
+      );
+
+      break;
+
+    case "fang":
+
+      rect(
+        ctx,
+        14,
+        y,
+        5,
+        2,
+        c
+      );
+
+      px(
+        ctx,
+        15,
+        y + 2,
+        palette.highlight
+      );
+
+      px(
+        ctx,
+        18,
+        y + 2,
+        palette.highlight
+      );
+
+      break;
+
+    case "pixel":
+
+      px(
+        ctx,
+        15,
+        y,
+        accent
+      );
+
+      px
