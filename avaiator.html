@@ -3,281 +3,585 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Aviator Style Game</title>
+<title>SKYLINE — Transparent Crash Demo</title>
 
 <style>
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
+:root{
+    --bg:#050711;
+    --panel:rgba(14,18,32,.82);
+    --panel2:#10162a;
+    --border:rgba(255,255,255,.09);
+    --text:#f7f8ff;
+    --muted:#8c95ad;
+    --pink:#ff386d;
+    --pink2:#ff6a91;
+    --green:#35e6a1;
+    --yellow:#ffc857;
+    --blue:#5aa9ff;
+    --shadow:0 25px 70px rgba(0,0,0,.45);
 }
 
-body {
-    font-family: Arial, Helvetica, sans-serif;
-    background: #080b16;
-    color: white;
-    min-height: 100vh;
-    overflow-x: hidden;
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
 }
 
-.header {
-    height: 64px;
-    background: #111525;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 25px;
-    border-bottom: 1px solid #242a40;
-}
-
-.logo {
-    font-size: 25px;
-    font-weight: bold;
-    color: #ff3b6b;
-}
-
-.balance {
-    background: #1b2032;
-    padding: 10px 18px;
-    border-radius: 20px;
-    color: #62e6a5;
-    font-weight: bold;
-}
-
-.game {
-    width: min(1100px, 95%);
-    margin: 25px auto;
-}
-
-.flight-box {
-    position: relative;
-    height: 500px;
+body{
+    min-height:100vh;
     background:
-        radial-gradient(circle at 50% 30%, #222d55 0%, transparent 35%),
-        linear-gradient(145deg, #11182d, #090c18);
-    border: 1px solid #29314b;
-    border-radius: 18px;
-    overflow: hidden;
+        radial-gradient(circle at 15% 0%,rgba(255,56,109,.13),transparent 30%),
+        radial-gradient(circle at 90% 15%,rgba(60,120,255,.12),transparent 30%),
+        var(--bg);
+    color:var(--text);
+    font-family:Inter,Arial,Helvetica,sans-serif;
 }
 
-.grid {
-    position: absolute;
-    inset: 0;
-    opacity: .25;
+button,input{
+    font:inherit;
+}
+
+button{
+    cursor:pointer;
+}
+
+/* HEADER */
+
+header{
+    height:72px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 5%;
+    border-bottom:1px solid var(--border);
+    background:rgba(5,7,17,.72);
+    backdrop-filter:blur(20px);
+    position:sticky;
+    top:0;
+    z-index:100;
+}
+
+.brand{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.brand-icon{
+    width:40px;
+    height:40px;
+    display:grid;
+    place-items:center;
+    border-radius:12px;
+    background:linear-gradient(135deg,var(--pink),#ff174f);
+    box-shadow:0 8px 30px rgba(255,56,109,.3);
+    font-size:21px;
+}
+
+.brand-name{
+    font-size:20px;
+    font-weight:900;
+    letter-spacing:2px;
+}
+
+.demo-badge{
+    font-size:10px;
+    color:#ffd76a;
+    border:1px solid rgba(255,215,106,.25);
+    background:rgba(255,215,106,.06);
+    padding:4px 7px;
+    border-radius:6px;
+    letter-spacing:1px;
+}
+
+.balance{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.balance-label{
+    color:var(--muted);
+    font-size:12px;
+}
+
+.balance-value{
+    padding:10px 16px;
+    background:rgba(255,255,255,.05);
+    border:1px solid var(--border);
+    border-radius:12px;
+    color:var(--green);
+    font-weight:800;
+}
+
+/* MAIN */
+
+.container{
+    width:min(1250px,94%);
+    margin:28px auto 50px;
+}
+
+/* TRANSPARENCY BAR */
+
+.transparency{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    padding:15px 18px;
+    margin-bottom:18px;
+    border:1px solid rgba(53,230,161,.16);
+    background:linear-gradient(
+        90deg,
+        rgba(53,230,161,.07),
+        rgba(90,169,255,.04)
+    );
+    border-radius:14px;
+}
+
+.check{
+    width:34px;
+    height:34px;
+    border-radius:50%;
+    display:grid;
+    place-items:center;
+    background:rgba(53,230,161,.12);
+    color:var(--green);
+}
+
+.transparency strong{
+    display:block;
+    font-size:13px;
+}
+
+.transparency span{
+    display:block;
+    color:var(--muted);
+    font-size:11px;
+    margin-top:3px;
+}
+
+/* GAME */
+
+.game-card{
+    position:relative;
+    height:560px;
+    overflow:hidden;
+    border-radius:24px;
+    border:1px solid var(--border);
+    background:
+        radial-gradient(circle at 50% 45%,#17203d 0%,#0b1021 38%,#060812 80%);
+    box-shadow:var(--shadow);
+}
+
+.aurora{
+    position:absolute;
+    width:600px;
+    height:300px;
+    left:50%;
+    top:10%;
+    transform:translateX(-50%);
+    background:radial-gradient(
+        ellipse,
+        rgba(255,56,109,.12),
+        transparent 65%
+    );
+    filter:blur(20px);
+}
+
+/* STARS */
+
+.stars{
+    position:absolute;
+    inset:0;
+}
+
+.star{
+    position:absolute;
+    width:2px;
+    height:2px;
+    background:white;
+    border-radius:50%;
+    opacity:.55;
+}
+
+/* GRID */
+
+.grid{
+    position:absolute;
+    width:140%;
+    height:55%;
+    left:-20%;
+    bottom:-7%;
+    opacity:.22;
     background-image:
-        linear-gradient(#526080 1px, transparent 1px),
-        linear-gradient(90deg, #526080 1px, transparent 1px);
-    background-size: 55px 55px;
-    transform: perspective(500px) rotateX(55deg) scale(1.6);
-    transform-origin: bottom;
+        linear-gradient(rgba(93,126,190,.35) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(93,126,190,.35) 1px,transparent 1px);
+    background-size:65px 65px;
+    transform:perspective(450px) rotateX(58deg);
+    transform-origin:center bottom;
 }
 
-.stars {
-    position: absolute;
-    inset: 0;
+/* STATUS */
+
+.round-status{
+    position:absolute;
+    left:50%;
+    top:22px;
+    transform:translateX(-50%);
+    z-index:20;
+    padding:8px 14px;
+    border-radius:100px;
+    background:rgba(0,0,0,.28);
+    border:1px solid var(--border);
+    color:var(--muted);
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:1px;
+    white-space:nowrap;
 }
 
-.star {
-    position: absolute;
-    width: 2px;
-    height: 2px;
-    background: white;
-    border-radius: 50%;
-    opacity: .6;
+/* MULTIPLIER */
+
+.multiplier{
+    position:absolute;
+    z-index:15;
+    top:37%;
+    width:100%;
+    text-align:center;
+    font-size:clamp(65px,11vw,125px);
+    line-height:1;
+    font-weight:950;
+    letter-spacing:-6px;
+    color:white;
+    text-shadow:
+        0 0 20px rgba(255,56,109,.35),
+        0 0 70px rgba(255,56,109,.16);
 }
 
-.multiplier {
-    position: absolute;
-    width: 100%;
-    top: 40%;
-    text-align: center;
-    font-size: clamp(55px, 10vw, 105px);
-    font-weight: 900;
-    color: #fff;
-    text-shadow: 0 0 25px #ff2864;
-    z-index: 5;
+.multiplier.crashed{
+    color:var(--pink);
+    text-shadow:0 0 35px rgba(255,56,109,.55);
 }
 
-.status {
-    position: absolute;
-    top: 22px;
-    left: 50%;
-    transform: translateX(-50%);
-    padding: 8px 18px;
-    border-radius: 20px;
-    background: rgba(0,0,0,.4);
-    color: #aaa;
-    z-index: 10;
+/* PLANE */
+
+.plane{
+    position:absolute;
+    z-index:17;
+    left:9%;
+    bottom:14%;
+    font-size:62px;
+    filter:
+        drop-shadow(0 0 8px rgba(255,65,110,.8))
+        drop-shadow(0 0 28px rgba(255,65,110,.35));
+    transform:rotate(-18deg);
 }
 
-.plane {
-    position: absolute;
-    left: 12%;
-    bottom: 15%;
-    font-size: 60px;
-    transform: rotate(-20deg);
-    z-index: 6;
-    filter: drop-shadow(0 0 12px #ff3468);
-    transition: none;
+.trail{
+    position:absolute;
+    z-index:10;
+    height:3px;
+    left:9%;
+    bottom:17%;
+    width:0;
+    transform-origin:left center;
+    background:linear-gradient(
+        90deg,
+        transparent,
+        rgba(255,56,109,.15),
+        var(--pink)
+    );
+    box-shadow:0 0 15px rgba(255,56,109,.5);
 }
 
-.flight-line {
-    position: absolute;
-    height: 4px;
-    background: linear-gradient(90deg, transparent, #ff2f68);
-    transform-origin: left center;
-    left: 10%;
-    bottom: 16%;
-    width: 0;
-    opacity: .8;
+/* GAME FOOTER */
+
+.game-footer{
+    position:absolute;
+    bottom:18px;
+    width:100%;
+    text-align:center;
+    color:#68728d;
+    font-size:10px;
+    letter-spacing:.4px;
 }
 
-.controls {
-    margin-top: 18px;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 18px;
+/* PANELS */
+
+.dashboard{
+    display:grid;
+    grid-template-columns:1.1fr .9fr;
+    gap:18px;
+    margin-top:18px;
 }
 
-.panel {
-    background: #111525;
-    border: 1px solid #29314b;
-    border-radius: 15px;
-    padding: 18px;
+.panel{
+    background:var(--panel);
+    border:1px solid var(--border);
+    border-radius:18px;
+    padding:20px;
+    backdrop-filter:blur(15px);
 }
 
-.panel h3 {
-    margin-bottom: 15px;
-    color: #cbd1e5;
+.panel-title{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:18px;
 }
 
-.bet-row {
-    display: flex;
-    gap: 10px;
+.panel-title h3{
+    font-size:15px;
 }
 
-input {
-    flex: 1;
-    min-width: 0;
-    background: #090c17;
-    border: 1px solid #333b57;
-    color: white;
-    padding: 14px;
-    border-radius: 9px;
-    font-size: 16px;
-    outline: none;
+.panel-title span{
+    color:var(--muted);
+    font-size:10px;
 }
 
-input:focus {
-    border-color: #ff376c;
+/* BET */
+
+.bet-input{
+    display:flex;
+    gap:10px;
 }
 
-button {
-    border: 0;
-    border-radius: 9px;
-    padding: 13px 20px;
-    font-size: 15px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: .2s;
+.bet-input input{
+    width:100%;
+    min-width:0;
+    background:#080b16;
+    border:1px solid #2a3148;
+    color:white;
+    border-radius:11px;
+    padding:14px;
+    outline:none;
 }
 
-button:hover {
-    transform: translateY(-2px);
+.bet-input input:focus{
+    border-color:var(--pink);
+    box-shadow:0 0 0 3px rgba(255,56,109,.08);
 }
 
-.bet-btn {
-    background: #ff3268;
-    color: white;
+.bet-button{
+    width:120px;
+    border:0;
+    border-radius:11px;
+    background:linear-gradient(135deg,#ff4a78,#ff174f);
+    color:white;
+    font-weight:900;
+    box-shadow:0 10px 25px rgba(255,56,109,.2);
 }
 
-.bet-btn:hover {
-    background: #ff1d59;
+.bet-button:disabled{
+    opacity:.45;
+    cursor:not-allowed;
 }
 
-.cashout-btn {
-    width: 100%;
-    margin-top: 12px;
-    background: #21d88c;
-    color: #07150f;
-    font-size: 17px;
+.quick{
+    display:flex;
+    gap:7px;
+    margin-top:10px;
 }
 
-.cashout-btn:disabled {
-    background: #30374a;
-    color: #777e91;
-    cursor: not-allowed;
-    transform: none;
+.quick button{
+    flex:1;
+    border:1px solid var(--border);
+    background:#191f32;
+    color:#aeb5c8;
+    padding:8px;
+    border-radius:8px;
+    font-size:12px;
 }
 
-.quick-bets {
-    display: flex;
-    gap: 7px;
-    margin-top: 10px;
+.cashout{
+    width:100%;
+    margin-top:14px;
+    padding:15px;
+    border:0;
+    border-radius:11px;
+    background:linear-gradient(135deg,#32e7a0,#18bf82);
+    color:#03130c;
+    font-weight:950;
+    font-size:16px;
+    box-shadow:0 10px 25px rgba(53,230,161,.18);
 }
 
-.quick-bets button {
-    background: #252b40;
-    color: #aaa;
-    padding: 7px 12px;
+.cashout:disabled{
+    background:#252b3d;
+    color:#697187;
+    box-shadow:none;
+    cursor:not-allowed;
 }
 
-.info {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 12px;
-    color: #9da5bc;
-    font-size: 14px;
+.metrics{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:8px;
+    margin-top:14px;
 }
 
-.history {
-    margin-top: 18px;
-    background: #111525;
-    border: 1px solid #29314b;
-    border-radius: 15px;
-    padding: 18px;
+.metric{
+    background:rgba(255,255,255,.035);
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:10px;
 }
 
-.history h3 {
-    margin-bottom: 12px;
+.metric label{
+    display:block;
+    color:#747e96;
+    font-size:10px;
+    margin-bottom:5px;
 }
 
-.history-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
+.metric strong{
+    font-size:13px;
 }
 
-.history-item {
-    background: #20263a;
-    color: #62e6a5;
-    padding: 7px 12px;
-    border-radius: 15px;
-    font-size: 13px;
+/* RESULTS */
+
+.results{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
 }
 
-.history-item.low {
-    color: #ff667f;
+.result{
+    padding:8px 11px;
+    border-radius:8px;
+    background:rgba(53,230,161,.08);
+    border:1px solid rgba(53,230,161,.12);
+    color:var(--green);
+    font-weight:800;
+    font-size:11px;
 }
 
-.message {
-    text-align: center;
-    min-height: 25px;
-    margin-top: 15px;
-    color: #aaa;
+.result.low{
+    color:#ff6683;
+    background:rgba(255,56,109,.07);
+    border-color:rgba(255,56,109,.12);
 }
 
-@media (max-width: 700px) {
-    .controls {
-        grid-template-columns: 1fr;
+.result.high{
+    color:#ffc857;
+    background:rgba(255,200,87,.07);
+    border-color:rgba(255,200,87,.12);
+}
+
+/* INFO */
+
+.info-section{
+    margin-top:18px;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:18px;
+}
+
+.info-box{
+    background:var(--panel);
+    border:1px solid var(--border);
+    border-radius:18px;
+    padding:22px;
+}
+
+.info-box h3{
+    margin-bottom:12px;
+    font-size:15px;
+}
+
+.info-box p{
+    color:#9ca5ba;
+    line-height:1.7;
+    font-size:12px;
+}
+
+.formula{
+    margin-top:12px;
+    padding:15px;
+    border-radius:10px;
+    background:#070a13;
+    border:1px solid #252c40;
+    color:#71dfff;
+    font-family:monospace;
+    font-size:12px;
+    overflow-x:auto;
+}
+
+.warning{
+    margin-top:12px;
+    padding:12px;
+    border-radius:10px;
+    color:#ffc857;
+    background:rgba(255,200,87,.06);
+    border:1px solid rgba(255,200,87,.13);
+    font-size:11px;
+    line-height:1.6;
+}
+
+/* MESSAGE */
+
+.message{
+    min-height:20px;
+    margin-top:12px;
+    color:#929bb0;
+    font-size:11px;
+    text-align:center;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:800px){
+    .dashboard,
+    .info-section{
+        grid-template-columns:1fr;
     }
 
-    .flight-box {
-        height: 400px;
+    .game-card{
+        height:460px;
     }
 
-    .plane {
-        font-size: 45px;
+    .plane{
+        font-size:48px;
+    }
+
+    .balance-label{
+        display:none;
+    }
+}
+
+@media(max-width:500px){
+    header{
+        padding:0 15px;
+    }
+
+    .brand-name{
+        font-size:16px;
+    }
+
+    .container{
+        width:94%;
+    }
+
+    .game-card{
+        height:400px;
+        border-radius:18px;
+    }
+
+    .multiplier{
+        letter-spacing:-3px;
+    }
+
+    .bet-input{
+        flex-direction:column;
+    }
+
+    .bet-button{
+        width:100%;
+        padding:13px;
+    }
+
+    .metrics{
+        grid-template-columns:1fr;
     }
 }
 </style>
@@ -285,385 +589,793 @@ button:hover {
 
 <body>
 
-<header class="header">
-    <div class="logo">✈ AVIATOR</div>
+<header>
+    <div class="brand">
+        <div class="brand-icon">✈</div>
+        <div class="brand-name">SKYLINE</div>
+        <div class="demo-badge">DEMO</div>
+    </div>
+
     <div class="balance">
-        Credits: <span id="balance">1000.00</span>
+        <span class="balance-label">VIRTUAL BALANCE</span>
+        <span class="balance-value">
+            <span id="balance">1000.00</span> CR
+        </span>
     </div>
 </header>
 
-<main class="game">
 
-    <section class="flight-box" id="flightBox">
+<div class="container">
+
+    <!-- TRANSPARENCY -->
+    <div class="transparency">
+        <div class="check">✓</div>
+
+        <div>
+            <strong>Not under our control • Fully randomized demo</strong>
+            <span>
+                Each round generates a new random crash point.
+                Previous rounds do not influence the next round.
+            </span>
+        </div>
+    </div>
+
+
+    <!-- GAME -->
+    <section class="game-card">
+
+        <div class="aurora"></div>
         <div class="stars" id="stars"></div>
         <div class="grid"></div>
 
-        <div class="status" id="status">
-            Waiting for next flight...
+        <div class="round-status" id="roundStatus">
+            NEXT FLIGHT STARTING...
         </div>
 
         <div class="multiplier" id="multiplier">
             1.00x
         </div>
 
-        <div class="flight-line" id="flightLine"></div>
+        <div class="trail" id="trail"></div>
 
         <div class="plane" id="plane">
             ✈
         </div>
+
+        <div class="game-footer">
+            VIRTUAL CREDITS ONLY • NO REAL-MONEY WAGERING
+        </div>
+
     </section>
 
-    <section class="controls">
+
+    <!-- CONTROLS -->
+    <section class="dashboard">
 
         <div class="panel">
-            <h3>Place Bet</h3>
 
-            <div class="bet-row">
+            <div class="panel-title">
+                <h3>Place Virtual Bet</h3>
+                <span>DEMO MODE</span>
+            </div>
+
+            <div class="bet-input">
                 <input
                     id="betAmount"
                     type="number"
                     min="1"
-                    step="1"
                     value="10"
-                    placeholder="Credits"
+                    step="1"
                 >
 
-                <button class="bet-btn" id="betBtn">
-                    BET
+                <button
+                    class="bet-button"
+                    id="betButton"
+                >
+                    PLACE BET
                 </button>
             </div>
 
-            <div class="quick-bets">
+            <div class="quick">
                 <button onclick="setBet(10)">10</button>
                 <button onclick="setBet(25)">25</button>
                 <button onclick="setBet(50)">50</button>
                 <button onclick="setBet(100)">100</button>
             </div>
 
-            <div class="info">
-                <span>Your bet</span>
-                <strong id="currentBet">0.00</strong>
-            </div>
-
             <button
-                class="cashout-btn"
-                id="cashoutBtn"
+                class="cashout"
+                id="cashoutButton"
                 disabled
             >
                 CASH OUT
             </button>
-        </div>
 
-        <div class="panel">
-            <h3>Flight Information</h3>
+            <div class="metrics">
 
-            <div class="info">
-                <span>Current multiplier</span>
-                <strong id="infoMultiplier">1.00x</strong>
-            </div>
+                <div class="metric">
+                    <label>YOUR BET</label>
+                    <strong id="yourBet">0.00 CR</strong>
+                </div>
 
-            <div class="info">
-                <span>Potential payout</span>
-                <strong id="potential">0.00</strong>
-            </div>
+                <div class="metric">
+                    <label>MULTIPLIER</label>
+                    <strong id="currentMultiplier">1.00x</strong>
+                </div>
 
-            <div class="info">
-                <span>Game status</span>
-                <strong id="gameStatus">Waiting</strong>
+                <div class="metric">
+                    <label>PAYOUT</label>
+                    <strong id="payout">0.00 CR</strong>
+                </div>
+
             </div>
 
             <div class="message" id="message">
-                Place a virtual bet to join the next flight.
+                Place a virtual bet before the flight begins.
             </div>
+
+        </div>
+
+
+        <!-- HISTORY -->
+        <div class="panel">
+
+            <div class="panel-title">
+                <h3>Recent Flights</h3>
+                <span>LAST 12 ROUNDS</span>
+            </div>
+
+            <div class="results" id="results"></div>
+
+            <div style="margin-top:20px">
+
+                <div class="info-box"
+                     style="padding:15px;background:#090d19">
+
+                    <h3 style="font-size:12px">
+                        Round Independence
+                    </h3>
+
+                    <p style="font-size:11px">
+                        Every round is generated independently.
+                        The result of the previous round is not used
+                        to calculate the next result.
+                    </p>
+
+                </div>
+
+            </div>
+
         </div>
 
     </section>
 
-    <section class="history">
-        <h3>Recent Flights</h3>
-        <div class="history-list" id="history"></div>
+
+    <!-- TRANSPARENCY / FORMULA -->
+    <section class="info-section">
+
+        <div class="info-box">
+
+            <h3>🔍 How the random crash point works</h3>
+
+            <p>
+                This demo creates a fresh random value
+                <b>u</b> between 0 and 1 for every round.
+                That value is then transformed into a multiplier.
+            </p>
+
+            <div class="formula">
+                u = random(0, 1)<br><br>
+                raw = 1 + (-ln(1 - u) × 2.5)<br><br>
+                crashPoint = min(raw, 100)
+            </div>
+
+            <p style="margin-top:12px">
+                The logarithmic transformation means lower multipliers
+                occur more frequently while larger multipliers become
+                progressively less frequent.
+            </p>
+
+        </div>
+
+
+        <div class="info-box">
+
+            <h3>🛡 Transparency & limitations</h3>
+
+            <p>
+                The game does not manually choose a crash point based
+                on your bet, previous result, or cash-out action.
+                Everything happens locally in this demo.
+            </p>
+
+            <div class="warning">
+                ⚠ DEMO LIMITATION<br><br>
+
+                This version uses the browser's
+                <b>Math.random()</b>. It is suitable for a visual/demo
+                project but is <b>not cryptographically secure</b> and
+                is <b>not a provably-fair gambling implementation</b>.
+            </div>
+
+            <p style="margin-top:12px">
+                For a real production fairness system, use a
+                server-side cryptographically secure RNG and publish
+                an independently verifiable commitment/proof scheme.
+            </p>
+
+        </div>
+
     </section>
 
-</main>
+</div>
+
 
 <script>
+/*
+==========================================================
+ SKYLINE — TRANSPARENT CRASH DEMO
+ VIRTUAL CREDITS ONLY
+==========================================================
+
+CRASH FORMULA:
+
+u = random number in [0,1)
+
+raw = 1 + (-ln(1-u) * 2.5)
+
+crashPoint = min(raw, 100)
+
+IMPORTANT:
+Math.random() is NOT a cryptographically secure RNG.
+This is only a browser demonstration.
+==========================================================
+*/
+
+
 let balance = 1000;
-let multiplier = 1;
-let crashPoint = 0;
+
 let gameRunning = false;
 let hasBet = false;
 let currentBet = 0;
-let animationStart = 0;
-let animationFrame;
 
-const balanceEl = document.getElementById("balance");
-const multiplierEl = document.getElementById("multiplier");
-const infoMultiplierEl = document.getElementById("infoMultiplier");
-const potentialEl = document.getElementById("potential");
-const currentBetEl = document.getElementById("currentBet");
-const statusEl = document.getElementById("status");
-const gameStatusEl = document.getElementById("gameStatus");
-const messageEl = document.getElementById("message");
-const betAmountEl = document.getElementById("betAmount");
-const betBtn = document.getElementById("betBtn");
-const cashoutBtn = document.getElementById("cashoutBtn");
-const plane = document.getElementById("plane");
-const flightLine = document.getElementById("flightLine");
-const flightBox = document.getElementById("flightBox");
-const historyEl = document.getElementById("history");
+let multiplier = 1;
+let crashPoint = 1;
 
-// Create background stars
-for (let i = 0; i < 70; i++) {
-    const star = document.createElement("div");
+let startTime = 0;
+let animationFrame = null;
+
+const balanceEl =
+    document.getElementById("balance");
+
+const multiplierEl =
+    document.getElementById("multiplier");
+
+const currentMultiplierEl =
+    document.getElementById("currentMultiplier");
+
+const payoutEl =
+    document.getElementById("payout");
+
+const yourBetEl =
+    document.getElementById("yourBet");
+
+const betAmountEl =
+    document.getElementById("betAmount");
+
+const betButton =
+    document.getElementById("betButton");
+
+const cashoutButton =
+    document.getElementById("cashoutButton");
+
+const messageEl =
+    document.getElementById("message");
+
+const roundStatusEl =
+    document.getElementById("roundStatus");
+
+const planeEl =
+    document.getElementById("plane");
+
+const trailEl =
+    document.getElementById("trail");
+
+const resultsEl =
+    document.getElementById("results");
+
+
+
+/* BACKGROUND STARS */
+
+const starsEl =
+    document.getElementById("stars");
+
+for(let i = 0; i < 90; i++){
+
+    const star =
+        document.createElement("div");
+
     star.className = "star";
 
-    star.style.left = Math.random() * 100 + "%";
-    star.style.top = Math.random() * 100 + "%";
-    star.style.opacity = Math.random();
+    star.style.left =
+        Math.random() * 100 + "%";
 
-    document.getElementById("stars").appendChild(star);
+    star.style.top =
+        Math.random() * 100 + "%";
+
+    star.style.opacity =
+        0.2 + Math.random() * .7;
+
+    starsEl.appendChild(star);
 }
 
-function updateBalance() {
-    balanceEl.textContent = balance.toFixed(2);
+
+
+/* =========================
+   TRANSPARENT RANDOM FORMULA
+========================= */
+
+function generateCrashPoint(){
+
+    /*
+        u = random number between 0 and 1
+    */
+
+    const u = Math.random();
+
+    /*
+        Exponential transformation:
+
+        raw = 1 + (-ln(1-u) * 2.5)
+    */
+
+    const raw =
+        1 + (-Math.log(1 - u) * 2.5);
+
+    /*
+        Maximum demo multiplier = 100x
+    */
+
+    return Math.min(raw, 100);
 }
 
-function setBet(amount) {
-    betAmountEl.value = amount;
+
+
+/* FORMAT */
+
+function money(value){
+
+    return value.toFixed(2);
 }
 
-function randomCrashPoint() {
-    // Demo-only random crash value.
-    // No real-money gambling is involved.
-    const value = Math.pow(Math.random(), 1.7) * 8 + 1.05;
-    return Math.min(value, 12);
+
+
+/* BALANCE */
+
+function updateBalance(){
+
+    balanceEl.textContent =
+        money(balance);
 }
 
-function startFlight() {
+
+
+/* BET INPUT */
+
+function setBet(value){
+
+    betAmountEl.value = value;
+}
+
+
+
+/* DISPLAY */
+
+function updateDisplay(){
+
+    const text =
+        multiplier.toFixed(2) + "x";
+
+    multiplierEl.textContent =
+        text;
+
+    currentMultiplierEl.textContent =
+        text;
+
+    if(hasBet){
+
+        payoutEl.textContent =
+            money(currentBet * multiplier) +
+            " CR";
+
+    }else{
+
+        payoutEl.textContent =
+            "0.00 CR";
+    }
+}
+
+
+
+/* PLANE */
+
+function updatePlane(progress){
+
+    const clamped =
+        Math.min(progress, 1);
+
+    const x =
+        8 + clamped * 78;
+
+    const bottom =
+        13 + clamped * 67;
+
+    planeEl.style.left =
+        x + "%";
+
+    planeEl.style.bottom =
+        bottom + "%";
+
+    planeEl.style.transform =
+        "rotate(-18deg) scale(" +
+        (1 + clamped * .28) +
+        ")";
+
+    trailEl.style.width =
+        (clamped * 80) + "%";
+
+    trailEl.style.transform =
+        "rotate(-27deg)";
+}
+
+
+
+/* START */
+
+function startRound(){
+
     gameRunning = true;
+
     multiplier = 1;
-    crashPoint = randomCrashPoint();
-    animationStart = performance.now();
 
-    statusEl.textContent = "FLIGHT IN PROGRESS";
-    statusEl.style.color = "#62e6a5";
-    gameStatusEl.textContent = "Flying";
+    /*
+        NEW independent crash point
+        for every round.
+    */
 
-    betBtn.disabled = true;
+    crashPoint =
+        generateCrashPoint();
+
+    startTime =
+        performance.now();
+
+    roundStatusEl.textContent =
+        "FLIGHT IN PROGRESS";
+
+    roundStatusEl.style.color =
+        "#35e6a1";
+
+    betButton.disabled = true;
     betAmountEl.disabled = true;
 
-    requestAnimationFrame(updateFlight);
+    animationFrame =
+        requestAnimationFrame(tick);
 }
 
-function updateFlight(now) {
-    if (!gameRunning) return;
 
-    const elapsed = (now - animationStart) / 1000;
 
-    // Exponential-looking multiplier growth
-    multiplier = Math.pow(1.13, elapsed * 3);
+/* ANIMATION */
 
-    if (multiplier >= crashPoint) {
-        multiplier = crashPoint;
+function tick(now){
+
+    if(!gameRunning)
+        return;
+
+    const elapsed =
+        (now - startTime) / 1000;
+
+    /*
+        Smooth multiplier growth.
+    */
+
+    multiplier =
+        Math.pow(1.14, elapsed * 2.8);
+
+    if(multiplier >= crashPoint){
+
+        multiplier =
+            crashPoint;
+
         updateDisplay();
-        crashFlight();
+
+        crash();
+
         return;
     }
 
     updateDisplay();
-    movePlane(elapsed);
 
-    animationFrame = requestAnimationFrame(updateFlight);
+    /*
+        Plane movement gets progressively
+        closer to the top-right.
+    */
+
+    const progress =
+        Math.min(elapsed / 10, 1);
+
+    updatePlane(progress);
+
+    animationFrame =
+        requestAnimationFrame(tick);
 }
 
-function updateDisplay() {
-    const value = multiplier.toFixed(2) + "x";
 
-    multiplierEl.textContent = value;
-    infoMultiplierEl.textContent = value;
 
-    if (hasBet) {
-        potentialEl.textContent =
-            (currentBet * multiplier).toFixed(2);
-    } else {
-        potentialEl.textContent = "0.00";
-    }
-}
+/* PLACE BET */
 
-function movePlane(elapsed) {
-    const progress = Math.min(elapsed / 8, 1);
+function placeBet(){
 
-    const x = 10 + progress * 72;
-    const y = 15 + progress * 65;
+    if(gameRunning){
 
-    plane.style.left = x + "%";
-    plane.style.bottom = y + "%";
-
-    plane.style.transform =
-        "rotate(-20deg) scale(" +
-        (1 + progress * .25) +
-        ")";
-
-    flightLine.style.width =
-        (progress * 75) + "%";
-
-    flightLine.style.transform =
-        "rotate(-25deg)";
-}
-
-function placeBet() {
-    if (gameRunning) {
         messageEl.textContent =
-            "Wait for the next flight.";
+            "Wait for the next round.";
+
         return;
     }
 
-    const amount = Number(betAmountEl.value);
+    const amount =
+        Number(betAmountEl.value);
 
-    if (!amount || amount <= 0) {
+    if(!Number.isFinite(amount) ||
+       amount <= 0){
+
         messageEl.textContent =
-            "Enter a valid bet amount.";
+            "Enter a valid virtual credit amount.";
+
         return;
     }
 
-    if (amount > balance) {
+    if(amount > balance){
+
         messageEl.textContent =
-            "Not enough virtual credits.";
+            "Insufficient virtual credits.";
+
         return;
     }
 
     balance -= amount;
-    currentBet = amount;
+
+    currentBet =
+        amount;
+
     hasBet = true;
 
-    currentBetEl.textContent =
-        currentBet.toFixed(2);
+    yourBetEl.textContent =
+        money(currentBet) + " CR";
 
     updateBalance();
 
-    cashoutBtn.disabled = false;
+    cashoutButton.disabled =
+        false;
 
     messageEl.textContent =
-        "Bet placed. Cash out before the flight crashes.";
+        "Bet active — cash out before the crash.";
 
-    startFlight();
+    startRound();
 }
 
-function cashOut() {
-    if (!gameRunning || !hasBet) return;
 
-    const payout = currentBet * multiplier;
+
+/* CASH OUT */
+
+function cashOut(){
+
+    if(!gameRunning ||
+       !hasBet){
+
+        return;
+    }
+
+    const payout =
+        currentBet * multiplier;
 
     balance += payout;
 
     updateBalance();
 
     messageEl.textContent =
-        "Cashed out at " +
+        "Successfully cashed out at " +
         multiplier.toFixed(2) +
-        "x — won " +
-        payout.toFixed(2) +
-        " credits.";
+        "x — " +
+        money(payout) +
+        " CR returned.";
 
     hasBet = false;
+
     currentBet = 0;
 
-    currentBetEl.textContent = "0.00";
-    potentialEl.textContent = "0.00";
-    cashoutBtn.disabled = true;
+    yourBetEl.textContent =
+        "0.00 CR";
+
+    payoutEl.textContent =
+        "0.00 CR";
+
+    cashoutButton.disabled =
+        true;
 }
 
-function crashFlight() {
+
+
+/* CRASH */
+
+function crash(){
+
     gameRunning = false;
 
     cancelAnimationFrame(animationFrame);
 
-    statusEl.textContent =
+    multiplierEl.classList.add("crashed");
+
+    roundStatusEl.textContent =
         "CRASHED AT " +
         crashPoint.toFixed(2) +
         "x";
 
-    statusEl.style.color = "#ff536f";
+    roundStatusEl.style.color =
+        "#ff386d";
 
-    gameStatusEl.textContent = "Crashed";
+    addResult(crashPoint);
 
-    multiplierEl.style.color = "#ff4168";
+    if(hasBet){
 
-    addHistory(crashPoint);
-
-    if (hasBet) {
         messageEl.textContent =
-            "Flight crashed. Your virtual bet was lost.";
+            "The flight crashed before cash-out. " +
+            "Your virtual bet was lost.";
     }
 
     hasBet = false;
+
     currentBet = 0;
 
-    currentBetEl.textContent = "0.00";
-    potentialEl.textContent = "0.00";
-    cashoutBtn.disabled = true;
+    yourBetEl.textContent =
+        "0.00 CR";
 
-    setTimeout(resetFlight, 2500);
+    payoutEl.textContent =
+        "0.00 CR";
+
+    cashoutButton.disabled =
+        true;
+
+    setTimeout(resetRound, 2800);
 }
 
-function resetFlight() {
+
+
+/* RESET */
+
+function resetRound(){
+
     multiplier = 1;
 
-    multiplierEl.textContent = "1.00x";
-    multiplierEl.style.color = "#fff";
+    multiplierEl.classList.remove("crashed");
 
-    infoMultiplierEl.textContent = "1.00x";
+    multiplierEl.textContent =
+        "1.00x";
 
-    plane.style.left = "12%";
-    plane.style.bottom = "15%";
-    plane.style.transform = "rotate(-20deg)";
+    currentMultiplierEl.textContent =
+        "1.00x";
 
-    flightLine.style.width = "0";
+    roundStatusEl.textContent =
+        "NEXT FLIGHT STARTING...";
 
-    statusEl.textContent =
-        "Waiting for next flight...";
+    roundStatusEl.style.color =
+        "#8c95ad";
 
-    statusEl.style.color = "#aaa";
+    planeEl.style.left =
+        "9%";
 
-    gameStatusEl.textContent = "Waiting";
+    planeEl.style.bottom =
+        "14%";
 
-    betBtn.disabled = false;
-    betAmountEl.disabled = false;
+    planeEl.style.transform =
+        "rotate(-18deg)";
+
+    trailEl.style.width =
+        "0";
+
+    betButton.disabled =
+        false;
+
+    betAmountEl.disabled =
+        false;
 
     messageEl.textContent =
-        "Place a virtual bet to join the next flight.";
+        "Place a virtual bet before the next flight.";
 }
 
-function addHistory(value) {
-    const item = document.createElement("div");
 
-    item.className =
-        "history-item" +
-        (value < 2 ? " low" : "");
 
-    item.textContent =
+/* HISTORY */
+
+function addResult(value){
+
+    const result =
+        document.createElement("div");
+
+    result.className =
+        "result";
+
+    if(value < 2){
+
+        result.classList.add("low");
+
+    }else if(value >= 10){
+
+        result.classList.add("high");
+    }
+
+    result.textContent =
         value.toFixed(2) + "x";
 
-    historyEl.prepend(item);
+    resultsEl.prepend(result);
 
-    while (historyEl.children.length > 10) {
-        historyEl.removeChild(
-            historyEl.lastChild
+    /*
+        Keep only last 12 rounds.
+    */
+
+    while(resultsEl.children.length > 12){
+
+        resultsEl.removeChild(
+            resultsEl.lastChild
         );
     }
 }
 
-betBtn.addEventListener("click", placeBet);
-cashoutBtn.addEventListener("click", cashOut);
 
-// Enter key places a bet
-betAmountEl.addEventListener("keydown", function(e) {
-    if (e.key === "Enter") {
-        placeBet();
+
+/* EVENTS */
+
+betButton.addEventListener(
+    "click",
+    placeBet
+);
+
+cashoutButton.addEventListener(
+    "click",
+    cashOut
+);
+
+betAmountEl.addEventListener(
+    "keydown",
+    function(event){
+
+        if(event.key === "Enter"){
+
+            placeBet();
+        }
     }
-});
+);
+
+
+
+/* INITIAL HISTORY
+   These are only visual demo values.
+*/
+
+[
+    1.42,
+    2.17,
+    1.08,
+    4.63,
+    1.76,
+    8.21,
+    1.31,
+    3.54
+].forEach(addResult);
 
 updateBalance();
+
 </script>
 
 </body>
