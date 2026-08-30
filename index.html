@@ -1,651 +1,733 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Report Message</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FormFlow — Google Form Automation</title>
 
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
     * {
-      -webkit-tap-highlight-color: transparent;
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg: #07070a;
+      --card: rgba(17, 17, 24, 0.72);
+      --border: rgba(255,255,255,0.09);
+      --text: #f8fafc;
+      --muted: #9295a3;
+      --primary: #8b5cf6;
+      --primary2: #6366f1;
+      --green: #22c55e;
     }
 
     body {
-      font-family: 'Inter', system-ui, sans-serif;
-      background: #050505;
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at 15% 10%, rgba(124,58,237,.22), transparent 28%),
+        radial-gradient(circle at 85% 20%, rgba(59,130,246,.15), transparent 25%),
+        radial-gradient(circle at 50% 100%, rgba(168,85,247,.10), transparent 35%),
+        var(--bg);
+      color: var(--text);
+      font-family: Inter, sans-serif;
+      overflow-x: hidden;
     }
 
-    /* Custom scrollbar */
-    ::-webkit-scrollbar {
-      width: 4px;
-    }
-    ::-webkit-scrollbar-track {
-      background: transparent;
-    }
-    ::-webkit-scrollbar-thumb {
-      background: #27272a;
-      border-radius: 10px;
-    }
-
-    .option-card {
-      position: relative;
-      transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
-      background: #0c0c0e;
-      border: 1px solid #1c1c1f;
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: .025;
+      background-image:
+        linear-gradient(rgba(255,255,255,.5) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.5) 1px, transparent 1px);
+      background-size: 40px 40px;
     }
 
-    .option-card:hover {
-      background: #111114;
-      border-color: #2a2a2e;
-    }
-
-    .option-card.selected {
-      background: linear-gradient(135deg, rgba(34, 197, 94, 0.08) 0%, rgba(16, 185, 129, 0.04) 100%);
-      border-color: rgba(34, 197, 94, 0.45);
-      box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.15), 0 8px 24px -8px rgba(34, 197, 94, 0.2);
-    }
-
-    /* Left accent bar */
-    .option-card::before {
-      content: '';
-      position: absolute;
-      left: 0;
-      top: 12px;
-      bottom: 12px;
-      width: 3px;
-      border-radius: 0 4px 4px 0;
-      background: transparent;
-      transition: all 0.3s ease;
-    }
-
-    .option-card.selected::before {
-      background: #22c55e;
-      box-shadow: 0 0 12px rgba(34, 197, 94, 0.6);
-    }
-
-    /* Check circle */
-    .check-circle {
-      width: 22px;
-      height: 22px;
+    .orb {
+      position: fixed;
+      width: 420px;
+      height: 420px;
       border-radius: 50%;
-      border: 1.5px solid #3f3f46;
+      filter: blur(100px);
+      opacity: .12;
+      pointer-events: none;
+      animation: float 10s ease-in-out infinite alternate;
+    }
+
+    .orb.one {
+      background: #7c3aed;
+      top: -180px;
+      left: -120px;
+    }
+
+    .orb.two {
+      background: #2563eb;
+      right: -180px;
+      bottom: -160px;
+      animation-delay: -4s;
+    }
+
+    @keyframes float {
+      from { transform: translate(0,0); }
+      to { transform: translate(40px,30px); }
+    }
+
+    .container {
+      width: min(1100px, calc(100% - 40px));
+      margin: auto;
+    }
+
+    nav {
+      height: 80px;
       display: flex;
       align-items: center;
-      justify-content: center;
-      transition: all 0.25s ease;
-      flex-shrink: 0;
+      justify-content: space-between;
+      position: relative;
+      z-index: 5;
     }
 
-    .option-card.selected .check-circle {
-      background: #22c55e;
-      border-color: #22c55e;
-      box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.15);
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      font-weight: 800;
+      font-size: 18px;
+      letter-spacing: -.5px;
     }
 
-    .check-circle svg {
-      opacity: 0;
-      transform: scale(0.5);
-      transition: all 0.2s ease 0.05s;
-    }
-
-    .option-card.selected .check-circle svg {
-      opacity: 1;
-      transform: scale(1);
-    }
-
-    /* Description */
-    .desc-wrap {
+    .logo {
+      width: 36px;
+      height: 36px;
       display: grid;
-      grid-template-rows: 0fr;
-      transition: grid-template-rows 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      place-items: center;
+      border-radius: 11px;
+      background: linear-gradient(135deg, #8b5cf6, #4f46e5);
+      box-shadow: 0 8px 30px rgba(124,58,237,.35);
     }
 
-    .option-card.selected .desc-wrap {
-      grid-template-rows: 1fr;
+    .logo svg {
+      width: 19px;
     }
 
-    .desc-inner {
-      overflow: hidden;
+    .nav-pill {
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.035);
+      color: #b9bbc6;
+      padding: 8px 13px;
+      border-radius: 999px;
+      font-size: 12px;
     }
 
-    .desc-text {
-      opacity: 0;
-      transform: translateY(-4px);
-      transition: all 0.25s ease 0.05s;
-      padding-top: 0;
+    .hero {
+      text-align: center;
+      padding: 75px 0 48px;
+      position: relative;
+      z-index: 2;
     }
 
-    .option-card.selected .desc-text {
-      opacity: 1;
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      background: rgba(139,92,246,.10);
+      border: 1px solid rgba(139,92,246,.25);
+      color: #c4b5fd;
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 22px;
+    }
+
+    .dot {
+      width: 7px;
+      height: 7px;
+      background: #a78bfa;
+      border-radius: 50%;
+      box-shadow: 0 0 12px #a78bfa;
+    }
+
+    h1 {
+      font-size: clamp(42px, 7vw, 76px);
+      line-height: .98;
+      letter-spacing: -4px;
+      font-weight: 800;
+      max-width: 850px;
+      margin: auto;
+    }
+
+    .gradient {
+      background: linear-gradient(90deg, #c4b5fd, #818cf8, #60a5fa);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .hero p {
+      max-width: 620px;
+      margin: 24px auto 0;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.7;
+    }
+
+    .workspace {
+      position: relative;
+      z-index: 3;
+      max-width: 780px;
+      margin: 0 auto;
+    }
+
+    .card {
+      border: 1px solid var(--border);
+      background: linear-gradient(
+        145deg,
+        rgba(25,25,34,.86),
+        rgba(10,10,14,.80)
+      );
+      backdrop-filter: blur(25px);
+      -webkit-backdrop-filter: blur(25px);
+      border-radius: 24px;
+      box-shadow:
+        0 30px 80px rgba(0,0,0,.45),
+        inset 0 1px 0 rgba(255,255,255,.04);
+    }
+
+    .main-card {
+      padding: 28px;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      margin-bottom: 25px;
+      text-align: left;
+    }
+
+    .google-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      background: rgba(255,255,255,.055);
+      border: 1px solid var(--border);
+      font-size: 20px;
+    }
+
+    .card-title {
+      font-size: 15px;
+      font-weight: 700;
+    }
+
+    .card-subtitle {
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 4px;
+    }
+
+    .label {
+      display: block;
+      text-align: left;
+      color: #c8cad2;
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 9px;
+    }
+
+    .input-wrap {
+      position: relative;
+    }
+
+    input {
+      width: 100%;
+      height: 56px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.10);
+      outline: none;
+      color: white;
+      background: rgba(255,255,255,.045);
+      padding: 0 125px 0 17px;
+      font-family: inherit;
+      font-size: 14px;
+      transition: .2s;
+    }
+
+    input::placeholder {
+      color: #5e616c;
+    }
+
+    input:focus {
+      border-color: rgba(139,92,246,.7);
+      box-shadow: 0 0 0 4px rgba(139,92,246,.10);
+      background: rgba(255,255,255,.06);
+    }
+
+    .paste-btn {
+      position: absolute;
+      right: 7px;
+      top: 7px;
+      height: 42px;
+      border: 0;
+      border-radius: 10px;
+      padding: 0 14px;
+      color: #d8d3ff;
+      background: rgba(139,92,246,.13);
+      cursor: pointer;
+      font-weight: 600;
+      transition: .2s;
+    }
+
+    .paste-btn:hover {
+      background: rgba(139,92,246,.23);
+    }
+
+    .action-row {
+      display: flex;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    button {
+      font-family: inherit;
+    }
+
+    .primary-btn {
+      flex: 1;
+      height: 54px;
+      border: 0;
+      border-radius: 14px;
+      cursor: pointer;
+      color: white;
+      font-size: 14px;
+      font-weight: 700;
+      background: linear-gradient(135deg, #8b5cf6, #6366f1);
+      box-shadow: 0 10px 30px rgba(99,102,241,.25);
+      transition: .2s;
+    }
+
+    .primary-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 14px 35px rgba(99,102,241,.35);
+    }
+
+    .primary-btn:active {
       transform: translateY(0);
-      padding-top: 10px;
     }
 
-    /* ID badge */
-    .id-badge {
-      font-size: 10px;
-      font-weight: 500;
-      letter-spacing: 0.03em;
-      color: #52525b;
-      background: #18181b;
-      padding: 2px 7px;
-      border-radius: 6px;
-      transition: all 0.25s ease;
+    .secondary-btn {
+      width: 54px;
+      height: 54px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.045);
+      color: #aaaeba;
+      cursor: pointer;
     }
 
-    .option-card.selected .id-badge {
+    .status {
+      display: none;
+      margin-top: 18px;
+      padding: 16px;
+      border-radius: 14px;
+      border: 1px solid rgba(34,197,94,.18);
+      background: rgba(34,197,94,.06);
+      text-align: left;
+      animation: slide .25s ease;
+    }
+
+    .status.show {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .status-icon {
+      width: 32px;
+      height: 32px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
       color: #4ade80;
-      background: rgba(34, 197, 94, 0.12);
+      background: rgba(34,197,94,.12);
     }
 
-    /* Submit */
-    /* ===== SUBMIT BAR ===== */
-    #submit-area {
-      transform: translateY(110%);
-      opacity: 0;
-      transition: all 0.4s cubic-bezier(0.32, 0.72, 0, 1);
+    .status strong {
+      display: block;
+      font-size: 13px;
     }
 
-    #submit-area.visible {
-      transform: translateY(0);
-      opacity: 1;
+    .status span {
+      display: block;
+      color: #858994;
+      font-size: 11px;
+      margin-top: 3px;
     }
 
-    .submit-card {
-      transition: all 0.3s ease;
+    @keyframes slide {
+      from {
+        opacity: 0;
+        transform: translateY(6px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
-    .submit-btn {
-      box-shadow: 0 4px 16px -2px rgba(34, 197, 94, 0.45);
+    .features {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 13px;
     }
 
-    .submit-btn:hover {
-      box-shadow: 0 6px 24px -2px rgba(34, 197, 94, 0.55);
+    .feature {
+      padding: 18px;
+      text-align: left;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.025);
     }
 
-    /* Header glow */
-    .header-glow {
-      background: radial-gradient(ellipse at top, rgba(34, 197, 94, 0.07) 0%, transparent 70%);
+    .feature-icon {
+      font-size: 17px;
+      margin-bottom: 12px;
+    }
+
+    .feature h3 {
+      font-size: 12px;
+      margin-bottom: 5px;
+    }
+
+    .feature p {
+      color: #737681;
+      font-size: 11px;
+      line-height: 1.5;
+    }
+
+    .footer {
+      text-align: center;
+      color: #50525c;
+      font-size: 11px;
+      padding: 45px 0 30px;
+    }
+
+    @media(max-width: 650px) {
+      .container {
+        width: min(100% - 24px, 1100px);
+      }
+
+      nav {
+        height: 68px;
+      }
+
+      .nav-pill {
+        display: none;
+      }
+
+      .hero {
+        padding: 55px 0 35px;
+      }
+
+      h1 {
+        letter-spacing: -2.5px;
+      }
+
+      .hero p {
+        font-size: 14px;
+      }
+
+      .main-card {
+        padding: 19px;
+        border-radius: 20px;
+      }
+
+      .features {
+        grid-template-columns: 1fr;
+      }
+
+      .action-row {
+        flex-direction: column;
+      }
+
+      .secondary-btn {
+        width: 100%;
+      }
     }
   </style>
 </head>
-<body class="text-white min-h-screen">
 
-  <div class="header-glow">
-    <div class="max-w-lg mx-auto px-4 pt-6 pb-28 sm:px-6 sm:pt-8 sm:pb-10">
+<body>
 
-      <!-- Header -->
-      <div class="mb-6 sm:mb-7">
-        <div class="flex items-center gap-3 mb-1.5">
-          <div class="w-9 h-9 rounded-xl bg-zinc-900 border border-zinc-800 flex items-center justify-center">
-            <svg class="w-4.5 h-4.5 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9"/>
-            </svg>
+  <div class="orb one"></div>
+  <div class="orb two"></div>
+
+  <div class="container">
+
+    <nav>
+      <div class="brand">
+        <div class="logo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+            <path d="M12 3v18M3 12h18"/>
+          </svg>
+        </div>
+        FormFlow
+      </div>
+
+      <div class="nav-pill">
+        Google Forms Automation
+      </div>
+    </nav>
+
+    <section class="hero">
+
+      <div class="badge">
+        <span class="dot"></span>
+        Ready to automate
+      </div>
+
+      <h1>
+        Automate your
+        <span class="gradient">Google Forms.</span>
+      </h1>
+
+      <p>
+        Drop your Google Form link below and turn repetitive form
+        workflows into a simple, streamlined automation.
+      </p>
+
+    </section>
+
+    <main class="workspace">
+
+      <div class="card main-card">
+
+        <div class="card-header">
+
+          <div class="google-icon">
+            📝
           </div>
+
           <div>
-            <h1 class="text-lg sm:text-xl font-semibold tracking-tight text-white">Report Content</h1>
-            <p class="text-[12px] sm:text-[13px] text-zinc-500 mt-0.5">Select a reason to continue</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Form Label -->
-      <div class="flex items-center justify-between mb-3 px-0.5">
-        <span class="text-[11px] font-medium uppercase tracking-wider text-zinc-500">Reason for report</span>
-        <span class="text-[11px] text-zinc-600" id="selected-count">0 selected</span>
-      </div>
-
-      <!-- Options -->
-      <div id="report-options" class="space-y-2">
-
-        <!-- Option Template will be repeated -->
-        <div class="option-card rounded-2xl cursor-pointer select-none px-4 py-3.5" data-option="RPT-001">
-          <div class="flex items-start gap-3">
-            <div class="check-circle mt-0.5">
-              <svg class="w-3 h-3 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
-              </svg>
+            <div class="card-title">
+              Connect your Google Form
             </div>
-            <div class="flex-1 min-w-0">
-              <div class="flex items-center justify-between gap-2">
-                <span class="text-[13.5px] sm:text-[14px] font-medium text-zinc-100 leading-snug">I don’t like it</span>
-                <span class="id-badge">RPT-001</span>
-              </div>
-              <div class="desc-wrap">
-                <div class="desc-inner">
-                  <p class="desc-text text-[12px] text-zinc-400 leading-relaxed">
-                    Content that is annoying, irrelevant, or simply not interesting to you.
-                  </p>
-                </div>
-              </div>
+
+            <div class="card-subtitle">
+              Paste a public Google Forms URL to get started
             </div>
           </div>
+
         </div>
 
-        <div class="option-card rounded-2xl cursor-pointer select-none px-4 py-3.5" data-option="RPT-002">
-          <div class="flex items-start gap-3">
-            <div class="check-circle mt-0.5">
-              <svg class="w-3 h-3 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
-              </svg>
-            </div>
-            <div class="flex-1 min-w-0">
-              <div class="flex items-center justify-between gap-2">
-                <span class="text-[13.5px] sm:text-[14px] font-medium text-zinc-100 leading-snug">Child abuse / exploitation</span>
-                <span class="id-badge">RPT-002</span>
-              </div>
-              <div class="desc-wrap">
-                <div class="desc-inner">
-                  <p class="desc-text text-[12px] text-zinc-400 leading-relaxed">
-                    Any content involving the sexual exploitation or abuse of minors.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
+        <label class="label" for="formUrl">
+          Google Form URL
+        </label>
+
+        <div class="input-wrap">
+
+          <input
+            id="formUrl"
+            type="url"
+            placeholder="https://docs.google.com/forms/d/e/..."
+            autocomplete="off"
+          />
+
+          <button class="paste-btn" onclick="pasteLink()">
+            Paste
+          </button>
+
         </div>
 
-        <div class="option-card rounded-2xl cursor-pointer select-none px-4 py-3.5" data-option="RPT-003">
-          <div class="flex items-start gap-3">
-            <div class="check-circle mt-0.5">
-              <svg class="w-3 h-3 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
-              </svg>
-            </div>
-            <div class="flex-1 min-w-0">
-              <div class="flex items-center justify-between gap-2">
-                <span class="text-[13.5px] sm:text-[14px] font-medium text-zinc-100 leading-snug">Violence or threats</span>
-                <span class="id-badge">RPT-003</span>
-              </div>
-              <div class="desc-wrap">
-                <div class="desc-inner">
-                  <p class="desc-text text-[12px] text-zinc-400 leading-relaxed">
-                    Graphic violence, credible threats of harm, or glorification of violence.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
+        <div class="action-row">
+
+          <button class="primary-btn" onclick="connectForm()">
+            Connect Form →
+          </button>
+
+          <button
+            class="secondary-btn"
+            onclick="clearForm()"
+            title="Clear"
+          >
+            ↺
+          </button>
+
         </div>
 
-        <div class="option-card rounded-2xl cursor-pointer select-none px-4 py-3.5" data-option="RPT-004">
-          <div class="flex items-start gap-3">
-            <div class="check-circle mt-0.5">
-              <svg class="w-3 h-3 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
-              </svg>
-            </div>
-            <div class="flex-1 min-w-0">
-              <div class="flex items-center justify-between gap-2">
-                <span class="text-[13.5px] sm:text-[14px] font-medium text-zinc-100 leading-snug">Illegal goods or services</span>
-                <span class="id-badge">RPT-004</span>
-              </div>
-              <div class="desc-wrap">
-                <div class="desc-inner">
-                  <p class="desc-text text-[12px] text-zinc-400 leading-relaxed">
-                    Selling or promoting drugs, weapons, counterfeit goods or other illegal items.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <div class="status" id="status">
 
-        <div class="option-card rounded-2xl cursor-pointer select-none px-4 py-3.5" data-option="RPT-005">
-          <div class="flex items-start gap-3">
-            <div class="check-circle mt-0.5">
-              <svg class="w-3 h-3 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
-              </svg>
-            </div>
-            <div class="flex-1 min-w-0">
-              <div class="flex items-center justify-between gap-2">
-                <span class="text-[13.5px] sm:text-[14px] font-medium text-zinc-100 leading-snug">Illegal adult content</span>
-                <span class="id-badge">RPT-005</span>
-              </div>
-              <div class="desc-wrap">
-                <div class="desc-inner">
-                  <p class="desc-text text-[12px] text-zinc-400 leading-relaxed">
-                    Non-consensual intimate imagery, extreme pornography or illegal sexual content.
-                  </p>
-                </div>
-              </div>
-            </div>
+          <div class="status-icon">
+            ✓
           </div>
-        </div>
 
-        <div class="option-card rounded-2xl cursor-pointer select-none px-4 py-3.5" data-option="RPT-006">
-          <div class="flex items-start gap-3">
-            <div class="check-circle mt-0.5">
-              <svg class="w-3 h-3 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
-              </svg>
-            </div>
-            <div class="flex-1 min-w-0">
-              <div class="flex items-center justify-between gap-2">
-                <span class="text-[13.5px] sm:text-[14px] font-medium text-zinc-100 leading-snug">Personal data / privacy</span>
-                <span class="id-badge">RPT-006</span>
-              </div>
-              <div class="desc-wrap">
-                <div class="desc-inner">
-                  <p class="desc-text text-[12px] text-zinc-400 leading-relaxed">
-                    Sharing private information, doxxing or unauthorized personal data.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+          <div>
+            <strong id="statusTitle">
+              Form link detected
+            </strong>
 
-        <div class="option-card rounded-2xl cursor-pointer select-none px-4 py-3.5" data-option="RPT-007">
-          <div class="flex items-start gap-3">
-            <div class="check-circle mt-0.5">
-              <svg class="w-3 h-3 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
-              </svg>
-            </div>
-            <div class="flex-1 min-w-0">
-              <div class="flex items-center justify-between gap-2">
-                <span class="text-[13.5px] sm:text-[14px] font-medium text-zinc-100 leading-snug">Terrorism or extremism</span>
-                <span class="id-badge">RPT-007</span>
-              </div>
-              <div class="desc-wrap">
-                <div class="desc-inner">
-                  <p class="desc-text text-[12px] text-zinc-400 leading-relaxed">
-                    Content promoting terrorist organizations or extremist ideologies.
-                  </p>
-                </div>
-              </div>
-            </div>
+            <span id="statusText">
+              Your form is ready for the next automation step.
+            </span>
           </div>
-        </div>
 
-        <div class="option-card rounded-2xl cursor-pointer select-none px-4 py-3.5" data-option="RPT-008">
-          <div class="flex items-start gap-3">
-            <div class="check-circle mt-0.5">
-              <svg class="w-3 h-3 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
-              </svg>
-            </div>
-            <div class="flex-1 min-w-0">
-              <div class="flex items-center justify-between gap-2">
-                <span class="text-[13.5px] sm:text-[14px] font-medium text-zinc-100 leading-snug">Scam, spam or phishing</span>
-                <span class="id-badge">RPT-008</span>
-              </div>
-              <div class="desc-wrap">
-                <div class="desc-inner">
-                  <p class="desc-text text-[12px] text-zinc-400 leading-relaxed">
-                    Fraudulent schemes, unsolicited spam or attempts to steal credentials.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="option-card rounded-2xl cursor-pointer select-none px-4 py-3.5" data-option="RPT-009">
-          <div class="flex items-start gap-3">
-            <div class="check-circle mt-0.5">
-              <svg class="w-3 h-3 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
-              </svg>
-            </div>
-            <div class="flex-1 min-w-0">
-              <div class="flex items-center justify-between gap-2">
-                <span class="text-[13.5px] sm:text-[14px] font-medium text-zinc-100 leading-snug">Copyright infringement</span>
-                <span class="id-badge">RPT-009</span>
-              </div>
-              <div class="desc-wrap">
-                <div class="desc-inner">
-                  <p class="desc-text text-[12px] text-zinc-400 leading-relaxed">
-                    Unauthorized use of copyrighted material, music, videos or images.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="option-card rounded-2xl cursor-pointer select-none px-4 py-3.5" data-option="RPT-010">
-          <div class="flex items-start gap-3">
-            <div class="check-circle mt-0.5">
-              <svg class="w-3 h-3 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
-              </svg>
-            </div>
-            <div class="flex-1 min-w-0">
-              <div class="flex items-center justify-between gap-2">
-                <span class="text-[13.5px] sm:text-[14px] font-medium text-zinc-100 leading-snug">Hate speech</span>
-                <span class="id-badge">RPT-010</span>
-              </div>
-              <div class="desc-wrap">
-                <div class="desc-inner">
-                  <p class="desc-text text-[12px] text-zinc-400 leading-relaxed">
-                    Attacks or slurs based on race, religion, gender, sexuality or other protected traits.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="option-card rounded-2xl cursor-pointer select-none px-4 py-3.5" data-option="RPT-011">
-          <div class="flex items-start gap-3">
-            <div class="check-circle mt-0.5">
-              <svg class="w-3 h-3 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
-              </svg>
-            </div>
-            <div class="flex-1 min-w-0">
-              <div class="flex items-center justify-between gap-2">
-                <span class="text-[13.5px] sm:text-[14px] font-medium text-zinc-100 leading-snug">Harassment or bullying</span>
-                <span class="id-badge">RPT-011</span>
-              </div>
-              <div class="desc-wrap">
-                <div class="desc-inner">
-                  <p class="desc-text text-[12px] text-zinc-400 leading-relaxed">
-                    Targeted harassment, repeated unwanted contact or bullying behavior.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="option-card rounded-2xl cursor-pointer select-none px-4 py-3.5" data-option="RPT-012">
-          <div class="flex items-start gap-3">
-            <div class="check-circle mt-0.5">
-              <svg class="w-3 h-3 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
-              </svg>
-            </div>
-            <div class="flex-1 min-w-0">
-              <div class="flex items-center justify-between gap-2">
-                <span class="text-[13.5px] sm:text-[14px] font-medium text-zinc-100 leading-snug">Misinformation</span>
-                <span class="id-badge">RPT-012</span>
-              </div>
-              <div class="desc-wrap">
-                <div class="desc-inner">
-                  <p class="desc-text text-[12px] text-zinc-400 leading-relaxed">
-                    False or misleading information that can cause real-world harm.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="option-card rounded-2xl cursor-pointer select-none px-4 py-3.5" data-option="RPT-013">
-          <div class="flex items-start gap-3">
-            <div class="check-circle mt-0.5">
-              <svg class="w-3 h-3 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
-              </svg>
-            </div>
-            <div class="flex-1 min-w-0">
-              <div class="flex items-center justify-between gap-2">
-                <span class="text-[13.5px] sm:text-[14px] font-medium text-zinc-100 leading-snug">Self-harm or suicide</span>
-                <span class="id-badge">RPT-013</span>
-              </div>
-              <div class="desc-wrap">
-                <div class="desc-inner">
-                  <p class="desc-text text-[12px] text-zinc-400 leading-relaxed">
-                    Content that promotes, encourages or provides methods for self-harm.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="option-card rounded-2xl cursor-pointer select-none px-4 py-3.5" data-option="RPT-014">
-          <div class="flex items-start gap-3">
-            <div class="check-circle mt-0.5">
-              <svg class="w-3 h-3 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
-              </svg>
-            </div>
-            <div class="flex-1 min-w-0">
-              <div class="flex items-center justify-between gap-2">
-                <span class="text-[13.5px] sm:text-[14px] font-medium text-zinc-100 leading-snug">Impersonation</span>
-                <span class="id-badge">RPT-014</span>
-              </div>
-              <div class="desc-wrap">
-                <div class="desc-inner">
-                  <p class="desc-text text-[12px] text-zinc-400 leading-relaxed">
-                    Pretending to be someone else in a way that is misleading or harmful.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="option-card rounded-2xl cursor-pointer select-none px-4 py-3.5" data-option="RPT-015">
-          <div class="flex items-start gap-3">
-            <div class="check-circle mt-0.5">
-              <svg class="w-3 h-3 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
-              </svg>
-            </div>
-            <div class="flex-1 min-w-0">
-              <div class="flex items-center justify-between gap-2">
-                <span class="text-[13.5px] sm:text-[14px] font-medium text-zinc-100 leading-snug">Not illegal, but must be removed</span>
-                <span class="id-badge">RPT-015</span>
-              </div>
-              <div class="desc-wrap">
-                <div class="desc-inner">
-                  <p class="desc-text text-[12px] text-zinc-400 leading-relaxed">
-                    Content that violates community guidelines even if not strictly illegal.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="option-card rounded-2xl cursor-pointer select-none px-4 py-3.5" data-option="RPT-016">
-          <div class="flex items-start gap-3">
-            <div class="check-circle mt-0.5">
-              <svg class="w-3 h-3 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
-              </svg>
-            </div>
-            <div class="flex-1 min-w-0">
-              <div class="flex items-center justify-between gap-2">
-                <span class="text-[13.5px] sm:text-[14px] font-medium text-zinc-100 leading-snug">Other</span>
-                <span class="id-badge">RPT-016</span>
-              </div>
-              <div class="desc-wrap">
-                <div class="desc-inner">
-                  <p class="desc-text text-[12px] text-zinc-400 leading-relaxed">
-                    Something else that doesn’t fit the categories above.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
 
       </div>
-    </div>
-  </div>
 
-  <!-- Sticky Submit Bar -->
-  <!-- ========== MODERN SUBMIT BAR ========== -->
-  <div id="submit-area" class="fixed bottom-0 left-0 right-0 z-50 pointer-events-none">
-    <div class="max-w-lg mx-auto px-4 pb-5 pt-3 sm:px-6">
-    
-      <!-- Glass card -->
-      <div class="submit-card pointer-events-auto rounded-2xl border border-zinc-800/80 bg-zinc-950/90 backdrop-blur-xl shadow-2xl shadow-black/50 overflow-hidden">
-        
-        <!-- Selected reason preview -->
-        <div id="selected-preview" class="px-4 pt-3.5 pb-2 flex items-center gap-2.5 border-b border-zinc-800/60">
-          <div class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></div>
-          <p class="text-[12.5px] text-zinc-400 truncate">
-            <span class="text-zinc-500">Selected:</span>
-            <span id="preview-text" class="text-zinc-200 font-medium ml-1">—</span>
+      <div class="features">
+
+        <div class="feature">
+          <div class="feature-icon">⚡</div>
+
+          <h3>Fast Setup</h3>
+
+          <p>
+            Paste a form URL and configure your workflow in seconds.
           </p>
         </div>
-  
-        <!-- Button -->
-        <div class="p-3">
-          <button id="submit-btn" class="submit-btn w-full h-12 rounded-xl bg-green-500 hover:bg-green-400 active:scale-[0.98] text-black font-semibold text-[14.5px] flex items-center justify-center gap-2 transition-all duration-200">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
-            </svg>
-            Submit Report
-          </button>
+
+        <div class="feature">
+          <div class="feature-icon">🔗</div>
+
+          <h3>Easy Integration</h3>
+
+          <p>
+            Designed around simple Google Form links and workflows.
+          </p>
         </div>
+
+        <div class="feature">
+          <div class="feature-icon">🛡️</div>
+
+          <h3>Clean & Private</h3>
+
+          <p>
+            Your interface stays lightweight without unnecessary clutter.
+          </p>
+        </div>
+
       </div>
-  
-      <p class="text-center text-[11px] text-zinc-600 mt-2.5">Your report is completely anonymous</p>
-    </div>
+
+    </main>
+
+    <footer class="footer">
+      FormFlow · Google Form Automation Interface
+    </footer>
+
   </div>
 
   <script>
-    const options = document.querySelectorAll('.option-card');
-    const submitArea = document.getElementById('submit-area');
-    const selectedCount = document.getElementById('selected-count');
-    const previewText = document.getElementById('preview-text');
-    let activeOption = null;
-    
-    options.forEach(option => {
-      option.addEventListener('click', () => {
-        if (activeOption) {
-          activeOption.classList.remove('selected');
+
+    const input = document.getElementById("formUrl");
+    const status = document.getElementById("status");
+    const statusTitle = document.getElementById("statusTitle");
+    const statusText = document.getElementById("statusText");
+
+    async function pasteLink() {
+      try {
+        const text = await navigator.clipboard.readText();
+
+        if (text) {
+          input.value = text;
+          input.focus();
         }
-    
-        activeOption = option;
-        option.classList.add('selected');
+      } catch (error) {
+        input.focus();
+        alert("Clipboard access is unavailable. Please paste the link manually.");
+      }
+    }
 
-        // Update counter + preview
-        const title = option.querySelector('.font-medium').textContent.trim();
-        selectedCount.textContent = '1 selected';
-        previewText.textContent = title;
-    
-        submitArea.classList.add('visible');
-    
-        setTimeout(() => {
-          option.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        }, 80);
-      });
+    function connectForm() {
+
+      const url = input.value.trim();
+
+      if (!url) {
+        showError(
+          "Missing form link",
+          "Please paste your Google Form URL first."
+        );
+        input.focus();
+        return;
+      }
+
+      const isGoogleForm =
+        url.includes("docs.google.com/forms/") ||
+        url.includes("forms.gle/");
+
+      if (!isGoogleForm) {
+        showError(
+          "Invalid Google Form",
+          "Please enter a valid Google Forms link."
+        );
+        input.focus();
+        return;
+      }
+
+      status.style.display = "flex";
+      status.style.borderColor = "rgba(34,197,94,.18)";
+      status.style.background = "rgba(34,197,94,.06)";
+
+      statusTitle.textContent = "Form link detected ✓";
+      statusTitle.style.color = "#f8fafc";
+
+      statusText.textContent =
+        "Your Google Form is ready for the next automation step.";
+
+      /*
+        IMPORTANT:
+
+        This frontend currently validates the Google Form URL.
+
+        To actually:
+        - read form questions
+        - automatically fill answers
+        - upload files
+        - submit responses
+        - process CSV/Excel rows
+        - run multiple submissions
+
+        you will need a backend/API or Google Apps Script.
+      */
+
+      console.log("Google Form:", url);
+    }
+
+    function showError(title, message) {
+
+      status.style.display = "flex";
+      status.style.borderColor = "rgba(239,68,68,.20)";
+      status.style.background = "rgba(239,68,68,.06)";
+
+      statusTitle.textContent = title;
+      statusTitle.style.color = "#fca5a5";
+
+      statusText.textContent = message;
+    }
+
+    function clearForm() {
+      input.value = "";
+      status.style.display = "none";
+      input.focus();
+    }
+
+    input.addEventListener("keydown", function(event) {
+      if (event.key === "Enter") {
+        connectForm();
+      }
     });
 
-    document.getElementById('submit-btn').addEventListener('click', () => {
-      if (!activeOption) return;
-    
-      const reportId = activeOption.getAttribute('data-option');
-      const title = activeOption.querySelector('.font-medium').textContent.trim();
-    
-      console.log('Report ID:', reportId);
-      console.log('Reason:', title);
-    
-      // Backend yahan
-      // fetch('/api/report', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ id: reportId, reason: title }) })    });
-    });
   </script>
+
 </body>
 </html>
