@@ -1495,6 +1495,10 @@ const riskLabel =
    RANDOM CLIENT SEED
 ========================= */
 
+function updateBalance() {
+    balanceEl.textContent = balance.toFixed(2);
+}
+
 function generateClientSeed(){
 
     const bytes =
