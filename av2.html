@@ -1,0 +1,1377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>AEROX — Provably Fair Crash Demo</title>
+
+<style>
+:root {
+    --bg: #02040a;
+    --panel: rgba(12, 15, 28, 0.92);
+    --panel2: rgba(16, 20, 36, 0.95);
+    --line: rgba(255, 255, 255, 0.085);
+    --white: #f8f9ff;
+    --muted: #7f889e;
+    --pink: #ff2a6d;
+    --pink2: #ff6b91;
+    --cyan: #5ce1ff;
+    --green: #35e6a1;
+    --gold: #ffd96a;
+    --danger: #ff2d5e;
+    --shadow: 0 35px 110px rgba(0, 0, 0, 0.65);
+    --glow: rgba(255, 42, 109, 0.45);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    min-height: 100vh;
+    color: var(--white);
+    background: radial-gradient(circle at 50% 20%, rgba(255, 42, 109, 0.12) 0%, transparent 45%),
+                radial-gradient(circle at 85% 10%, rgba(92, 225, 255, 0.12) 0%, transparent 40%),
+                radial-gradient(circle at 30% 85%, rgba(168, 0, 255, 0.10) 0%, transparent 40%),
+                var(--bg);
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    overflow-x: hidden;
+}
+
+/* ============================================
+   MODERN HOLOGRAPHIC HEADER
+=========================================== */
+
+.header {
+    height: 82px;
+    position: sticky;
+    top: 0;
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 clamp(20px, 6vw, 80px);
+    background: rgba(2, 4, 10, 0.92);
+    backdrop-filter: blur(32px);
+    border-bottom: 1px solid var(--line);
+    box-shadow: 0 0 40px rgba(255, 42, 109, 0.25);
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.logo-mark {
+    width: 46px;
+    height: 46px;
+    display: grid;
+    place-items: center;
+    border-radius: 16px;
+    background: linear-gradient(135deg, var(--pink), #c300ff);
+    box-shadow: 
+        0 0 35px var(--glow),
+        0 0 70px rgba(255, 42, 109, 0.6);
+    font-size: 22px;
+    position: relative;
+}
+
+.logo-mark::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle, rgba(255,255,255,0.6), transparent 70%);
+    border-radius: 16px;
+    animation: pulse 3s infinite alternate;
+}
+
+.logo-text {
+    font-size: 19px;
+    font-weight: 950;
+    letter-spacing: 4px;
+    background: linear-gradient(90deg, #fff, var(--pink));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.logo-text::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 100%;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--pink), transparent);
+    animation: shimmer 4s infinite;
+}
+
+.demo-tag {
+    margin-left: 8px;
+    font-size: 10px;
+    color: var(--gold);
+    border: 1px solid rgba(255, 217, 106, 0.4);
+    padding: 5px 10px;
+    border-radius: 9999px;
+    letter-spacing: 1.5px;
+    background: rgba(255, 217, 106, 0.08);
+    box-shadow: 0 0 20px rgba(255, 217, 106, 0.3);
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.connection {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--green);
+    font-size: 10.5px;
+    font-weight: 700;
+}
+
+.dot {
+    width: 8px;
+    height: 8px;
+    background: var(--green);
+    border-radius: 50%;
+    box-shadow: 0 0 16px var(--green), 0 0 32px rgba(53, 230, 161, 0.6);
+    animation: ping 2s infinite;
+}
+
+.balance {
+    padding: 12px 18px;
+    border-radius: 14px;
+    background: rgba(255,255,255,0.045);
+    border: 1px solid var(--line);
+    color: var(--green);
+    font-weight: 900;
+    font-size: 13.5px;
+    box-shadow: 0 0 20px rgba(53, 230, 161, 0.2);
+}
+
+/* ============================================
+   HOLO GAME AREA
+=========================================== */
+
+.page {
+    width: min(1280px, 94%);
+    margin: 32px auto 90px;
+}
+
+.game {
+    height: 620px;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: 32px;
+    background: #02040a;
+    box-shadow: var(--shadow);
+    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.game:hover {
+    box-shadow: 0 0 80px -10px var(--glow);
+}
+
+.game::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, 
+        rgba(255,42,109,0.03) 0%,
+        rgba(92,225,255,0.03) 40%,
+        rgba(168,0,255,0.03) 70%);
+    pointer-events: none;
+}
+
+.glow {
+    position: absolute;
+    width: 720px;
+    height: 340px;
+    left: 50%;
+    top: 10%;
+    transform: translateX(-50%);
+    background: radial-gradient(ellipse at center, 
+        rgba(255,42,109,0.25) 10%,
+        transparent 65%);
+    filter: blur(40px);
+    opacity: 0.85;
+    z-index: -1;
+}
+
+.stars {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+}
+
+.star {
+    position: absolute;
+    width: 1.5px;
+    height: 1.5px;
+    background: white;
+    border-radius: 50%;
+    box-shadow: 0 0 4px white;
+    opacity: 0.6;
+    animation: twinkle 4s infinite alternate;
+}
+
+@keyframes twinkle {
+    0% { opacity: 0.3; }
+    100% { opacity: 1; }
+}
+
+/* horizon */
+.horizon {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 32%;
+    height: 1.5px;
+    background: linear-gradient(90deg, 
+        transparent, 
+        rgba(92,225,255,0.45), 
+        transparent);
+    box-shadow: 0 0 30px rgba(92,225,255,0.3);
+    z-index: 3;
+}
+
+/* grid */
+.grid {
+    position: absolute;
+    width: 160%;
+    height: 68%;
+    left: -30%;
+    bottom: -15%;
+    opacity: 0.18;
+    background-image: 
+        linear-gradient(rgba(92,225,255,0.22) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(92,225,255,0.22) 1px, transparent 1px);
+    background-size: 85px 85px;
+    transform: perspective(500px) rotateX(64deg);
+    transform-origin: center bottom;
+    z-index: 1;
+}
+
+/* status */
+.status {
+    position: absolute;
+    z-index: 30;
+    top: 22px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    white-space: nowrap;
+    padding: 9px 18px;
+    border-radius: 9999px;
+    background: rgba(0,0,0,0.35);
+    border: 1px solid var(--line);
+    color: var(--muted);
+    font-size: 9.5px;
+    font-weight: 900;
+    letter-spacing: 1.5px;
+    backdrop-filter: blur(20px);
+    box-shadow: 0 0 20px rgba(255,42,109,0.4);
+}
+
+.status-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 14px var(--green), 0 0 28px var(--green);
+    animation: statusPulse 2s infinite;
+}
+
+/* multiplier */
+.multiplier {
+    position: absolute;
+    z-index: 25;
+    top: 36%;
+    width: 100%;
+    text-align: center;
+    font-size: clamp(75px, 12vw, 155px);
+    line-height: 0.9;
+    font-weight: 900;
+    letter-spacing: -9px;
+    color: #fff;
+    text-shadow: 
+        0 0 30px rgba(255,42,109,0.6),
+        0 0 110px rgba(255,42,109,0.25),
+        0 0 180px rgba(255,42,109,0.1);
+    transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.multiplier.running {
+    animation: multiplierPulse 1.1s infinite alternate;
+}
+
+.multiplier.crashed {
+    color: var(--danger);
+    text-shadow: 
+        0 0 45px var(--danger),
+        0 0 130px rgba(255,42,109,0.6);
+    animation: crashShake 0.6s infinite;
+}
+
+@keyframes multiplierPulse {
+    0% { transform: scale(1.0) rotate(1deg); }
+    100% { transform: scale(1.06) rotate(-1deg); }
+}
+
+@keyframes crashShake {
+    0%, 100% { transform: rotate(-8deg) translateX(0); }
+    25% { transform: rotate(8deg) translateX(6px); }
+    75% { transform: rotate(-8deg) translateX(-6px); }
+}
+
+/* aircraft */
+.aircraft {
+    position: absolute;
+    z-index: 40;
+    left: 8%;
+    bottom: 16%;
+    width: 110px;
+    height: 58px;
+    transform: rotate(-18deg);
+    filter: 
+        drop-shadow(0 0 10px rgba(255,42,109,0.9))
+        drop-shadow(0 0 40px rgba(255,42,109,0.6))
+        drop-shadow(0 0 70px rgba(255,42,109,0.3));
+    transition: transform 0.2s ease;
+}
+
+.aircraft-body {
+    position: absolute;
+    width: 82px;
+    height: 21px;
+    top: 19px;
+    left: 11px;
+    border-radius: 75% 25% 25% 75%;
+    background: linear-gradient(90deg, #d9e8ff, #fff 50%, #a0b8d8);
+    transform: skewX(-14deg);
+    box-shadow: 0 0 15px rgba(255,42,109,0.4);
+}
+
+.aircraft-nose {
+    position: absolute;
+    right: 0;
+    top: 17px;
+    width: 27px;
+    height: 27px;
+    background: #fff;
+    clip-path: polygon(0 0, 100% 50%, 0 100%);
+    box-shadow: inset 0 0 12px rgba(255,255,255,0.6);
+}
+
+.aircraft-wing {
+    position: absolute;
+    left: 32px;
+    top: 6px;
+    width: 52px;
+    height: 31px;
+    background: linear-gradient(135deg, #e0f0ff, #9ab8d4);
+    clip-path: polygon(0 0, 100% 25%, 38% 100%);
+    transform: rotate(-6deg);
+    box-shadow: 0 0 20px rgba(92,225,255,0.5);
+}
+
+.aircraft-wing2 {
+    position: absolute;
+    left: 32px;
+    top: 31px;
+    width: 47px;
+    height: 28px;
+    background: #8ba9c5;
+    clip-path: polygon(0 100%, 100% 68%, 32% 0);
+    transform: rotate(-3deg);
+}
+
+.aircraft-tail {
+    position: absolute;
+    left: 9px;
+    top: 8px;
+    width: 22px;
+    height: 32px;
+    background: var(--pink);
+    clip-path: polygon(0 100%, 50% 0, 100% 100%);
+    box-shadow: 0 0 18px var(--pink);
+}
+
+.window {
+    position: absolute;
+    z-index: 50;
+    width: 9px;
+    height: 7px;
+    top: 24px;
+    left: 41px;
+    border-radius: 4px;
+    background: #1e3a5f;
+    box-shadow: 14px 0 #1e3a5f, 28px 0 #1e3a5f;
+}
+
+.engine {
+    position: absolute;
+    left: 4px;
+    top: 23px;
+    width: 22px;
+    height: 10px;
+    background: linear-gradient(90deg, #ff1d5e, #ffcc44, transparent);
+    filter: blur(3px);
+    animation: engineThrust 0.1s infinite alternate;
+}
+
+.trail {
+    position: absolute;
+    z-index: 20;
+    left: 8%;
+    bottom: 17%;
+    width: 0;
+    height: 4px;
+    transform-origin: left center;
+    transform: rotate(-28deg);
+    background: linear-gradient(90deg, transparent, rgba(255,42,109,0.3), var(--pink));
+    box-shadow: 0 0 25px var(--pink);
+}
+
+/* bottom info */
+.game-note {
+    position: absolute;
+    bottom: 22px;
+    width: 100%;
+    text-align: center;
+    color: #5a6782;
+    font-size: 9.5px;
+    letter-spacing: 1px;
+}
+
+/* ============================================
+   DASHBOARD + FAIRNESS
+=========================================== */
+
+.dashboard,
+.fairness {
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: 22px;
+    margin-top: 22px;
+}
+
+@media (max-width: 920px) {
+    .dashboard,
+    .fairness {
+        grid-template-columns: 1fr;
+    }
+}
+
+.panel {
+    border: 1px solid var(--line);
+    border-radius: 22px;
+    background: var(--panel);
+    backdrop-filter: blur(28px);
+    padding: 24px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    transition: all 0.3s ease;
+}
+
+.panel:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 30px 80px rgba(255,42,109,0.15);
+}
+
+.panel-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 22px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+.panel-head h3 {
+    font-size: 15px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+}
+
+.panel-head span {
+    color: var(--muted);
+    font-size: 9.5px;
+    letter-spacing: 1.5px;
+    background: rgba(255,255,255,0.06);
+    padding: 2px 10px;
+    border-radius: 9999px;
+}
+
+/* risk grid */
+.risk-grid {
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    gap: 6px;
+    margin-bottom: 16px;
+}
+
+.risk {
+    padding: 10px 4px;
+    border-radius: 10px;
+    border: 1px solid var(--line);
+    background: rgba(17,23,42,0.6);
+    color: #7f889e;
+    font-size: 9.5px;
+    font-weight: 900;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.risk:hover {
+    transform: scale(1.08) translateY(-2px);
+    border-color: var(--pink);
+    box-shadow: 0 0 25px rgba(255,42,109,0.3);
+}
+
+.risk.active {
+    color: #fff;
+    border-color: var(--pink);
+    background: linear-gradient(135deg, rgba(255,42,109,0.35), rgba(168,0,255,0.2));
+    box-shadow: 0 0 30px rgba(255,42,109,0.4);
+    box-shadow: inset 0 0 20px rgba(255,42,109,0.25);
+}
+
+/* bet input */
+.input-row {
+    display: flex;
+    gap: 12px;
+}
+
+.input-row input {
+    flex: 1;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 14px;
+    background: rgba(7,10,19,0.6);
+    color: white;
+    padding: 16px 20px;
+    font-size: 15px;
+    font-weight: 700;
+    outline: none;
+    transition: all 0.2s;
+}
+
+.input-row input:focus {
+    border-color: var(--pink);
+    box-shadow: 0 0 0 4px rgba(255,42,109,0.15);
+    background: rgba(7,10,19,0.9);
+}
+
+/* primary button */
+.primary {
+    width: 100%;
+    margin-top: 12px;
+    padding: 16px;
+    border: 0;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #ff2a6d, #ff0f4d);
+    color: white;
+    font-weight: 950;
+    font-size: 16px;
+    letter-spacing: 1px;
+    box-shadow: 0 10px 35px rgba(255,42,109,0.35);
+    transition: all 0.2s;
+    cursor: pointer;
+}
+
+.primary:hover {
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 15px 45px rgba(255,42,109,0.5);
+}
+
+.primary:active {
+    transform: scale(0.96);
+}
+
+.primary:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* cashout */
+.cashout {
+    width: 100%;
+    margin-top: 16px;
+    padding: 17px;
+    border: 0;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #39edaa, #1ab88a);
+    color: #020a06;
+    font-size: 15.5px;
+    font-weight: 900;
+    letter-spacing: 1px;
+    box-shadow: 0 12px 35px rgba(53,230,161,0.3);
+    transition: all 0.2s;
+}
+
+.cashout:disabled {
+    background: #2a3348;
+    color: #6f7a95;
+    box-shadow: none;
+}
+
+/* quick buttons */
+.quick button {
+    flex: 1;
+    padding: 9px;
+    border: 1px solid rgba(255,255,255,0.1);
+    background: rgba(23,29,48,0.6);
+    color: #a0a9c0;
+    border-radius: 10px;
+    font-size: 10px;
+    font-weight: 700;
+    transition: all 0.2s;
+}
+
+.quick button:hover {
+    background: rgba(255,42,109,0.15);
+    color: var(--pink);
+    border-color: var(--pink);
+}
+
+/* stats */
+.stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+    margin-top: 14px;
+}
+
+.stat {
+    padding: 12px 10px;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.06);
+    background: rgba(255,255,255,0.03);
+}
+
+.stat label {
+    display: block;
+    color: #68748a;
+    font-size: 8.5px;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.stat strong {
+    font-size: 13px;
+    font-weight: 800;
+}
+
+/* history */
+.history {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.result {
+    padding: 9px 12px;
+    border-radius: 10px;
+    font-size: 10px;
+    font-weight: 900;
+    background: rgba(53,230,161,0.08);
+    border: 1px solid rgba(53,230,161,0.15);
+    color: var(--green);
+    transition: all 0.2s;
+}
+
+.result.low {
+    color: #ff6b8f;
+    background: rgba(255,42,109,0.1);
+    border-color: rgba(255,42,109,0.2);
+}
+
+.result.high {
+    color: var(--gold);
+    background: rgba(255,217,106,0.1);
+    border-color: rgba(255,217,106,0.2);
+}
+
+/* fairness cards */
+.fair-card {
+    border: 1px solid var(--line);
+    border-radius: 22px;
+    background: var(--panel);
+    padding: 24px;
+}
+
+.fair-card h3 {
+    font-size: 15px;
+    margin-bottom: 12px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+}
+
+.fair-card p {
+    color: #8a95b0;
+    font-size: 10.5px;
+    line-height: 1.75;
+    margin-bottom: 18px;
+}
+
+/* seed value */
+.seed {
+    margin-top: 14px;
+}
+
+.seed label {
+    display: block;
+    color: #6a7488;
+    font-size: 8.5px;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+}
+
+.seed-value {
+    padding: 13px 16px;
+    border-radius: 12px;
+    background: rgba(7,10,19,0.8);
+    border: 1px solid rgba(37,45,66,0.6);
+    color: #7ed9ff;
+    font-family: monospace;
+    font-size: 9px;
+    word-break: break-all;
+    letter-spacing: 0.5px;
+}
+
+/* formula */
+.formula {
+    margin-top: 14px;
+    padding: 16px;
+    border-radius: 12px;
+    background: rgba(7,10,19,0.8);
+    border: 1px solid rgba(37,45,66,0.6);
+    color: #75d9ff;
+    font-family: monospace;
+    font-size: 9.5px;
+    line-height: 1.75;
+    overflow: auto;
+    max-height: 180px;
+}
+
+/* verify button */
+.verify-btn {
+    width: 100%;
+    margin-top: 14px;
+    padding: 13px;
+    border-radius: 12px;
+    border: 1px solid rgba(92,225,255,0.25);
+    background: rgba(92,225,255,0.07);
+    color: var(--cyan);
+    font-weight: 900;
+    font-size: 10.5px;
+    letter-spacing: 1.2px;
+    transition: all 0.2s;
+}
+
+.verify-btn:hover {
+    background: rgba(92,225,255,0.15);
+    transform: translateY(-1px);
+}
+
+/* message */
+.message {
+    min-height: 22px;
+    margin-top: 12px;
+    text-align: center;
+    color: #929bb0;
+    font-size: 10px;
+}
+
+/* animations */
+@keyframes pulse {
+    50% { transform: scale(1.015); }
+}
+
+@keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(300%); }
+}
+
+@keyframes engineThrust {
+    to { width: 32px; opacity: 0.7; }
+}
+
+@keyframes statusPulse {
+    0%, 100% { box-shadow: 0 0 14px var(--green); }
+    50% { box-shadow: 0 0 28px var(--green); }
+}
+</style>
+</head>
+
+<body>
+
+<header class="header">
+
+    <div class="logo">
+        <div class="logo-mark">✈</div>
+        <div class="logo-text">AEROX</div>
+        <div class="demo-tag">NEXT-LEVEL PROVABLY FAIR</div>
+    </div>
+
+    <div class="header-right">
+
+        <div class="connection">
+            <span class="dot"></span>
+            REAL-TIME HOLO-SECURE
+        </div>
+
+        <div class="balance">
+            <span id="balance">1000.00</span> CR
+        </div>
+
+    </div>
+
+</header>
+
+
+<main class="page">
+
+    <!-- TRANSPARENCY -->
+    <div class="notice">
+        <div class="notice-icon">✓</div>
+        <div>
+            <strong>NOT UNDER OPERATOR CONTROL • PROVABLY FAIR HOLO-DEMO</strong>
+            <p>Every round uses deterministic HMAC-SHA256 + client seed. Virtual credits only. No real money.</p>
+        </div>
+    </div>
+
+    <!-- GAME -->
+    <section class="game" id="gameSection">
+
+        <div class="glow"></div>
+        <div class="stars" id="stars"></div>
+        <div class="grid"></div>
+        <div class="horizon"></div>
+
+        <div class="status">
+            <span class="status-dot"></span>
+            <span id="statusText">PREPARING HOLO-FLIGHT</span>
+        </div>
+
+        <div class="multiplier" id="multiplier">1.00x</div>
+
+        <!-- MODERN PLANE -->
+        <div class="aircraft" id="aircraft">
+            <div class="aircraft-body"></div>
+            <div class="aircraft-nose"></div>
+            <div class="aircraft-wing"></div>
+            <div class="aircraft-wing2"></div>
+            <div class="aircraft-tail"></div>
+            <div class="window"></div>
+            <div class="engine"></div>
+        </div>
+
+        <div class="trail" id="trail"></div>
+
+        <div class="game-note">HOLO-DEMO • VIRTUAL CREDITS ONLY • LOCAL PROVABLY FAIR</div>
+
+    </section>
+
+    <!-- CONTROLS -->
+    <section class="dashboard">
+
+        <div class="panel">
+
+            <div class="panel-head">
+                <h3>FLIGHT CONFIGURATION</h3>
+                <span>RISK HOLO-ENGINE v3.1</span>
+            </div>
+
+            <!-- RISK -->
+            <div class="risk-grid" id="riskGrid">
+                <!-- populated by JS -->
+            </div>
+
+            <div class="risk-info">
+                <small id="riskDescription">Conservative Holo Mode</small>
+                <strong id="riskLabel">LOW RISK</strong>
+            </div>
+
+            <!-- BET -->
+            <div class="bet-area">
+                <div class="input-row">
+                    <input id="betAmount" type="number" min="1" step="1" value="10">
+                    <button class="primary" id="betButton">LAUNCH HOLO-FLIGHT</button>
+                </div>
+
+                <div class="quick" id="quickButtons">
+                    <!-- populated by JS -->
+                </div>
+
+                <button class="cashout" id="cashoutButton" disabled>CASH OUT</button>
+
+                <div class="stats">
+                    <div class="stat">
+                        <label>VIRTUAL BET</label>
+                        <strong id="yourBet">0.00 CR</strong>
+                    </div>
+                    <div class="stat">
+                        <label>MULTIPLIER</label>
+                        <strong id="currentMultiplier">1.00x</strong>
+                    </div>
+                    <div class="stat">
+                        <label>PAYOUT</label>
+                        <strong id="payout">0.00 CR</strong>
+                    </div>
+                </div>
+
+                <div class="message" id="message">Choose risk level &amp; launch the next Holo flight</div>
+            </div>
+
+        </div>
+
+        <!-- HISTORY -->
+        <div class="panel">
+
+            <div class="panel-head">
+                <h3>FLIGHT HISTORY</h3>
+                <span>LIVE HOLO-LOG</span>
+            </div>
+
+            <div class="history" id="history"></div>
+
+            <div style="margin-top: 24px; padding: 18px; border-radius: 16px; background: rgba(8,12,23,0.6); border: 1px solid var(--line); font-size: 9px;">
+                <div style="color: var(--cyan); font-weight: 900; margin-bottom: 8px;">ROUND INDEPENDENCE PROTOCOL</div>
+                <p style="color: #788298; line-height: 1.65;">Each nonce creates a unique deterministic crash. No replay possible.</p>
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- FAIRNESS -->
+    <section class="fairness">
+
+        <div class="fair-card">
+            <h3>🔐 PROVABLY FAIR HOLO-DEMO</h3>
+            <p>Server seed commitment + HMAC-SHA256 + nonce = fully verifiable crash point in browser.</p>
+
+            <div class="seed">
+                <label>SERVER SEED SHA-256 COMMITMENT</label>
+                <div class="seed-value" id="serverHash">Generating quantum seed...</div>
+            </div>
+
+            <div class="seed">
+                <label>CLIENT SEED</label>
+                <div class="seed-value" id="clientSeed"></div>
+            </div>
+
+            <div class="seed">
+                <label>NONCE</label>
+                <div class="seed-value" id="nonce">0</div>
+            </div>
+
+            <button class="verify-btn" id="verifyButton">VERIFY CURRENT HOLO-ROUND</button>
+            <div class="verify-result" id="verifyResult">Waiting for first flight...</div>
+        </div>
+
+        <div class="fair-card">
+            <h3>📐 TRANSPARENT CRASH ALGORITHM</h3>
+            <p>Exact deterministic formula used in this Holo-Demo</p>
+
+            <div class="formula">
+HMAC-SHA256(serverSeed, clientSeed + ":" + nonce)<br>
+hash = result<br>
+fraction = first 13 hex chars / 2^52<br>
+crash = 1 / (1 - fraction) * 100
+            </div>
+
+            <div class="seed">
+                <label>CURRENT ROUND HMAC</label>
+                <div class="seed-value" id="roundHash">Waiting...</div>
+            </div>
+
+            <div style="margin-top:14px; font-size:8.5px; color:#ffcc44; line-height:1.6; opacity:0.85;">
+                This is a fully client-side Holo-Demo. Real production requires secret server seed on backend.
+            </div>
+        </div>
+
+    </section>
+
+</main>
+
+
+<script>
+/*
+============================================================
+AEROX — NEXT-LEVEL HOLO PROVABLY FAIR CRASH DEMO
+============================================================
+*/
+
+let balance = 1000;
+let gameRunning = false;
+let hasBet = false;
+
+let currentBet = 0;
+let multiplier = 1;
+let crashPoint = 1;
+
+let riskMode = 1;
+
+let currentRoundHash = "";
+let serverSeed = "";
+let clientSeed = "";
+let nonce = 0;
+let startTime = 0;
+let animationFrame = null;
+
+const trail = document.getElementById("trail");
+
+/* ====================== STATE ====================== */
+
+const balanceEl = document.getElementById("balance");
+const multiplierEl = document.getElementById("multiplier");
+const currentMultiplierEl = document.getElementById("currentMultiplier");
+const payoutEl = document.getElementById("payout");
+const yourBetEl = document.getElementById("yourBet");
+const betAmountEl = document.getElementById("betAmount");
+const betButton = document.getElementById("betButton");
+const cashoutButton = document.getElementById("cashoutButton");
+const messageEl = document.getElementById("message");
+const statusText = document.getElementById("statusText");
+const aircraft = document.getElementById("aircraft");
+const historyEl = document.getElementById("history");
+const serverHashEl = document.getElementById("serverHash");
+const clientSeedEl = document.getElementById("clientSeed");
+const nonceEl = document.getElementById("nonce");
+const verifyResultEl = document.getElementById("verifyResult");
+const riskDescription = document.getElementById("riskDescription");
+const riskLabel = document.getElementById("riskLabel");
+const roundHashEl = document.getElementById("roundHash");
+
+/* ====================== CRYPTO ====================== */
+
+function bytesToHex(bytes) {
+    return Array.from(bytes).map(b => b.toString(16).padStart(2, "0")).join("");
+}
+
+async function sha256(text) {
+    const data = new TextEncoder().encode(text);
+    const hash = await crypto.subtle.digest("SHA-256", data);
+    return bytesToHex(new Uint8Array(hash));
+}
+
+async function hmacSHA256(keyText, messageText) {
+    const key = await crypto.subtle.importKey(
+        "raw",
+        new TextEncoder().encode(keyText),
+        { name: "HMAC", hash: "SHA-256" },
+        false,
+        ["sign"]
+    );
+    const sig = await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(messageText));
+    return bytesToHex(new Uint8Array(sig));
+}
+
+/* ====================== SEEDS ====================== */
+
+async function createServerSeed() {
+    const bytes = crypto.getRandomValues(new Uint8Array(32));
+    serverSeed = bytesToHex(bytes);
+    serverHashEl.textContent = await sha256(serverSeed);
+}
+
+async function generateClientSeed() {
+    const bytes = crypto.getRandomValues(new Uint8Array(16));
+    return bytesToHex(bytes);
+}
+
+/* ====================== RISK SYSTEM ====================== */
+
+const riskData = {
+    1: { label: "LOW RISK", desc: "Conservative Holo Mode", speed: 1.00 },
+    2: { label: "LOW+", desc: "Slightly aggressive", speed: 1.06 },
+    3: { label: "BALANCED", desc: "Balanced Holo", speed: 1.12 },
+    4: { label: "MEDIUM", desc: "Fast growth", speed: 1.18 },
+    5: { label: "MEDIUM+", desc: "Aggressive", speed: 1.25 },
+    6: { label: "HIGH", desc: "High-speed Holo", speed: 1.33 },
+    7: { label: "HIGH+", desc: "Very aggressive", speed: 1.42 },
+    8: { label: "EXTREME", desc: "Extreme Holo", speed: 1.52 },
+    9: { label: "ULTRA", desc: "Ultra-fast", speed: 1.63 },
+    10: { label: "MAX", desc: "Maximum demo chaos", speed: 1.75 }
+};
+
+function createRiskButtons() {
+    const container = document.getElementById("riskGrid");
+    container.innerHTML = "";
+    Object.keys(riskData).forEach(key => {
+        const btn = document.createElement("button");
+        btn.className = `risk ${key === "1" ? "active" : ""}`;
+        btn.dataset.risk = key;
+        btn.textContent = key + "x";
+        btn.addEventListener("click", () => {
+            if (gameRunning) return;
+            document.querySelectorAll(".risk").forEach(b => b.classList.remove("active"));
+            btn.classList.add("active");
+            riskMode = Number(key);
+            riskLabel.textContent = riskData[key].label;
+            riskDescription.textContent = riskData[key].desc;
+        });
+        container.appendChild(btn);
+    });
+}
+
+createRiskButtons();
+
+/* ====================== CALCULATION ====================== */
+
+function hashToFraction(hash) {
+    const hex = hash.substring(0, 13);
+    return parseInt(hex, 16) / 4503599627370496;
+}
+
+function calculateCrash(fraction, risk) {
+    const safe = Math.max(0.0000000001, Math.min(0.9999999999, fraction));
+    const base = Math.floor((1 / (1 - safe)) * 100) / 100;
+    const factor = 1 - (risk - 1) * 0.048;
+    return Math.min(1000, Math.max(1.01, base * factor));
+}
+
+/* ====================== PREPARE ROUND ====================== */
+
+async function prepareRound() {
+    nonce++;
+    nonceEl.textContent = nonce;
+
+    currentRoundHash = await hmacSHA256(serverSeed, clientSeed + ":" + nonce);
+    roundHashEl.textContent = currentRoundHash;
+
+    const fraction = hashToFraction(currentRoundHash);
+    crashPoint = calculateCrash(fraction, riskMode);
+    document.getElementById("crashPoint")?.textContent = crashPoint.toFixed(2) + "x";
+}
+
+/* ====================== FLIGHT LOGIC ====================== */
+
+function startFlight() {
+    gameRunning = true;
+    multiplier = 1;
+    startTime = performance.now();
+    statusText.textContent = "FLIGHT IN PROGRESS";
+    statusText.style.color = "#35e6a1";
+    betButton.disabled = true;
+    betAmountEl.disabled = true;
+
+    requestAnimationFrame(updateFlight);
+}
+
+function updateFlight(now) {
+    if (!gameRunning) return;
+
+    const elapsed = (now - startTime) / 1000;
+    multiplier = Math.pow(1.14, elapsed * 2.9);
+
+    if (multiplier >= crashPoint) {
+        multiplier = crashPoint;
+        updateDisplay();
+        crashFlight();
+        return;
+    }
+
+    updateDisplay();
+    movePlane(Math.min(elapsed / 9.5, 1));
+
+    animationFrame = requestAnimationFrame(updateFlight);
+}
+
+function updateDisplay() {
+    const txt = multiplier.toFixed(2) + "x";
+    multiplierEl.textContent = txt;
+    currentMultiplierEl.textContent = txt;
+
+    if (hasBet) {
+        payoutEl.textContent = (currentBet * multiplier).toFixed(2) + " CR";
+    }
+}
+
+function movePlane(progress) {
+    const p = Math.min(Math.max(progress, 0), 1);
+    aircraft.style.left = (8 + p * 82) + "%";
+    aircraft.style.bottom = (14 + p * 68) + "%";
+    aircraft.style.transform = `rotate(-18deg) scale(${1 + p * 0.32})`;
+    trail.style.width = (p * 88) + "%";
+    trail.style.transform = `rotate(-29deg)`;
+}
+
+/* ====================== ACTIONS ====================== */
+
+async function placeBet() {
+    if (gameRunning) return;
+    const amount = Number(betAmountEl.value);
+    if (!amount || amount <= 0 || amount > balance) {
+        messageEl.textContent = amount > balance ? "Insufficient Holo-Credits" : "Enter valid amount";
+        return;
+    }
+
+    balance -= amount;
+    updateBalance();
+    currentBet = amount;
+    hasBet = true;
+    yourBetEl.textContent = currentBet.toFixed(2) + " CR";
+    cashoutButton.disabled = false;
+    messageEl.textContent = "Holo-bet placed. Fly fast!";
+
+    await prepareRound();
+    startFlight();
+}
+
+function cashOut() {
+    if (!gameRunning || !hasBet) return;
+    const payout = currentBet * multiplier;
+    balance += payout;
+    updateBalance();
+    messageEl.textContent = `Cashed out at ${multiplier.toFixed(2)}x — ${payout.toFixed(2)} CR returned!`;
+    hasBet = false;
+    currentBet = 0;
+    yourBetEl.textContent = "0.00 CR";
+    payoutEl.textContent = "0.00 CR";
+    cashoutButton.disabled = true;
+}
+
+/* ====================== CRASH ====================== */
+
+function crashFlight() {
+    gameRunning = false;
+    cancelAnimationFrame(animationFrame);
+    multiplierEl.classList.add("crashed");
+    statusText.textContent = `CRASHED AT ${crashPoint.toFixed(2)}x`;
+    statusText.style.color = "#ff2d5e";
+    addHistory(crashPoint);
+
+    if (hasBet) {
+        messageEl.textContent = "Flight crashed. Your Holo-bet lost.";
+    }
+
+    hasBet = false;
+    currentBet = 0;
+    yourBetEl.textContent = "0.00 CR";
+    payoutEl.textContent = "0.00 CR";
+    cashoutButton.disabled = true;
+
+    setTimeout(resetFlight, 2800);
+}
+
+function resetFlight() {
+    multiplier = 1;
+    multiplierEl.classList.remove("crashed");
+    multiplierEl.textContent = "1.00x";
+    currentMultiplierEl.textContent = "1.00x";
+    statusText.textContent = "NEXT HOLO FLIGHT READY";
+    statusText.style.color = "#8ca5c0";
+    aircraft.style.left = "9%";
+    aircraft.style.bottom = "14%";
+    aircraft.style.transform = "rotate(-18deg)";
+    trail.style.width = "0";
+    betButton.disabled = false;
+    betAmountEl.disabled = false;
+    messageEl.textContent = "Choose risk • Place Holo-bet • Launch!";
+}
+
+/* ====================== HISTORY ====================== */
+
+function addHistory(value) {
+    const el = document.createElement("div");
+    el.className = "result";
+    if (value < 2) el.classList.add("low");
+    else if (value > 9) el.classList.add("high");
+    el.textContent = value.toFixed(2) + "x";
+    historyEl.prepend(el);
+    while (historyEl.children.length > 14) historyEl.removeChild(historyEl.lastChild);
+}
+
+/* ====================== VERIFY ====================== */
+
+async function verifyCurrentRound() {
+    if (!currentRoundHash) {
+        verifyResultEl.textContent = "No Holo-round active";
+        return;
+    }
+    try {
+        const calc = await hmacSHA256(serverSeed, clientSeed + ":" + nonce);
+        const ok = calc === currentRoundHash;
+        verifyResultEl.textContent = ok ? "✓ HOLO-HASH VERIFIED" : "✕ HASH MISMATCH";
+        verifyResultEl.style.color = ok ? "#35e6a1" : "#ff2d5e";
+    } catch (e) {
+        verifyResultEl.textContent = "Verification failed";
+    }
+}
+
+/* ====================== QUICK BETS ====================== */
+
+function createQuickButtons() {
+    const container = document.getElementById("quickButtons");
+    const amounts = [10, 25, 50, 100, 250, 500];
+    amounts.forEach(amount => {
+        const btn = document.createElement("button");
+        btn.textContent = amount;
+        btn.onclick = () => betAmountEl.value = amount;
+        container.appendChild(btn);
+    });
+}
+createQuickButtons();
+
+/* ====================== INITIALIZE ====================== */
+
+async function initialize() {
+    await createServerSeed();
+    clientSeed = await generateClientSeed();
+    clientSeedEl.textContent = clientSeed;
+    nonce = 0;
+    nonceEl.textContent = nonce;
+
+    // initial history
+    const initial = [1.28, 2.41, 1.09, 4.73, 2.16, 7.92, 3.05, 1.47];
+    initial.forEach(addHistory);
+
+    updateBalance();
+    await prepareRound();
+    updateRoundDetails();
+}
+
+function updateBalance() {
+    balanceEl.textContent = balance.toFixed(2);
+}
+
+function updateRoundDetails() {
+    if (serverHashEl) serverHashEl.textContent = "Ready";
+    if (clientSeedEl) clientSeedEl.textContent = clientSeed;
+    if (nonceEl) nonceEl.textContent = nonce;
+    if (roundHashEl) roundHashEl.textContent = "Waiting...";
+}
+
+/* ====================== EVENTS ====================== */
+
+betButton.addEventListener("click", placeBet);
+cashoutButton.addEventListener("click", cashOut);
+document.getElementById("verifyButton").addEventListener("click", verifyCurrentRound);
+betAmountEl.addEventListener("keydown", e => e.key === "Enter" && placeBet());
+
+/* ====================== START ====================== */
+
+initialize();
+</script>
+
+</body>
+</html>
