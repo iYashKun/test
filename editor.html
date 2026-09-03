@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lightweight WYSIWYG Editor</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #0a0e27 0%, #16213e 100%);
+            color: #e0e0e0;
+            padding: 40px 20px;
+            line-height: 1.65;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 32px;
+            margin-bottom: 12px;
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: #888;
+            margin-bottom: 40px;
+        }
+
+        /* Editor container */
+        .editor-wrapper {
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            background: rgba(15, 23, 42, 0.8);
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Toolbar */
+        .editor-toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 4px;
+            padding: 8px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(10, 14, 27, 0.9);
+        }
+
+        .toolbar-group {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+        }
+
+        .toolbar-separator {
+            width: 1px;
+            height: 20px;
+            background: rgba(255, 255, 255, 0.15);
+            margin: 0 4px;
+        }
+
+        /* Toolbar buttons */
+        .editor-toolbar button {
+            background: transparent;
+            border: 1px solid transparent;
+            color: #888;
+            padding: 6px 10px;
+            height: 30px;
+            border-radius: 7px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            transition: all 0.15s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 30px;
+            white-space: nowrap;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .editor-toolbar button {
+                transition: none;
+            }
+        }
+
+        .editor-toolbar button:hover:not(.is-active) {
+            background: rgba(255, 255, 255, 0.05);
+            color: #b0b0b0;
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .editor-toolbar button.is-active {
+            background: rgba(0, 196, 255, 0.12);
+            border-color: rgba(0, 196, 255, 0.3);
+            color: #00c4ff;
+        }
+
+        /* Editor surface */
+        .editor-surface {
+            min-height: 220px;
+            padding: 18px 20px;
+            outline: none;
+            color: #e0e0e0;
+            font-size: 15px;
+            line-height: 1.65;
+            overflow-y: auto;
+            max-height: 600px;
+        }
+
+        .editor-surface:empty::before {
+            content: attr(data-placeholder);
+            color: #666;
+            pointer-events: none;
+        }
+
+        /* Source textarea */
+        .editor-source {
+            display: none;
+            min-height: 220px;
+            padding: 18px 20px;
+            outline: none;
+            color: #e0e0e0;
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.5;
+            width: 100%;
+            background: rgba(10, 14, 27, 0.9);
+            border: none;
+            resize: vertical;
+            max-height: 600px;
+        }
+
+        .editor-source.active {
+            display: block;
+        }
+
+        .editor-surface.hidden {
+            display: none;
+        }
+
+        /* Content styling */
+        .editor-surface h1 {
+            font-size: 28px;
+            font-weight: 600;
+            margin: 20px 0 12px 0;
+            color: #fff;
+        }
+
+        .editor-surface h1:first-child {
+            margin-top: 0;
+        }
+
+        .editor-surface h2 {
+            font-size: 22px;
+            font-weight: 600;
+            margin: 16px 0 10px 0;
+            color: #f5f5f5;
+        }
+
+        .editor-surface h3 {
+            font-size: 18px;
+            font-weight: 600;
+            margin: 14px 0 8px 0;
+            color: #f0f0f0;
+        }
+
+        .editor-surface p {
+            margin: 8px 0;
+        }
+
+        .editor-surface b,
+        .editor-surface strong {
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .editor-surface i,
+        .editor-surface em {
+            font-style: italic;
+            color: #d4d4d4;
+        }
+
+        .editor-surface u {
+            text-decoration: underline;
+            text-decoration-color: rgba(0, 196, 255, 0.4);
+            text-underline-offset: 3px;
+        }
+
+        .editor-surface s,
+        .editor-surface del {
+            text-decoration: line-through;
+            color: #888;
+        }
+
+        .editor-surface a {
+            color: #00c4ff;
+            text-decoration: underline;
+            text-decoration-color: rgba(0, 196, 255, 0.4);
+            text-underline-offset: 3px;
+            cursor: pointer;
+            transition: color 0.15s ease;
+        }
+
+        .editor-surface a:hover {
+            color: #00e5ff;
+            text-decoration-color: rgba(0, 229, 255, 0.6);
+        }
+
+        .editor-surface ul,
+        .editor-surface ol {
+            margin: 12px 0;
+            padding-left: 24px;
+        }
+
+        .editor-surface li {
+            margin: 6px 0;
+        }
+
+        .editor-surface blockquote {
+            margin: 12px 0;
+            padding-left: 16px;
+            border-left: 3px solid rgba(0, 196, 255, 0.5);
+            color: #b0b0b0;
+            font-style: italic;
+        }
+
+        .editor-surface code {
+            background: rgba(0, 196, 255, 0.08);
+            color: #00d9ff;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+
+        .editor-surface pre {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 12px;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin: 12px 0;
+        }
+
+        .editor-surface pre code {
+            background: none;
+            color: #00d9ff;
+            padding: 0;
+            border-radius: 0;
+        }
+
+        /* Modal for link input */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: #1a1f3a;
+            border: 1px solid rgba(0, 196, 255, 0.3);
+            border-radius: 12px;
+            padding: 24px;
+            min-width: 320px;
+            max-width: 500px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+        }
+
+        .modal h2 {
+            font-size: 18px;
+            color: #fff;
+            margin-bottom: 16px;
+            font-weight: 600;
+        }
+
+        .modal input {
+            width: 100%;
+            padding: 10px 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(0, 196, 255, 0.3);
+            border-radius: 6px;
+            color: #e0e0e0;
+            font-size: 14px;
+            margin-bottom: 16px;
+        }
+
+        .modal input:focus {
+            outline: none;
+            border-color: rgba(0, 196, 255, 0.6);
+            background: rgba(0, 196, 255, 0.08);
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 8px;
+            justify-content: flex-end;
+        }
+
+        .modal button {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            transition: all 0.15s ease;
+        }
+
+        .modal-btn-cancel {
+            background: rgba(255, 255, 255, 0.1);
+            color: #888;
+        }
+
+        .modal-btn-cancel:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: #b0b0b0;
+        }
+
+        .modal-btn-confirm {
+            background: rgba(0, 196, 255, 0.2);
+            border: 1px solid rgba(0, 196, 255, 0.3);
+            color: #00c4ff;
+        }
+
+        .modal-btn-confirm:hover {
+            background: rgba(0, 196, 255, 0.3);
+            border-color: rgba(0, 196, 255, 0.5);
+        }
+
+        .modal-error {
+            color: #ff6b6b;
+            font-size: 12px;
+            margin-bottom: 12px;
+            display: none;
+        }
+
+        .modal-error.show {
+            display: block;
+        }
+
+        /* Icons using Unicode */
+        .icon-before::before {
+            content: attr(data-icon);
+            margin-right: 4px;
+            font-size: 14px;
+        }
+
+        /* Demo content styles */
+        .editor-demo {
+            margin-top: 20px;
+            padding: 16px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px dashed rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            font-size: 12px;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>✏️ Rich Text Editor</h1>
+        <p class="subtitle">Lightweight, zero-dependency WYSIWYG editor — pure HTML, CSS, and JavaScript</p>
+
+        <div class="editor-wrapper" id="editor">
+            <!-- Toolbar will be inserted here by JavaScript -->
+        </div>
+
+        <div class="editor-demo">
+            <strong>Features:</strong> Bold, italic, underline, strikethrough • Headings & paragraphs • Lists & blockquotes • Link insertion with validation • HTML source view • Full sanitization on paste • Keyboard shortcuts (Ctrl+B/I/U)
+        </div>
+    </div>
+
+    <!-- Link modal -->
+    <div class="modal-overlay" id="linkModal">
+        <div class="modal">
+            <h2>Insert Link</h2>
+            <div class="modal-error" id="linkError"></div>
+            <input type="text" id="linkInput" placeholder="https://example.com" />
+            <div class="modal-buttons">
+                <button class="modal-btn-cancel" onclick="document.getElementById('linkModal').classList.remove('active'); editor.focus();">Cancel</button>
+                <button class="modal-btn-confirm" id="linkConfirm">Insert</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /**
+         * RichTextEditor - A lightweight WYSIWYG editor
+         * No dependencies, all inline, sanitized, accessible
+         */
+        class RichTextEditor {
+            constructor(rootElement, options = {}) {
+                this.rootElement = rootElement;
+                this.options = {
+                    initialHTML: '',
+                    placeholder: 'Write something…',
+                    onChange: () => {},
+                    ...options
+                };
+
+                this.isSourceMode = false;
+                this.listeners = [];
+
+                this.init();
+            }
+
+            init() {
+                // Create toolbar
+                this.createToolbar();
+
+                // Create surface
+                this.surface = document.createElement('div');
+                this.surface.className = 'editor-surface';
+                this.surface.contentEditable = 'true';
+                this.surface.setAttribute('role', 'textbox');
+                this.surface.setAttribute('aria-multiline', 'true');
+                this.surface.setAttribute('aria-label', 'Text editor');
+                this.surface.setAttribute('data-placeholder', this.options.placeholder);
+                this.rootElement.appendChild(this.surface);
+
+                // Create source textarea
+                this.sourceTextarea = document.createElement('textarea');
+                this.sourceTextarea.className = 'editor-source';
+                this.sourceTextarea.setAttribute('aria-label', 'HTML source');
+                this.rootElement.appendChild(this.sourceTextarea);
+
+                // Set initial content
+                if (this.options.initialHTML) {
+                    this.setHTML(this.options.initialHTML);
+                }
+
+                // Bind events
+                this.attachEventListeners();
+            }
+
+            createToolbar() {
+                this.toolbar = document.createElement('div');
+                this.toolbar.className = 'editor-toolbar';
+                this.toolbar.setAttribute('role', 'toolbar');
+                this.toolbar.setAttribute('aria-label', 'Text formatting toolbar');
+
+                const groups = [
+                    {
+                        name: 'text',
+                        buttons: [
+                            { id: 'bold', label: 'Bold', command: 'bold', icon: '𝐁', key: 'B' },
+                            { id: 'italic', label: 'Italic', command: 'italic', icon: '𝑰', key: 'I' },
+                            { id: 'underline', label: 'Underline', command: 'underline', icon: 'U̲', key: 'U' },
+                            { id: 'strikethrough', label: 'Strikethrough', command: 'strikeThrough', icon: 'S̶' }
+                        ]
+                    },
+                    {
+                        name: 'blocks',
+                        buttons: [
+                            { id: 'h1', label: 'Heading 1', command: 'formatBlock', value: 'h1', icon: 'H1' },
+                            { id: 'h2', label: 'Heading 2', command: 'formatBlock', value: 'h2', icon: 'H2' },
+                            { id: 'paragraph', label: 'Paragraph', command: 'formatBlock', value: 'p', icon: '¶' }
+                        ]
+                    },
+                    {
+                        name: 'list',
+                        buttons: [
+                            { id: 'ul', label: 'Bullet List', command: 'insertUnorderedList', icon: '•' },
+                            { id: 'ol', label: 'Numbered List', command: 'insertOrderedList', icon: '1.' }
+                        ]
+                    },
+                    {
+                        name: 'quote',
+                        buttons: [
+                            { id: 'blockquote', label: 'Blockquote', command: 'formatBlock', value: 'blockquote', icon: '❝' }
+                        ]
+                    },
+                    {
+                        name: 'link',
+                        buttons: [
+                            { id: 'link', label: 'Insert Link', command: 'link', icon: '🔗' }
+                        ]
+                    },
+                    {
+                        name: 'format',
+                        buttons: [
+                            { id: 'removeFormat', label: 'Clear Formatting', command: 'removeFormat', icon: '✕' }
+                        ]
+                    },
+                    {
+                        name: 'view',
+                        buttons: [
+                            { id: 'source', label: 'Source', command: 'source', icon: '</>' }
+                        ]
+                    }
+                ];
+
+                groups.forEach((group, groupIndex) => {
+                    const groupDiv = document.createElement('div');
+                    groupDiv.className = 'toolbar-group';
+
+                    group.buttons.forEach((btnConfig) => {
+                        const button = document.createElement('button');
+                        button.id = `btn-${btnConfig.id}`;
+                        button.type = 'button';
+                        button.className = 'toolbar-button';
+                        button.innerHTML = btnConfig.icon;
+                        button.setAttribute('aria-label', btnConfig.label);
+                        button.setAttribute('aria-pressed', 'false');
+                        button.title = `${btnConfig.label} ${btnConfig.key ? '(Ctrl+' + btnConfig.key + ')' : ''}`;
+
+                        if (btnConfig.command === 'link') {
+                            button.addEventListener('mousedown', (e) => {
+                                e.preventDefault();
+                                this.showLinkModal();
+                            });
+                        } else if (btnConfig.command === 'source') {
+                            button.addEventListener('mousedown', (e) => {
+                                e.preventDefault();
+                                this.toggleSourceView();
+                            });
+                        } else {
+                            button.addEventListener('mousedown', (e) => {
+                                e.preventDefault();
+                                this.exec(btnConfig.command, btnConfig.value || '');
+                            });
+                        }
+
+                        groupDiv.appendChild(button);
+                    });
+
+                    this.toolbar.appendChild(groupDiv);
+
+                    // Add separator between groups (except after last)
+                    if (groupIndex < groups.length - 1) {
+                        const separator = document.createElement('div');
+                        separator.className = 'toolbar-separator';
+                        this.toolbar.appendChild(separator);
+                    }
+                });
+
+                this.rootElement.appendChild(this.toolbar);
+            }
+
+            attachEventListeners() {
+                // Sync toolbar state on input, selection change, and focus
+                const syncToolbarState = () => {
+                    if (!this.isSourceMode) {
+                        this.syncToolbarState();
+                    }
+                };
+
+                this.surface.addEventListener('input', () => {
+                    this.options.onChange(this.getHTML());
+                    syncToolbarState();
+                }, false);
+
+                this.surface.addEventListener('keyup', syncToolbarState, false);
+                this.surface.addEventListener('mouseup', syncToolbarState, false);
+                this.surface.addEventListener('focus', syncToolbarState, false);
+
+                document.addEventListener('selectionchange', syncToolbarState, false);
+
+                // Keyboard shortcuts
+                this.surface.addEventListener('keydown', (e) => {
+                    const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+                    const modifier = isMac ? e.metaKey : e.ctrlKey;
+
+                    if (modifier && !e.shiftKey && !e.altKey) {
+                        if (e.key.toLowerCase() === 'b') {
+                            e.preventDefault();
+                            this.exec('bold', '');
+                            this.syncToolbarState();
+                        } else if (e.key.toLowerCase() === 'i') {
+                            e.preventDefault();
+                            this.exec('italic', '');
+                            this.syncToolbarState();
+                        } else if (e.key.toLowerCase() === 'u') {
+                            e.preventDefault();
+                            this.exec('underline', '');
+                            this.syncToolbarState();
+                        }
+                    }
+                }, false);
+
+                // Sanitize on paste
+                this.surface.addEventListener('paste', (e) => {
+                    e.preventDefault();
+                    const clipboardData = e.clipboardData || window.clipboardData;
+                    const html = clipboardData.getData('text/html');
+                    const text = clipboardData.getData('text/plain');
+
+                    let content = html || text;
+
+                    if (html) {
+                        content = this.sanitizeHTML(html);
+                    } else if (text) {
+                        // For plain text, escape HTML and preserve line breaks
+                        content = this.escapeHTML(text);
+                    }
+
+                    document.execCommand('insertHTML', false, content);
+                    this.options.onChange(this.getHTML());
+                    syncToolbarState();
+                }, false);
+
+                // Setup link modal
+                document.getElementById('linkConfirm').addEventListener('click', () => {
+                    this.insertLink();
+                });
+
+                document.getElementById('linkInput').addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        this.insertLink();
+                    }
+                });
+            }
+
+            /**
+             * Execute a command with proper error handling and re-focus
+             */
+            exec(command, value = '') {
+                try {
+                    document.execCommand(command, false, value);
+                } catch (e) {
+                    console.warn(`Command "${command}" failed:`, e.message);
+                }
+                this.surface.focus();
+                this.syncToolbarState();
+            }
+
+            /**
+             * Sync toolbar button states based on queryCommandState
+             */
+            syncToolbarState() {
+                const commands = {
+                    'bold': 'bold',
+                    'italic': 'italic',
+                    'underline': 'underline',
+                    'strikethrough': 'strikeThrough',
+                    'h1': 'h1',
+                    'h2': 'h2',
+                    'paragraph': 'p',
+                    'ul': 'insertUnorderedList',
+                    'ol': 'insertOrderedList',
+                    'blockquote': 'blockquote'
+                };
+
+                Object.entries(commands).forEach(([btnId, cmd]) => {
+                    const button = document.getElementById(`btn-${btnId}`);
+                    if (!button) return;
+
+                    let isActive = false;
+                    try {
+                        if (cmd === 'h1' || cmd === 'h2' || cmd === 'blockquote' || cmd === 'p') {
+                            // For formatBlock, check the current tag
+                            const block = document.queryCommandValue('formatBlock');
+                            isActive = block.toLowerCase().includes(cmd.toLowerCase());
+                        } else {
+                            isActive = document.queryCommandState(cmd);
+                        }
+                    } catch (e) {
+                        // Degrade gracefully
+                    }
+
+                    button.classList.toggle('is-active', isActive);
+                    button.setAttribute('aria-pressed', isActive);
+                });
+            }
+
+            /**
+             * Show link insertion modal
+             */
+            showLinkModal() {
+                const modal = document.getElementById('linkModal');
+                const input = document.getElementById('linkInput');
+                const error = document.getElementById('linkError');
+
+                input.value = '';
+                error.classList.remove('show');
+                error.textContent = '';
+
+                modal.classList.add('active');
+                input.focus();
+
+                // Allow closing with Escape
+                const escapeHandler = (e) => {
+                    if (e.key === 'Escape') {
+                        modal.classList.remove('active');
+                        document.removeEventListener('keydown', escapeHandler);
+                        this.surface.focus();
+                    }
+                };
+                document.addEventListener('keydown', escapeHandler);
+            }
+
+            /**
+             * Insert link with validation
+             */
+            insertLink() {
+                const input = document.getElementById('linkInput');
+                const error = document.getElementById('linkError');
+                const url = input.value.trim();
+
+                if (!url) {
+                    error.textContent = 'Please enter a URL';
+                    error.classList.add('show');
+                    return;
+                }
+
+                if (!this.isValidURL(url)) {
+                    error.textContent = 'Invalid URL. Use http(s), mailto, tel, or relative links.';
+                    error.classList.add('show');
+                    return;
+                }
+
+                error.classList.remove('show');
+                document.getElementById('linkModal').classList.remove('active');
+
+                this.exec('createLink', url);
+                this.surface.focus();
+
+                // Add security attributes to the link
+                const selection = window.getSelection();
+                const range = selection.getRangeAt(0);
+                const link = range.commonAncestorContainer.parentElement;
+                if (link && link.tagName === 'A') {
+                    link.setAttribute('rel', 'noopener nofollow');
+                }
+            }
+
+            /**
+             * Validate URL and check for dangerous schemes
+             */
+            isValidURL(url) {
+                // Check for dangerous protocols
+                if (/^(javascript|data|vbscript):/i.test(url)) {
+                    return false;
+                }
+
+                // Allow common protocols and relative URLs
+                if (/^(https?:|mailto:|tel:|\/|#|\.)/i.test(url)) {
+                    return true;
+                }
+
+                // Try to construct and validate as full URL
+                try {
+                    new URL(url, window.location.href);
+                    return true;
+                } catch (e) {
+                    return false;
+                }
+            }
+
+            /**
+             * Toggle source/rich view
+             */
+            toggleSourceView() {
+                this.isSourceMode = !this.isSourceMode;
+                const btn = document.getElementById('btn-source');
+
+                if (this.isSourceMode) {
+                    // Switch to source
+                    const html = this.surface.innerHTML;
+                    this.sourceTextarea.value = this.prettifyHTML(html);
+                    this.surface.classList.add('hidden');
+                    this.sourceTextarea.classList.add('active');
+                    this.sourceTextarea.focus();
+                    btn.classList.add('is-active');
+                } else {
+                    // Switch to rich
+                    const html = this.sourceTextarea.value;
+                    const sanitized = this.sanitizeHTML(html);
+                    this.surface.innerHTML = sanitized;
+                    this.sourceTextarea.classList.remove('active');
+                    this.surface.classList.remove('hidden');
+                    this.surface.focus();
+                    btn.classList.remove('is-active');
+                    this.options.onChange(this.getHTML());
+                }
+            }
+
+            /**
+             * Prettify HTML for source view
+             */
+            prettifyHTML(html) {
+                let result = html;
+                // Break between tags for readability
+                result = result.replace(/></g, '>\n<');
+                // Indent nested elements (simplified)
+                let indent = 0;
+                result = result.split('\n').map((line) => {
+                    if (line.match(/^<\//)) indent = Math.max(0, indent - 1);
+                    const padded = '  '.repeat(indent) + line;
+                    if (line.match(/^<[^/]/)) indent++;
+                    return padded;
+                }).join('\n');
+                return result;
+            }
+
+            /**
+             * Strict HTML sanitizer
+             */
+            sanitizeHTML(html) {
+                // Parse in detached DOM
+                const doc = document.implementation.createHTMLDocument('');
+                doc.body.innerHTML = html;
+
+                // Allowlist of tags
+                const ALLOWED_TAGS = {
+                    'p': true,
+                    'br': true,
+                    'b': true,
+                    'strong': true,
+                    'i': true,
+                    'em': true,
+                    'u': true,
+                    's': true,
+                    'del': true,
+                    'h1': true,
+                    'h2': true,
+                    'h3': true,
+                    'ul': true,
+                    'ol': true,
+                    'li': true,
+                    'blockquote': true,
+                    'code': true,
+                    'pre': true,
+                    'a': true,
+                    '#text': true,
+                    '#document-fragment': true
+                };
+
+                const walk = (node) => {
+                    if (node.nodeType === 3) { // Text node
+                        return node.cloneNode(true);
+                    }
+
+                    if (node.nodeType !== 1) { // Not element
+                        return null;
+                    }
+
+                    const tag = node.tagName.toLowerCase();
+                    if (!ALLOWED_TAGS[tag]) {
+                        // Unwrap: keep children but discard wrapper
+                        const fragment = document.createDocumentFragment();
+                        for (const child of node.childNodes) {
+                            const sanitized = walk(child);
+                            if (sanitized) fragment.appendChild(sanitized);
+                        }
+                        return fragment;
+                    }
+
+                    const clone = document.createElement(tag);
+
+                    // Only allow href on anchors, with security checks
+                    if (tag === 'a' && node.hasAttribute('href')) {
+                        const href = node.getAttribute('href');
+                        if (this.isValidURL(href)) {
+                            clone.setAttribute('href', href);
+                            clone.setAttribute('rel', 'noopener nofollow');
+                        }
+                    }
+
+                    // Recursively sanitize children
+                    for (const child of node.childNodes) {
+                        const sanitized = walk(child);
+                        if (sanitized) {
+                            if (sanitized.nodeType === 11) { // DocumentFragment
+                                clone.appendChild(sanitized);
+                            } else {
+                                clone.appendChild(sanitized);
+                            }
+                        }
+                    }
+
+                    return clone;
+                };
+
+                const sanitized = document.createDocumentFragment();
+                for (const child of doc.body.childNodes) {
+                    const result = walk(child);
+                    if (result) {
+                        if (result.nodeType === 11) { // DocumentFragment
+                            sanitized.appendChild(result);
+                        } else {
+                            sanitized.appendChild(result);
+                        }
+                    }
+                }
+
+                return sanitized.innerHTML;
+            }
+
+            /**
+             * Escape HTML special characters
+             */
+            escapeHTML(text) {
+                const div = document.createElement('div');
+                div.textContent = text;
+                return div.innerHTML.replace(/\n/g, '<br>');
+            }
+
+            /**
+             * Get sanitized HTML content
+             * NOTE: This is client-side sanitization for defense-in-depth.
+             * Server-side sanitization is REQUIRED before storing or displaying user content.
+             */
+            getHTML() {
+                if (this.isSourceMode) {
+                    return this.sanitizeHTML(this.sourceTextarea.value);
+                }
+                return this.sanitizeHTML(this.surface.innerHTML);
+            }
+
+            /**
+             * Set HTML content (sanitized before insertion)
+             */
+            setHTML(html) {
+                const sanitized = this.sanitizeHTML(html);
+                this.surface.innerHTML = sanitized;
+                this.options.onChange(this.getHTML());
+            }
+
+            /**
+             * Focus the editor
+             */
+            focus() {
+                if (this.isSourceMode) {
+                    this.sourceTextarea.focus();
+                } else {
+                    this.surface.focus();
+                }
+            }
+
+            /**
+             * Clear all content
+             */
+            clear() {
+                this.surface.innerHTML = '';
+                this.sourceTextarea.value = '';
+                this.options.onChange(this.getHTML());
+            }
+
+            /**
+             * Clean up listeners
+             */
+            destroy() {
+                document.removeEventListener('selectionchange', () => {});
+                this.surface.removeEventListener('input', () => {});
+                this.surface.removeEventListener('keyup', () => {});
+                this.surface.removeEventListener('mouseup', () => {});
+                this.surface.removeEventListener('focus', () => {});
+                this.surface.removeEventListener('keydown', () => {});
+                this.surface.removeEventListener('paste', () => {});
+            }
+        }
+
+        // Initialize editor with sample content
+        const sampleHTML = `
+            <h1>Welcome to the Rich Text Editor</h1>
+            <p>This is a <b>lightweight WYSIWYG editor</b> built with vanilla HTML, CSS, and JavaScript. <i>No frameworks, no dependencies.</i></p>
+            <p>Try formatting text with the toolbar above or use keyboard shortcuts:</p>
+            <ul>
+                <li><strong>Ctrl+B</strong> or <strong>Cmd+B</strong> for bold</li>
+                <li><strong>Ctrl+I</strong> or <strong>Cmd+I</strong> for italic</li>
+                <li><strong>Ctrl+U</strong> or <strong>Cmd+U</strong> for underline</li>
+            </ul>
+            <p>Features include lists, blockquotes, links with validation, and a source view for editing HTML directly.</p>
+            <blockquote>All content is sanitized on paste and when switching views — security is built in from the start.</blockquote>
+            <p>Create <a href="https://example.com" rel="noopener nofollow">links safely</a>, and the editor will validate the URL and add security attributes automatically.</p>
+        `;
+
+        const editorElement = document.getElementById('editor');
+        const editor = new RichTextEditor(editorElement, {
+            initialHTML: sampleHTML,
+            placeholder: 'Start typing…',
+            onChange: (html) => {
+                // You can use this callback to save content to a server
+                // console.log('Content changed:', html);
+            }
+        });
+
+        // Expose to global for testing
+        window.editor = editor;
+    </script>
+</body>
+</html>
