@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Mint Schedule</title>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+    :root {
+      --bg: #080a09;
+      --panel: #09110e;
+      --green: #35d7a5;
+      --green-dark: #075d47;
+      --gold: #f2c75d;
+      --cream: #f1dfbb;
+      --muted: #8c857a;
+      --line: #262925;
+      --border: #174e3f;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at 50% 0%, rgba(20, 66, 52, 0.08), transparent 35%),
+        var(--bg);
+      color: var(--cream);
+      font-family: "Cormorant Garamond", Georgia, serif;
+      padding: 0 42px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 828px;
+      margin: 0 auto;
+    }
+
+    /* =========================
+       GUARANTEED PLACE
+    ========================= */
+
+    .guaranteed {
+      margin-top: 1px;
+      min-height: 178px;
+      border: 1px solid var(--border);
+      border-radius: 19px;
+      background:
+        linear-gradient(
+          110deg,
+          rgba(11, 28, 23, 0.62),
+          rgba(5, 13, 11, 0.28)
+        );
+      padding: 27px 31px;
+      box-shadow:
+        inset 0 0 35px rgba(24, 134, 101, 0.025),
+        0 0 30px rgba(0, 0, 0, 0.12);
+    }
+
+    .guaranteed-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--green);
+      font-size: 25px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+    }
+
+    .dot {
+      width: 15px;
+      height: 15px;
+      background: var(--green);
+      border-radius: 50%;
+      display: inline-block;
+      box-shadow: 0 0 12px rgba(53, 215, 165, 0.2);
+      flex-shrink: 0;
+    }
+
+    .guaranteed-text {
+      margin-top: 17px;
+      color: #c5b89e;
+      font-size: 18px;
+      line-height: 1.5;
+    }
+
+    .wallet {
+      margin-top: 19px;
+      color: #595d58;
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 14px;
+      letter-spacing: 0.5px;
+    }
+
+    /* =========================
+       SCHEDULE HEADER
+    ========================= */
+
+    .schedule-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 46px;
+      margin-bottom: 29px;
+    }
+
+    .schedule-title {
+      color: #a99779;
+      font-size: 19px;
+      letter-spacing: 7px;
+      text-transform: uppercase;
+      font-weight: 500;
+    }
+
+    .recheck {
+      height: 46px;
+      padding: 0 25px;
+      border: 1px solid #454540;
+      border-radius: 25px;
+      background: transparent;
+      color: #dfcfb1;
+      font-family: inherit;
+      font-size: 17px;
+      letter-spacing: 2px;
+      cursor: pointer;
+      transition: all .25s ease;
+    }
+
+    .recheck:hover {
+      border-color: var(--green);
+      color: var(--green);
+      box-shadow: 0 0 18px rgba(53, 215, 165, .08);
+      transform: translateY(-1px);
+    }
+
+    /* =========================
+       MINT ITEMS
+    ========================= */
+
+    .mint-list {
+      width: 100%;
+    }
+
+    .mint-item {
+      position: relative;
+      display: grid;
+      grid-template-columns: 29px 1fr;
+      column-gap: 13px;
+      padding: 0 0 27px;
+    }
+
+    .mint-item + .mint-item {
+      border-top: 1px solid var(--line);
+      padding-top: 24px;
+    }
+
+    .radio {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      border: 1px solid #454843;
+      margin-top: 6px;
+      position: relative;
+      transition: all .2s ease;
+    }
+
+    .mint-item.active .radio {
+      border-color: var(--gold);
+      background: rgba(242, 199, 93, .2);
+    }
+
+    .mint-item.active .radio::after {
+      content: "";
+      position: absolute;
+      inset: 3px;
+      border-radius: 50%;
+      background: var(--gold);
+    }
+
+    .mint-item:hover .radio {
+      border-color: var(--green);
+    }
+
+    .item-content {
+      min-width: 0;
+    }
+
+    .item-heading {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .item-title {
+      color: #e9dfcc;
+      font-size: 22px;
+      line-height: 1.2;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .2px;
+    }
+
+    .active .item-title {
+      color: var(--gold);
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      height: 31px;
+      padding: 0 10px;
+      border: 1px solid #3a3d39;
+      border-radius: 6px;
+      color: #c4b89f;
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 13px;
+      letter-spacing: .5px;
+      white-space: nowrap;
+    }
+
+    .tag.green {
+      border-color: #08694f;
+      color: #35d7a5;
+      background: rgba(7, 93, 71, .12);
+      letter-spacing: 1px;
+    }
+
+    .details {
+      margin-top: 10px;
+      color: #a69b89;
+      font-size: 18px;
+      line-height: 1.5;
+    }
+
+    .price {
+      margin-top: 5px;
+      color: #d5c9b0;
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 15px;
+      letter-spacing: .3px;
+    }
+
+    .free {
+      color: #c7c0b1;
+    }
+
+    /* =========================
+       RESPONSIVE
+    ========================= */
+
+    @media (max-width: 700px) {
+      body {
+        padding: 0 18px 30px;
+      }
+
+      .guaranteed {
+        min-height: auto;
+        padding: 23px 21px;
+        border-radius: 16px;
+      }
+
+      .guaranteed-title {
+        font-size: 19px;
+        letter-spacing: 2.5px;
+        gap: 9px;
+      }
+
+      .dot {
+        width: 12px;
+        height: 12px;
+      }
+
+      .guaranteed-text {
+        font-size: 16px;
+        margin-top: 14px;
+      }
+
+      .wallet {
+        font-size: 12px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .schedule-header {
+        align-items: flex-start;
+        gap: 18px;
+        margin-top: 34px;
+        margin-bottom: 24px;
+      }
+
+      .schedule-title {
+        font-size: 16px;
+        letter-spacing: 4px;
+        padding-top: 10px;
+      }
+
+      .recheck {
+        height: 42px;
+        padding: 0 15px;
+        font-size: 13px;
+        letter-spacing: 1.2px;
+        white-space: nowrap;
+      }
+
+      .mint-item {
+        grid-template-columns: 24px 1fr;
+        column-gap: 9px;
+        padding-bottom: 24px;
+      }
+
+      .mint-item + .mint-item {
+        padding-top: 22px;
+      }
+
+      .item-title {
+        font-size: 19px;
+      }
+
+      .tag {
+        height: 28px;
+        font-size: 11px;
+        padding: 0 8px;
+      }
+
+      .details {
+        margin-top: 9px;
+        font-size: 16px;
+      }
+
+      .price {
+        font-size: 13px;
+        line-height: 1.6;
+      }
+    }
+
+    @media (max-width: 430px) {
+      .schedule-header {
+        flex-direction: column;
+      }
+
+      .recheck {
+        width: 100%;
+      }
+
+      .schedule-title {
+        padding-top: 0;
+      }
+
+      .item-heading {
+        gap: 7px;
+      }
+
+      .item-title {
+        font-size: 18px;
+      }
+
+      .details {
+        font-size: 15px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <main class="container">
+
+    <!-- Guaranteed Place -->
+    <section class="guaranteed">
+
+      <h1 class="guaranteed-title">
+        <span class="dot"></span>
+        Guaranteed Place
+      </h1>
+
+      <p class="guaranteed-text">
+        Granted. You hold a guaranteed place, and your Book is reserved.
+      </p>
+
+      <div class="wallet">
+        0x231f...b185
+      </div>
+
+    </section>
+
+
+    <!-- Schedule Header -->
+    <header class="schedule-header">
+
+      <h2 class="schedule-title">
+        Mint Schedule
+      </h2>
+
+      <button class="recheck" onclick="recheckEligibility()">
+        RECHECK ELIGIBILITY
+      </button>
+
+    </header>
+
+
+    <!-- Mint Schedule -->
+    <section class="mint-list">
+
+      <!-- Guaranteed Mint -->
+      <article class="mint-item active">
+
+        <div class="radio"></div>
+
+        <div class="item-content">
+
+          <div class="item-heading">
+
+            <h3 class="item-title">
+              Guaranteed - Mint
+            </h3>
+
+            <span class="tag">
+              Allowlist
+            </span>
+
+            <span class="tag green">
+              YOU MINT HERE
+            </span>
+
+          </div>
+
+          <p class="details">
+            Starts: September 11 at 8:00 PM GMT+7 ·
+            8:00 PM to 9:00 PM · 1 hour
+          </p>
+
+          <p class="price free">
+            FREE &nbsp;|&nbsp; LIMIT 1 PER WALLET
+          </p>
+
+        </div>
+
+      </article>
+
+
+      <!-- FCFS -->
+      <article class="mint-item">
+
+        <div class="radio"></div>
+
+        <div class="item-content">
+
+          <div class="item-heading">
+
+            <h3 class="item-title">
+              First Come, First Served - Mint
+            </h3>
+
+            <span class="tag">
+              Allowlist
+            </span>
+
+          </div>
+
+          <p class="details">
+            Starts: September 11 at 9:00 PM GMT+7 ·
+            9:00 PM to 10:00 PM · 1 hour
+          </p>
+
+          <p class="price">
+            0.0004 ETH &nbsp;|&nbsp; LIMIT 1 PER WALLET
+          </p>
+
+        </div>
+
+      </article>
+
+
+      <!-- Public -->
+      <article class="mint-item">
+
+        <div class="radio"></div>
+
+        <div class="item-content">
+
+          <div class="item-heading">
+
+            <h3 class="item-title">
+              Public - Mint
+            </h3>
+
+            <span class="tag">
+              Public
+            </span>
+
+          </div>
+
+          <p class="details">
+            Starts: September 11 at 10:00 PM GMT+7 ·
+            for 2 days
+          </p>
+
+          <p class="price">
+            0.001 ETH &nbsp;|&nbsp; LIMIT 10 PER WALLET
+          </p>
+
+        </div>
+
+      </article>
+
+    </section>
+
+  </main>
+
+
+  <script>
+    function recheckEligibility() {
+      const button = document.querySelector(".recheck");
+
+      button.textContent = "CHECKING...";
+
+      setTimeout(() => {
+        button.textContent = "ELIGIBILITY CONFIRMED";
+
+        setTimeout(() => {
+          button.textContent = "RECHECK ELIGIBILITY";
+        }, 1800);
+
+      }, 900);
+    }
+  </script>
+
+</body>
+</html>
