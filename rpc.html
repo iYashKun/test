@@ -1,0 +1,1296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="theme-color" content="#070b17">
+<title>ChainPulse — Multi RPC Network Monitor</title>
+
+<style>
+:root{
+  --bg:#050812;
+  --panel:rgba(13,19,36,.72);
+  --panel2:rgba(18,27,48,.65);
+  --border:rgba(255,255,255,.09);
+  --text:#f4f7ff;
+  --muted:#8f9bb7;
+  --cyan:#00e5ff;
+  --blue:#4d7cff;
+  --green:#00e676;
+  --yellow:#ffd740;
+  --red:#ff4d6d;
+  --purple:#a855f7;
+  --shadow:0 25px 80px rgba(0,0,0,.4);
+}
+
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  min-height:100vh;
+  font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--text);
+  background:
+    radial-gradient(circle at 15% 10%,rgba(0,229,255,.12),transparent 28%),
+    radial-gradient(circle at 85% 15%,rgba(168,85,247,.13),transparent 30%),
+    radial-gradient(circle at 50% 100%,rgba(77,124,255,.1),transparent 35%),
+    var(--bg);
+  overflow-x:hidden;
+}
+
+body:before{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  background-image:
+    linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);
+  background-size:40px 40px;
+  mask-image:linear-gradient(to bottom,black,transparent);
+}
+
+.container{
+  width:min(1200px,calc(100% - 32px));
+  margin:auto;
+  padding:35px 0 60px;
+}
+
+header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:20px;
+  margin-bottom:30px;
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:14px;
+}
+
+.logo{
+  width:48px;
+  height:48px;
+  border-radius:15px;
+  display:grid;
+  place-items:center;
+  background:linear-gradient(135deg,var(--cyan),var(--blue),var(--purple));
+  box-shadow:0 0 35px rgba(0,229,255,.3);
+  font-size:23px;
+}
+
+h1{
+  margin:0;
+  font-size:25px;
+  letter-spacing:-.7px;
+}
+
+.subtitle{
+  color:var(--muted);
+  font-size:13px;
+  margin-top:3px;
+}
+
+.status-pill{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:9px 13px;
+  border:1px solid var(--border);
+  background:rgba(255,255,255,.04);
+  border-radius:999px;
+  font-size:12px;
+  color:var(--muted);
+}
+
+.dot{
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  background:var(--green);
+  box-shadow:0 0 14px currentColor;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:1.3fr .7fr;
+  gap:18px;
+}
+
+@media(max-width:850px){
+  .grid{grid-template-columns:1fr}
+  header{align-items:flex-start;flex-direction:column}
+}
+
+.card{
+  position:relative;
+  overflow:hidden;
+  border:1px solid var(--border);
+  border-radius:24px;
+  background:linear-gradient(145deg,rgba(17,25,45,.82),rgba(7,11,23,.75));
+  backdrop-filter:blur(20px);
+  box-shadow:var(--shadow);
+}
+
+.card:after{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background:linear-gradient(120deg,rgba(255,255,255,.035),transparent 40%);
+}
+
+.hero{
+  padding:25px;
+  min-height:290px;
+}
+
+.hero-top{
+  display:flex;
+  justify-content:space-between;
+  gap:20px;
+}
+
+.chain-logo{
+  width:76px;
+  height:76px;
+  border-radius:22px;
+  padding:10px;
+  object-fit:contain;
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.08);
+}
+
+.chain-name{
+  font-size:30px;
+  font-weight:800;
+  letter-spacing:-1px;
+  margin-top:20px;
+}
+
+.chain-id{
+  color:var(--cyan);
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:14px;
+  margin-top:5px;
+}
+
+.detected{
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  margin-top:18px;
+  padding:7px 11px;
+  border-radius:999px;
+  background:rgba(0,230,118,.08);
+  border:1px solid rgba(0,230,118,.18);
+  color:#7dffb3;
+  font-size:12px;
+}
+
+.metrics{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+  margin-top:25px;
+}
+
+.metric{
+  padding:14px;
+  border-radius:16px;
+  background:rgba(255,255,255,.035);
+  border:1px solid rgba(255,255,255,.06);
+}
+
+.metric-label{
+  color:var(--muted);
+  font-size:11px;
+  text-transform:uppercase;
+  letter-spacing:.8px;
+}
+
+.metric-value{
+  margin-top:6px;
+  font-weight:800;
+  font-size:17px;
+}
+
+.online{color:var(--green)}
+.offline{color:var(--red)}
+.warning{color:var(--yellow)}
+
+.rpc-card{
+  padding:22px;
+}
+
+.section-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:17px;
+}
+
+.section-title{
+  font-size:17px;
+  font-weight:750;
+}
+
+.small{
+  color:var(--muted);
+  font-size:11px;
+}
+
+.rpc-list{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+.rpc-row{
+  display:grid;
+  grid-template-columns:11px 1fr auto;
+  gap:12px;
+  align-items:center;
+  padding:13px;
+  border-radius:15px;
+  background:rgba(255,255,255,.035);
+  border:1px solid rgba(255,255,255,.055);
+  transition:.2s;
+}
+
+.rpc-row:hover{
+  transform:translateY(-1px);
+  border-color:rgba(0,229,255,.2);
+  background:rgba(0,229,255,.035);
+}
+
+.rpc-dot{
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  background:var(--muted);
+}
+
+.rpc-dot.good{
+  background:var(--green);
+  box-shadow:0 0 12px var(--green);
+}
+
+.rpc-dot.bad{
+  background:var(--red);
+  box-shadow:0 0 12px var(--red);
+}
+
+.rpc-name{
+  font-size:13px;
+  font-weight:650;
+}
+
+.rpc-url{
+  margin-top:3px;
+  color:var(--muted);
+  font-size:10px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  max-width:500px;
+}
+
+.latency{
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:12px;
+  font-weight:700;
+}
+
+.controls{
+  display:flex;
+  gap:9px;
+  flex-wrap:wrap;
+}
+
+button{
+  border:0;
+  color:white;
+  cursor:pointer;
+  font:inherit;
+}
+
+.btn{
+  padding:10px 14px;
+  border-radius:12px;
+  background:rgba(255,255,255,.06);
+  border:1px solid var(--border);
+  font-size:12px;
+  transition:.2s;
+}
+
+.btn:hover{
+  background:rgba(255,255,255,.11);
+  transform:translateY(-1px);
+}
+
+.btn-primary{
+  background:linear-gradient(135deg,var(--cyan),var(--blue));
+  color:#03101a;
+  font-weight:800;
+  box-shadow:0 8px 25px rgba(0,229,255,.18);
+}
+
+.btn-danger{
+  color:#ff9caf;
+}
+
+.form{
+  display:grid;
+  grid-template-columns:1fr 1.4fr auto;
+  gap:9px;
+  margin-top:13px;
+}
+
+input{
+  width:100%;
+  padding:12px 13px;
+  outline:none;
+  border-radius:12px;
+  border:1px solid var(--border);
+  background:rgba(0,0,0,.22);
+  color:white;
+}
+
+input:focus{
+  border-color:rgba(0,229,255,.5);
+  box-shadow:0 0 0 3px rgba(0,229,255,.07);
+}
+
+@media(max-width:650px){
+  .metrics{grid-template-columns:1fr}
+  .form{grid-template-columns:1fr}
+  .hero-top{align-items:flex-start}
+}
+
+.log-card{
+  margin-top:18px;
+  padding:22px;
+}
+
+.log{
+  height:180px;
+  overflow:auto;
+  padding:14px;
+  border-radius:14px;
+  background:#03050b;
+  border:1px solid rgba(255,255,255,.05);
+  font-family:ui-monospace,monospace;
+  font-size:11px;
+  line-height:1.8;
+  color:#9ba8c7;
+}
+
+.log .ok{color:#62ffa2}
+.log .err{color:#ff718b}
+.log .info{color:#62dfff}
+
+footer{
+  text-align:center;
+  margin-top:25px;
+  color:#58627a;
+  font-size:11px;
+}
+
+.scan-line{
+  position:absolute;
+  top:0;
+  left:-30%;
+  width:30%;
+  height:1px;
+  background:linear-gradient(90deg,transparent,var(--cyan),transparent);
+  animation:scan 4s linear infinite;
+}
+
+@keyframes scan{
+  from{left:-30%}
+  to{left:130%}
+}
+
+.spin{
+  animation:spin 1s linear infinite;
+}
+
+@keyframes spin{
+  to{transform:rotate(360deg)}
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<header>
+  <div class="brand">
+    <div class="logo">⛓</div>
+    <div>
+      <h1>ChainPulse</h1>
+      <div class="subtitle">Multi-RPC Network Intelligence</div>
+    </div>
+  </div>
+
+  <div class="status-pill">
+    <span class="dot" id="internetDot"></span>
+    <span id="internetStatus">Checking network...</span>
+  </div>
+</header>
+
+<div class="grid">
+
+  <!-- NETWORK -->
+  <section class="card hero">
+    <div class="scan-line"></div>
+
+    <div class="hero-top">
+      <div>
+        <div class="small">AUTO DETECTED NETWORK</div>
+        <div class="chain-name" id="chainName">Detecting...</div>
+        <div class="chain-id" id="chainId">Chain ID: —</div>
+
+        <div class="detected">
+          <span>●</span>
+          <span id="detectionSource">Waiting for RPC</span>
+        </div>
+      </div>
+
+      <img
+        id="chainLogo"
+        class="chain-logo"
+        alt="Chain logo"
+        src="https://safe-transaction-assets.safe.global/chains/1/chain_logo.png"
+      >
+    </div>
+
+    <div class="metrics">
+      <div class="metric">
+        <div class="metric-label">Best RPC</div>
+        <div class="metric-value" id="bestRpc">—</div>
+      </div>
+
+      <div class="metric">
+        <div class="metric-label">Latency</div>
+        <div class="metric-value" id="bestLatency">—</div>
+      </div>
+
+      <div class="metric">
+        <div class="metric-label">Block</div>
+        <div class="metric-value" id="blockNumber">—</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTROLS -->
+  <section class="card rpc-card">
+
+    <div class="section-head">
+      <div>
+        <div class="section-title">⚡ Control Center</div>
+        <div class="small">Live RPC diagnostics</div>
+      </div>
+
+      <div class="controls">
+        <button class="btn btn-primary" id="scanBtn">
+          Scan RPCs
+        </button>
+      </div>
+    </div>
+
+    <div class="metric">
+      <div class="metric-label">Wallet Provider</div>
+      <div class="metric-value" id="walletStatus">Not detected</div>
+    </div>
+
+    <div style="height:10px"></div>
+
+    <div class="metric">
+      <div class="metric-label">Browser Network</div>
+      <div class="metric-value" id="browserNetwork">—</div>
+    </div>
+
+    <div style="height:10px"></div>
+
+    <div class="metric">
+      <div class="metric-label">RPC Consensus</div>
+      <div class="metric-value" id="consensus">Waiting</div>
+    </div>
+
+  </section>
+
+</div>
+
+<!-- RPC MONITOR -->
+<section class="card rpc-card" style="margin-top:18px">
+
+  <div class="section-head">
+    <div>
+      <div class="section-title">📡 Multi-RPC Monitor</div>
+      <div class="small">
+        Parallel JSON-RPC health checks
+      </div>
+    </div>
+
+    <div class="small" id="lastScan">
+      Never scanned
+    </div>
+  </div>
+
+  <div class="rpc-list" id="rpcList"></div>
+
+  <div class="form">
+    <input id="rpcName" placeholder="RPC name">
+    <input id="rpcUrl" placeholder="https://your-rpc.example">
+    <button class="btn btn-primary" id="addRpc">
+      + Add RPC
+    </button>
+  </div>
+
+</section>
+
+<!-- EVENT LOG -->
+<section class="card log-card">
+
+  <div class="section-head">
+    <div>
+      <div class="section-title">🧠 Detection Log</div>
+      <div class="small">Realtime diagnostics</div>
+    </div>
+
+    <button class="btn" id="clearLog">Clear</button>
+  </div>
+
+  <div class="log" id="log"></div>
+
+</section>
+
+<footer>
+  ChainPulse • Client-side RPC diagnostics • No private keys are requested
+</footer>
+
+</div>
+
+<script>
+/* =========================================================
+   CHAIN DATABASE
+   Add more networks whenever required.
+========================================================= */
+
+const CHAINS = {
+  1: {
+    name: "Ethereum Mainnet",
+    symbol: "ETH"
+  },
+
+  10: {
+    name: "OP Mainnet",
+    symbol: "ETH"
+  },
+
+  56: {
+    name: "BNB Smart Chain",
+    symbol: "BNB"
+  },
+
+  100: {
+    name: "Gnosis",
+    symbol: "xDAI"
+  },
+
+  137: {
+    name: "Polygon",
+    symbol: "POL"
+  },
+
+  146: {
+    name: "Sonic",
+    symbol: "S"
+  },
+
+  196: {
+    name: "X Layer",
+    symbol: "OKB"
+  },
+
+  204: {
+    name: "opBNB",
+    symbol: "BNB"
+  },
+
+  42161: {
+    name: "Arbitrum One",
+    symbol: "ETH"
+  },
+
+  43114: {
+    name: "Avalanche",
+    symbol: "AVAX"
+  },
+
+  8453: {
+    name: "Base",
+    symbol: "ETH"
+  },
+
+  11155111: {
+    name: "Sepolia",
+    symbol: "ETH"
+  },
+
+  11155420: {
+    name: "OP Sepolia",
+    symbol: "ETH"
+  },
+
+  84532: {
+    name: "Base Sepolia",
+    symbol: "ETH"
+  }
+};
+
+
+/* =========================================================
+   RPC CONFIGURATION
+========================================================= */
+
+let RPCS = [
+  {
+    name: "Cloudflare",
+    url: "https://cloudflare-eth.com"
+  },
+
+  {
+    name: "PublicNode",
+    url: "https://ethereum-rpc.publicnode.com"
+  },
+
+  {
+    name: "LlamaNodes",
+    url: "https://eth.llamarpc.com"
+  }
+];
+
+
+/* =========================================================
+   DOM
+========================================================= */
+
+const $ = id => document.getElementById(id);
+
+const chainNameEl = $("chainName");
+const chainIdEl = $("chainId");
+const chainLogoEl = $("chainLogo");
+const detectionSourceEl = $("detectionSource");
+const bestRpcEl = $("bestRpc");
+const bestLatencyEl = $("bestLatency");
+const blockEl = $("blockNumber");
+const rpcListEl = $("rpcList");
+const logEl = $("log");
+const scanBtn = $("scanBtn");
+const consensusEl = $("consensus");
+const walletStatusEl = $("walletStatus");
+const internetStatusEl = $("internetStatus");
+const internetDot = $("internetDot");
+
+
+/* =========================================================
+   LOGGER
+========================================================= */
+
+function log(message, type="info"){
+  const time = new Date().toLocaleTimeString();
+
+  const line = document.createElement("div");
+  line.className = type;
+
+  line.textContent = `[${time}] ${message}`;
+
+  logEl.appendChild(line);
+  logEl.scrollTop = logEl.scrollHeight;
+}
+
+
+/* =========================================================
+   INTERNET DETECTION
+========================================================= */
+
+function updateInternet(){
+  const online = navigator.onLine;
+
+  internetStatus.textContent =
+    online ? "Internet Online" : "Internet Offline";
+
+  internetDot.style.background =
+    online ? "var(--green)" : "var(--red)";
+
+  $("browserNetwork").textContent =
+    online ? "ONLINE" : "OFFLINE";
+
+  $("browserNetwork").className =
+    "metric-value " + (online ? "online" : "offline");
+
+  log(
+    online
+      ? "Browser network connection restored."
+      : "Browser is offline.",
+    online ? "ok" : "err"
+  );
+}
+
+window.addEventListener("online", updateInternet);
+window.addEventListener("offline", updateInternet);
+
+
+/* =========================================================
+   RPC JSON-RPC REQUEST
+========================================================= */
+
+async function rpcCall(url, method, params=[]){
+
+  const controller = new AbortController();
+
+  const timeout = setTimeout(
+    () => controller.abort(),
+    7000
+  );
+
+  const started = performance.now();
+
+  try{
+
+    const response = await fetch(url,{
+      method:"POST",
+
+      headers:{
+        "Content-Type":"application/json"
+      },
+
+      body:JSON.stringify({
+        jsonrpc:"2.0",
+        id:Date.now(),
+        method,
+        params
+      }),
+
+      signal:controller.signal
+    });
+
+    if(!response.ok){
+      throw new Error("HTTP " + response.status);
+    }
+
+    const data = await response.json();
+
+    if(data.error){
+      throw new Error(data.error.message || "RPC error");
+    }
+
+    return {
+      result:data.result,
+      latency:Math.round(performance.now() - started)
+    };
+
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
+
+/* =========================================================
+   CHECK ONE RPC
+========================================================= */
+
+async function checkRPC(rpc){
+
+  try{
+
+    const chain = await rpcCall(
+      rpc.url,
+      "eth_chainId"
+    );
+
+    const block = await rpcCall(
+      rpc.url,
+      "eth_blockNumber"
+    );
+
+    const chainId = parseInt(chain.result,16);
+
+    return {
+      ...rpc,
+      ok:true,
+      chainId,
+      blockNumber:parseInt(block.result,16),
+      latency:chain.latency
+    };
+
+  }catch(error){
+
+    return {
+      ...rpc,
+      ok:false,
+      error:error.message
+    };
+
+  }
+}
+
+
+/* =========================================================
+   RENDER RPC LIST
+========================================================= */
+
+function renderRPCs(results=[]){
+
+  rpcListEl.innerHTML = "";
+
+  results.forEach(result => {
+
+    const row = document.createElement("div");
+    row.className = "rpc-row";
+
+    const dot = document.createElement("span");
+
+    dot.className =
+      "rpc-dot " +
+      (result.ok ? "good" : "bad");
+
+    const info = document.createElement("div");
+
+    info.innerHTML = `
+      <div class="rpc-name">
+        ${escapeHtml(result.name)}
+      </div>
+
+      <div class="rpc-url">
+        ${escapeHtml(result.url)}
+      </div>
+    `;
+
+    const latency = document.createElement("div");
+
+    latency.className = "latency";
+
+    latency.textContent = result.ok
+      ? result.latency + " ms"
+      : "FAILED";
+
+    latency.style.color =
+      result.ok
+        ? latencyColor(result.latency)
+        : "var(--red)";
+
+    row.append(dot,info,latency);
+
+    rpcListEl.appendChild(row);
+  });
+}
+
+
+/* =========================================================
+   LATENCY COLOR
+========================================================= */
+
+function latencyColor(ms){
+
+  if(ms < 150) return "var(--green)";
+  if(ms < 400) return "var(--yellow)";
+
+  return "var(--red)";
+}
+
+
+/* =========================================================
+   MAIN SCAN
+========================================================= */
+
+async function scan(){
+
+  scanBtn.disabled = true;
+  scanBtn.innerHTML = "⟳ Scanning...";
+
+  log("Starting parallel RPC scan...", "info");
+
+  const results = await Promise.all(
+    RPCS.map(checkRPC)
+  );
+
+  renderRPCs(results);
+
+  const healthy = results.filter(x => x.ok);
+
+  if(!healthy.length){
+
+    chainNameEl.textContent = "No RPC Available";
+    chainIdEl.textContent = "Chain ID: —";
+    consensusEl.textContent = "OFFLINE";
+    consensusEl.className = "metric-value offline";
+
+    log("All configured RPCs failed.", "err");
+
+    scanBtn.disabled = false;
+    scanBtn.innerHTML = "Scan RPCs";
+
+    return;
+  }
+
+  /* ---------------------------------------------
+     CHAIN CONSENSUS
+  --------------------------------------------- */
+
+  const counts = {};
+
+  healthy.forEach(r => {
+    counts[r.chainId] =
+      (counts[r.chainId] || 0) + 1;
+  });
+
+  const chainIds =
+    Object.keys(counts)
+      .sort((a,b) => counts[b]-counts[a]);
+
+  const majorityId =
+    Number(chainIds[0]);
+
+  const majorityCount =
+    counts[majorityId];
+
+  const consensus =
+    majorityCount === healthy.length;
+
+  consensusEl.textContent =
+    consensus
+      ? "✓ CONSENSUS"
+      : "⚠ RPC MISMATCH";
+
+  consensusEl.className =
+    "metric-value " +
+    (consensus ? "online" : "warning");
+
+  /* ---------------------------------------------
+     BEST RPC
+  --------------------------------------------- */
+
+  const best =
+    [...healthy]
+      .sort((a,b)=>a.latency-b.latency)[0];
+
+  bestRpcEl.textContent = best.name;
+  bestLatencyEl.textContent =
+    best.latency + " ms";
+
+  blockEl.textContent =
+    best.blockNumber.toLocaleString();
+
+  /* ---------------------------------------------
+     APPLY CHAIN
+  --------------------------------------------- */
+
+  applyChain(
+    majorityId,
+    "Multi-RPC detection"
+  );
+
+  if(!consensus){
+
+    log(
+      "RPC chain mismatch detected: " +
+      chainIds.join(", "),
+      "err"
+    );
+
+  }else{
+
+    log(
+      `RPC consensus confirmed on Chain ID ${majorityId}.`,
+      "ok"
+    );
+  }
+
+  $("lastScan").textContent =
+    "Last scan: " +
+    new Date().toLocaleTimeString();
+
+  scanBtn.disabled = false;
+  scanBtn.innerHTML = "Scan RPCs";
+}
+
+
+/* =========================================================
+   APPLY CHAIN
+========================================================= */
+
+function applyChain(chainId, source){
+
+  const chain =
+    CHAINS[chainId];
+
+  const name =
+    chain?.name ||
+    `Unknown Chain ${chainId}`;
+
+  chainNameEl.textContent = name;
+
+  chainIdEl.textContent =
+    `Chain ID: ${chainId}`;
+
+  detectionSourceEl.textContent =
+    source;
+
+  /*
+    Requested Safe logo format.
+  */
+
+  chainLogoEl.src =
+    `https://safe-transaction-assets.safe.global/chains/${chainId}/chain_logo.png`;
+
+  chainLogoEl.onerror = () => {
+
+    chainLogoEl.onerror = null;
+
+    chainLogoEl.src =
+      "data:image/svg+xml," +
+      encodeURIComponent(`
+        <svg xmlns="http://www.w3.org/2000/svg"
+             width="120"
+             height="120"
+             viewBox="0 0 120 120">
+          <rect width="120" height="120"
+                rx="30" fill="#10182c"/>
+          <text x="60" y="70"
+                text-anchor="middle"
+                font-size="42"
+                fill="#00e5ff">⛓</text>
+        </svg>
+      `);
+  };
+
+  log(
+    `Detected ${name} — Chain ID ${chainId}.`,
+    "ok"
+  );
+}
+
+
+/* =========================================================
+   WALLET / EIP-1193 DETECTION
+========================================================= */
+
+async function detectWallet(){
+
+  if(!window.ethereum){
+
+    walletStatusEl.textContent =
+      "No EIP-1193 wallet";
+
+    walletStatusEl.className =
+      "metric-value warning";
+
+    log(
+      "No injected wallet provider detected.",
+      "info"
+    );
+
+    return;
+  }
+
+  walletStatusEl.textContent =
+    "Wallet detected";
+
+  walletStatusEl.className =
+    "metric-value online";
+
+  log(
+    "EIP-1193 wallet provider detected.",
+    "ok"
+  );
+
+  try{
+
+    const chainHex =
+      await window.ethereum.request({
+        method:"eth_chainId"
+      });
+
+    const chainId =
+      parseInt(chainHex,16);
+
+    applyChain(
+      chainId,
+      "Wallet provider"
+    );
+
+  }catch(error){
+
+    log(
+      "Wallet chain detection failed: " +
+      error.message,
+      "err"
+    );
+  }
+
+  /* Listen for wallet chain changes */
+
+  window.ethereum.on?.(
+    "chainChanged",
+    chainHex => {
+
+      const chainId =
+        parseInt(chainHex,16);
+
+      log(
+        `Wallet switched to Chain ID ${chainId}.`,
+        "info"
+      );
+
+      applyChain(
+        chainId,
+        "Wallet chainChanged"
+      );
+
+      scan();
+    }
+  );
+
+  window.ethereum.on?.(
+    "accountsChanged",
+    accounts => {
+
+      if(accounts.length){
+
+        log(
+          "Wallet account detected.",
+          "ok"
+        );
+
+      }else{
+
+        log(
+          "Wallet disconnected.",
+          "info"
+        );
+      }
+    }
+  );
+}
+
+
+/* =========================================================
+   CUSTOM RPC
+========================================================= */
+
+$("addRpc").addEventListener(
+  "click",
+  () => {
+
+    const name =
+      $("rpcName").value.trim();
+
+    const url =
+      $("rpcUrl").value.trim();
+
+    if(!name || !url){
+
+      alert("Enter both RPC name and URL.");
+      return;
+    }
+
+    try{
+      new URL(url);
+    }catch{
+      alert("Invalid RPC URL.");
+      return;
+    }
+
+    RPCS.push({
+      name,
+      url
+    });
+
+    $("rpcName").value = "";
+    $("rpcUrl").value = "";
+
+    log(
+      `Added custom RPC: ${name}`,
+      "ok"
+    );
+
+    scan();
+  }
+);
+
+
+/* =========================================================
+   BUTTONS
+========================================================= */
+
+scanBtn.addEventListener(
+  "click",
+  scan
+);
+
+$("clearLog").addEventListener(
+  "click",
+  () => {
+    logEl.innerHTML = "";
+  }
+);
+
+
+/* =========================================================
+   ESCAPE HTML
+========================================================= */
+
+function escapeHtml(value){
+
+  return String(value)
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+
+
+/* =========================================================
+   INITIALIZATION
+========================================================= */
+
+(async function init(){
+
+  updateInternet();
+
+  log(
+    "ChainPulse initialized.",
+    "ok"
+  );
+
+  log(
+    `${RPCS.length} RPC endpoints loaded.`,
+    "info"
+  );
+
+  await detectWallet();
+
+  await scan();
+
+  /*
+    Automatic monitoring every 30 seconds.
+  */
+
+  setInterval(
+    scan,
+    30000
+  );
+
+})();
+</script>
+
+</body>
+</html>
