@@ -3,18 +3,25 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>EVM Wallet Generator</title>
 
+<!-- Main Font -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Amaranth:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+
+<!-- Mono Font -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Google+Sans+Code:ital,wght@0,300..800;1,300..800;1,300..800&display=swap" rel="stylesheet">
 
 <style>
 :root {
   --bg: #fafafa;
   --surface: rgba(255,255,255,.82);
-  --surface-solid: #fff;
   --surface-2: #f4f4f5;
+
   --border: #e7e7ea;
   --border-dark: #dcdce1;
 
@@ -23,14 +30,15 @@
   --muted-2: #a0a0a8;
 
   --accent: #111113;
+
   --green: #159447;
   --green-light: #eaf8ef;
 
-  --shadow-sm: 0 4px 16px rgba(0,0,0,.045);
-  --shadow: 0 14px 40px rgba(0,0,0,.07);
-
   --radius: 18px;
   --radius-lg: 24px;
+
+  --shadow-sm: 0 4px 16px rgba(0,0,0,.045);
+  --shadow: 0 14px 40px rgba(0,0,0,.07);
 }
 
 * {
@@ -39,119 +47,260 @@
   padding: 0;
 }
 
+/* =========================
+   CUSTOM SCROLLBAR
+========================= */
+
 html {
   scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: #b8b8be transparent;
 }
 
 body {
   font-family: "Amaranth", sans-serif;
+
   background:
-    radial-gradient(circle at 50% -10%, #eeeeef 0, transparent 32%),
+    radial-gradient(
+      circle at 50% -10%,
+      #eeeeef 0,
+      transparent 32%
+    ),
     var(--bg);
+
   color: var(--text);
   line-height: 1.6;
+
   min-height: 100vh;
+
+  /* Firefox */
+  scrollbar-width: thin;
+  scrollbar-color: #a8a8ae transparent;
 }
 
-/* subtle background texture */
+/* Chrome / Edge / Safari */
+
+::-webkit-scrollbar {
+  width: 9px;
+  height: 9px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(
+    180deg,
+    #c4c4c9,
+    #96969d
+  );
+
+  border-radius: 999px;
+
+  border: 2px solid transparent;
+  background-clip: padding-box;
+
+  transition: background .2s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(
+    180deg,
+    #99999f,
+    #6f6f76
+  );
+
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* Code scrollbar */
+
+pre {
+  scrollbar-width: thin;
+  scrollbar-color: #55555c transparent;
+}
+
+pre::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+pre::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+pre::-webkit-scrollbar-thumb {
+  background: #4d4d54;
+  border-radius: 999px;
+}
+
+pre::-webkit-scrollbar-thumb:hover {
+  background: #6a6a72;
+}
+
+/* =========================
+   BACKGROUND
+========================= */
+
 body::before {
   content: "";
+
   position: fixed;
   inset: 0;
+
   pointer-events: none;
+
   opacity: .35;
+
   background-image:
-    linear-gradient(rgba(0,0,0,.018) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0,0,0,.018) 1px, transparent 1px);
+    linear-gradient(
+      rgba(0,0,0,.018) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      rgba(0,0,0,.018) 1px,
+      transparent 1px
+    );
+
   background-size: 32px 32px;
-  mask-image: linear-gradient(to bottom, black, transparent 80%);
+
+  mask-image:
+    linear-gradient(
+      to bottom,
+      black,
+      transparent 80%
+    );
 }
 
-/* ---------------- CONTAINER ---------------- */
+/* =========================
+   CONTAINER
+========================= */
 
 .container {
   width: min(860px, 100%);
+
   margin: 0 auto;
+
   padding: 55px 22px 35px;
+
   position: relative;
 }
 
-/* ---------------- HEADER ---------------- */
+/* =========================
+   HEADER
+========================= */
 
 header {
   text-align: center;
+
   margin-bottom: 48px;
 }
 
 .brand-dot {
   width: 54px;
   height: 54px;
+
   margin: 0 auto 18px;
+
   border-radius: 17px;
 
   display: grid;
   place-items: center;
 
   background: #111113;
-  color: white;
-
-  font-size: 22px;
-  font-weight: 700;
 
   box-shadow:
     0 12px 28px rgba(0,0,0,.16),
     inset 0 1px 0 rgba(255,255,255,.12);
+
+  overflow: hidden;
+}
+
+.brand-dot svg {
+  width: 34px;
+  height: 34px;
+
+  display: block;
 }
 
 h1 {
   font-size: clamp(2.25rem, 8vw, 4rem);
+
   font-weight: 700;
+
   letter-spacing: -.035em;
+
   line-height: 1;
 }
 
 .subtitle {
   max-width: 620px;
+
   margin: 17px auto 0;
+
   color: var(--muted);
+
   font-size: 1rem;
 }
 
 .tag {
   display: inline-flex;
+
   align-items: center;
+
   gap: 7px;
 
   margin-top: 17px;
+
   padding: 7px 13px;
 
   border: 1px solid #cfeeda;
+
   background: var(--green-light);
+
   color: var(--green);
 
   border-radius: 999px;
 
   font-size: .8rem;
+
   font-weight: 700;
 }
 
 .tag::before {
   content: "";
+
   width: 7px;
   height: 7px;
+
   border-radius: 50%;
+
   background: var(--green);
-  box-shadow: 0 0 0 4px rgba(21,148,71,.1);
+
+  box-shadow:
+    0 0 0 4px rgba(21,148,71,.1);
 }
 
-/* ---------------- SECTIONS ---------------- */
+/* =========================
+   SECTIONS
+========================= */
 
 section {
   margin: 22px 0;
+
   padding: 25px;
 
   background: var(--surface);
+
   border: 1px solid var(--border);
+
   border-radius: var(--radius-lg);
 
   box-shadow: var(--shadow-sm);
@@ -166,16 +315,21 @@ section {
 
 section:hover {
   transform: translateY(-2px);
+
   border-color: var(--border-dark);
+
   box-shadow: var(--shadow);
 }
 
 h2 {
   display: flex;
+
   align-items: center;
+
   gap: 10px;
 
   font-size: 1.45rem;
+
   font-weight: 700;
 
   margin-bottom: 12px;
@@ -183,28 +337,36 @@ h2 {
 
 h2::before {
   content: "";
+
   width: 5px;
   height: 23px;
 
   border-radius: 10px;
+
   background: var(--text);
 }
 
 p {
   color: var(--muted);
+
   font-size: .98rem;
+
   margin-bottom: 15px;
 }
 
 strong {
   color: var(--text);
+
   font-weight: 700;
 }
 
-/* ---------------- CODE BLOCK ---------------- */
+/* =========================
+   CODE
+========================= */
 
 .code-wrapper {
   position: relative;
+
   margin: 16px 0;
 }
 
@@ -212,17 +374,22 @@ pre {
   position: relative;
 
   background: #111113;
+
   color: #eeeeef;
 
   padding: 19px 48px 19px 19px;
 
   border-radius: 16px;
+
   overflow-x: auto;
 
   border: 1px solid #28282c;
 
-  font-family: "Amaranth", sans-serif;
-  font-size: .9rem;
+  /* Google Sans Code only */
+  font-family: "Google Sans Code", monospace;
+
+  font-size: .88rem;
+
   line-height: 1.7;
 
   box-shadow:
@@ -231,14 +398,18 @@ pre {
 }
 
 code {
-  font-family: "Amaranth", sans-serif;
+  font-family: "Google Sans Code", monospace;
+
   font-weight: 400;
 }
 
-/* ---------------- COPY BUTTON ---------------- */
+/* =========================
+   COPY BUTTON
+========================= */
 
 .copy-btn {
   position: absolute;
+
   top: 10px;
   right: 10px;
 
@@ -246,10 +417,13 @@ code {
   height: 30px;
 
   display: grid;
+
   place-items: center;
 
   border: 1px solid rgba(255,255,255,.12);
+
   background: rgba(255,255,255,.07);
+
   color: #d9d9dc;
 
   border-radius: 9px;
@@ -257,6 +431,7 @@ code {
   cursor: pointer;
 
   font-family: "Amaranth", sans-serif;
+
   font-size: 14px;
 
   transition:
@@ -267,52 +442,71 @@ code {
 
 .copy-btn:hover {
   background: rgba(255,255,255,.14);
+
   color: white;
+
   transform: scale(1.05);
 }
 
 .copy-btn.copied {
   color: #5ee58b;
+
   background: rgba(21,148,71,.14);
-  border-color: rgba(21,148,71,.3);
+
+  border-color:
+    rgba(21,148,71,.3);
 }
 
-/* ---------------- LISTS ---------------- */
+/* =========================
+   LISTS
+========================= */
 
 ol,
 ul {
   margin: 14px 0 18px 23px;
+
   color: var(--muted);
 }
 
 li {
   padding: 4px 0;
+
   font-size: .96rem;
 }
 
 li::marker {
   color: var(--text);
+
   font-weight: 700;
 }
 
-/* ---------------- BUTTON ---------------- */
+/* =========================
+   BUTTON
+========================= */
 
 .btn {
   display: inline-flex;
+
   align-items: center;
+
   gap: 8px;
 
   background: var(--accent);
+
   color: white;
 
   padding: 11px 19px;
+
   border-radius: 999px;
 
   text-decoration: none;
+
   font-weight: 700;
+
   font-size: .9rem;
 
-  box-shadow: 0 7px 20px rgba(0,0,0,.14);
+  box-shadow:
+    0 7px 20px rgba(0,0,0,.14);
 
   transition:
     transform .2s ease,
@@ -322,18 +516,26 @@ li::marker {
 
 .btn:hover {
   background: #29292c;
+
   transform: translateY(-2px);
-  box-shadow: 0 12px 28px rgba(0,0,0,.18);
+
+  box-shadow:
+    0 12px 28px rgba(0,0,0,.18);
 }
 
-/* ---------------- FOOTER ---------------- */
+/* =========================
+   FOOTER
+========================= */
 
 .footer {
   text-align: center;
+
   margin-top: 45px;
+
   padding-bottom: 10px;
 
   color: var(--muted-2);
+
   font-size: .8rem;
 }
 
@@ -341,9 +543,16 @@ li::marker {
   color: var(--text);
 }
 
-/* ---------------- MOBILE ---------------- */
+/* =========================
+   MOBILE
+========================= */
 
 @media (max-width: 600px) {
+
+  ::-webkit-scrollbar {
+    width: 7px;
+    height: 7px;
+  }
 
   .container {
     padding: 30px 14px;
@@ -356,12 +565,18 @@ li::marker {
   .brand-dot {
     width: 48px;
     height: 48px;
+
     border-radius: 15px;
-    font-size: 19px;
+  }
+
+  .brand-dot svg {
+    width: 30px;
+    height: 30px;
   }
 
   h1 {
-    font-size: clamp(2.1rem, 12vw, 3rem);
+    font-size:
+      clamp(2.1rem, 12vw, 3rem);
   }
 
   .subtitle {
@@ -370,7 +585,9 @@ li::marker {
 
   section {
     padding: 19px;
+
     margin: 16px 0;
+
     border-radius: 20px;
   }
 
@@ -384,23 +601,30 @@ li::marker {
   }
 
   pre {
-    padding: 17px 43px 17px 15px;
-    font-size: .82rem;
+    padding:
+      17px 43px 17px 15px;
+
+    font-size: .78rem;
+
     border-radius: 14px;
   }
 
   .copy-btn {
     top: 8px;
     right: 8px;
+
     width: 28px;
     height: 28px;
   }
 }
 
-/* ---------------- SELECTION ---------------- */
+/* =========================
+   SELECTION
+========================= */
 
 ::selection {
   background: #111113;
+
   color: white;
 }
 </style>
@@ -412,7 +636,208 @@ li::marker {
 
   <header>
 
-    <div class="brand-dot">W</div>
+    <!-- Ethereum SVG Icon -->
+    <div class="brand-dot">
+
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="1em"
+        height="1em"
+        viewBox="0 0 32 32"
+      >
+
+        <path
+          d="M0 0h32v32H0z"
+          fill="none"
+        />
+
+        <defs>
+
+          <filter
+            id="SVGtW6Dne1o"
+            width="111.7%"
+            height="111.7%"
+            x="-5.8%"
+            y="-4.2%"
+            filterUnits="objectBoundingBox"
+          >
+            <feOffset
+              dy=".5"
+              in="SourceAlpha"
+              result="shadowOffsetOuter1"
+            />
+
+            <feGaussianBlur
+              in="shadowOffsetOuter1"
+              result="shadowBlurOuter1"
+              stdDeviation=".5"
+            />
+
+            <feComposite
+              in="shadowBlurOuter1"
+              in2="SourceAlpha"
+              operator="out"
+              result="shadowBlurOuter1"
+            />
+
+            <feColorMatrix
+              in="shadowBlurOuter1"
+              values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.199473505 0"
+            />
+          </filter>
+
+          <filter
+            id="SVGw0qHYdBn"
+            width="123.3%"
+            height="114.6%"
+            x="-11.7%"
+            y="-5.2%"
+            filterUnits="objectBoundingBox"
+          >
+            <feOffset
+              dy=".5"
+              in="SourceAlpha"
+              result="shadowOffsetOuter1"
+            />
+
+            <feGaussianBlur
+              in="shadowOffsetOuter1"
+              result="shadowBlurOuter1"
+              stdDeviation=".5"
+            />
+
+            <feComposite
+              in="shadowBlurOuter1"
+              in2="SourceAlpha"
+              operator="out"
+              result="shadowBlurOuter1"
+            />
+
+            <feColorMatrix
+              in="shadowBlurOuter1"
+              values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.204257246 0"
+            />
+          </filter>
+
+          <linearGradient
+            id="SVGxjwWZbcU"
+            x1="50%"
+            x2="50%"
+            y1="0%"
+            y2="100%"
+          >
+            <stop
+              offset="0%"
+              stop-color="#fff"
+              stop-opacity=".5"
+            />
+
+            <stop
+              offset="100%"
+              stop-opacity=".5"
+            />
+          </linearGradient>
+
+          <circle
+            id="SVGMSOqEeDZ"
+            cx="16"
+            cy="15"
+            r="15"
+          />
+
+          <path
+            id="SVG7k6gtcQy"
+            d="M16.498 20.968L24 16.616l-7.502 10.379L9 16.615zm0-17.968l7.497 12.22l-7.497 4.353L9 15.22z"
+          />
+
+        </defs>
+
+        <g
+          fill="none"
+          fill-rule="evenodd"
+        >
+
+          <use
+            fill="#000"
+            filter="url(#SVGtW6Dne1o)"
+            href="#SVGMSOqEeDZ"
+          />
+
+          <use
+            fill="#627eea"
+            href="#SVGMSOqEeDZ"
+          />
+
+          <use
+            fill="url(#SVGxjwWZbcU)"
+            href="#SVGMSOqEeDZ"
+          />
+
+          <circle
+            cx="16"
+            cy="15"
+            r="14.5"
+            stroke="#000"
+            stroke-opacity=".097"
+          />
+
+          <g fill-rule="nonzero">
+
+            <use
+              fill="#000"
+              filter="url(#SVGw0qHYdBn)"
+              href="#SVG7k6gtcQy"
+            />
+
+            <use
+              fill="#fff"
+              fill-opacity="0"
+              fill-rule="evenodd"
+              href="#SVG7k6gtcQy"
+            />
+
+          </g>
+
+          <g
+            fill="#fff"
+            fill-rule="nonzero"
+          >
+
+            <path
+              fill-opacity=".602"
+              d="M16.498 3v8.87l7.497 3.35z"
+            />
+
+            <path
+              d="M16.498 3L9 15.22l7.498-3.35z"
+            />
+
+            <path
+              fill-opacity=".602"
+              d="M16.498 20.968v6.027L24 16.616z"
+            />
+
+            <path
+              d="M16.498 26.995v-6.028L9 16.616z"
+            />
+
+            <path
+              fill-opacity=".2"
+              d="m16.498 19.573l7.497-4.353l-7.497-3.348z"
+            />
+
+            <path
+              fill-opacity=".602"
+              d="m9 15.22l7.498 4.353v-7.701z"
+            />
+
+          </g>
+
+        </g>
+
+      </svg>
+
+    </div>
 
     <h1>Wallet Generator</h1>
 
@@ -442,7 +867,11 @@ chmod +x install.sh run.sh
 ./install.sh
 ./run.sh</code></pre>
 
-      <button class="copy-btn" title="Copy code">⧉</button>
+      <button
+        class="copy-btn"
+        title="Copy code"
+        aria-label="Copy code"
+      >⧉</button>
 
     </div>
 
@@ -466,17 +895,23 @@ chmod +x install.sh run.sh
 
     <ol>
       <li>Generate normal wallets.</li>
-      <li>Generate vanity wallets by matching up to 10 hexadecimal characters.</li>
+
       <li>
-        Generate wallets excluding a comma-separated list of
-        hexadecimal characters such as <strong>b,6,f</strong>.
+        Generate vanity wallets by matching up to
+        10 hexadecimal characters.
+      </li>
+
+      <li>
+        Generate wallets excluding a comma-separated list
+        of hexadecimal characters such as
+        <strong>b,6,f</strong>.
       </li>
     </ol>
 
     <p>
       Output is written to <strong>wallets.csv</strong>.
-      The address has no <strong>0x</strong>, while the private key keeps
-      the <strong>0x</strong> prefix.
+      The address has no <strong>0x</strong>, while the private key
+      keeps the <strong>0x</strong> prefix.
     </p>
 
     <div class="code-wrapper">
@@ -485,7 +920,11 @@ chmod +x install.sh run.sh
 023bcd...,0x...
 8fa21e...,0x...</code></pre>
 
-      <button class="copy-btn" title="Copy code">⧉</button>
+      <button
+        class="copy-btn"
+        title="Copy code"
+        aria-label="Copy code"
+      >⧉</button>
 
     </div>
 
@@ -508,7 +947,11 @@ chmod +x install.sh run.sh
 
       <pre><code>./run.sh --count 100000 --worker 1000</code></pre>
 
-      <button class="copy-btn" title="Copy code">⧉</button>
+      <button
+        class="copy-btn"
+        title="Copy code"
+        aria-label="Copy code"
+      >⧉</button>
 
     </div>
 
@@ -526,7 +969,11 @@ chmod +x install.sh run.sh
       <pre><code>zig build -Doptimize=ReleaseFast
 zig build run -Doptimize=ReleaseFast -- --count 1000 --worker 400</code></pre>
 
-      <button class="copy-btn" title="Copy code">⧉</button>
+      <button
+        class="copy-btn"
+        title="Copy code"
+        aria-label="Copy code"
+      >⧉</button>
 
     </div>
 
@@ -540,22 +987,32 @@ zig build run -Doptimize=ReleaseFast -- --count 1000 --worker 400</code></pre>
     <h2>Security</h2>
 
     <ul>
-      <li>Private keys from std.crypto.random (OS backed).</li>
+
+      <li>
+        Private keys from std.crypto.random (OS backed).
+      </li>
+
       <li>
         <strong>wallets.csv</strong> contains spendable secrets —
         treat it like a password vault.
       </li>
+
       <li>
         Never commit, upload or paste private keys to chat or issues.
       </li>
-      <li>No blockchain connection or balance check.</li>
+
+      <li>
+        No blockchain connection or balance check.
+      </li>
+
     </ul>
 
   </section>
 
 
   <div class="footer">
-    Built for local use • <span>Keep your keys private.</span>
+    Built for local use •
+    <span>Keep your keys private.</span>
   </div>
 
 </div>
@@ -567,39 +1024,41 @@ document.querySelectorAll(".copy-btn").forEach(button => {
   button.addEventListener("click", async () => {
 
     const wrapper = button.closest(".code-wrapper");
-    const code = wrapper.querySelector("code").innerText;
+
+    const code =
+      wrapper.querySelector("code").innerText;
 
     try {
 
       await navigator.clipboard.writeText(code);
 
-      button.innerHTML = "✓";
-      button.classList.add("copied");
-
-      setTimeout(() => {
-        button.innerHTML = "⧉";
-        button.classList.remove("copied");
-      }, 1400);
-
     } catch (error) {
 
-      const textarea = document.createElement("textarea");
+      const textarea =
+        document.createElement("textarea");
+
       textarea.value = code;
 
       document.body.appendChild(textarea);
+
       textarea.select();
+
       document.execCommand("copy");
+
       textarea.remove();
-
-      button.innerHTML = "✓";
-      button.classList.add("copied");
-
-      setTimeout(() => {
-        button.innerHTML = "⧉";
-        button.classList.remove("copied");
-      }, 1400);
-
     }
+
+    button.innerHTML = "✓";
+
+    button.classList.add("copied");
+
+    setTimeout(() => {
+
+      button.innerHTML = "⧉";
+
+      button.classList.remove("copied");
+
+    }, 1400);
 
   });
 
