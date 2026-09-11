@@ -1,26 +1,26 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>EVM Wallet Generator</title>
 
-<!-- Main Font -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Amaranth:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
 
-<!-- Mono Font -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Google+Sans+Code:ital,wght@0,300..800;1,300..800;1,300..800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Google+Sans+Code:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
 
 <style>
+
 :root {
   --bg: #fafafa;
+
   --surface: rgba(255,255,255,.82);
-  --surface-2: #f4f4f5;
+  --surface-2: #111113;
 
   --border: #e7e7ea;
   --border-dark: #dcdce1;
@@ -32,6 +32,8 @@
   --accent: #111113;
 
   --green: #159447;
+  --green-bright: #38d879;
+  --green-soft: #5ee58b;
   --green-light: #eaf8ef;
 
   --radius: 18px;
@@ -47,14 +49,15 @@
   padding: 0;
 }
 
-/* =========================
-   CUSTOM SCROLLBAR
-========================= */
+/* =========================================
+   PAGE SCROLLBAR
+========================================= */
 
 html {
   scroll-behavior: smooth;
+
   scrollbar-width: thin;
-  scrollbar-color: #b8b8be transparent;
+  scrollbar-color: #a5a5ac transparent;
 }
 
 body {
@@ -69,89 +72,64 @@ body {
     var(--bg);
 
   color: var(--text);
+
   line-height: 1.6;
 
   min-height: 100vh;
 
-  /* Firefox */
   scrollbar-width: thin;
-  scrollbar-color: #a8a8ae transparent;
+  scrollbar-color: #a5a5ac transparent;
 }
 
 /* Chrome / Edge / Safari */
 
-::-webkit-scrollbar {
+body::-webkit-scrollbar {
   width: 9px;
-  height: 9px;
 }
 
-::-webkit-scrollbar-track {
+body::-webkit-scrollbar-track {
   background: transparent;
 }
 
-::-webkit-scrollbar-thumb {
+body::-webkit-scrollbar-thumb {
   background: linear-gradient(
     180deg,
-    #c4c4c9,
-    #96969d
+    #c8c8cd,
+    #929299
   );
 
   border-radius: 999px;
 
   border: 2px solid transparent;
-  background-clip: padding-box;
 
-  transition: background .2s ease;
+  background-clip: padding-box;
 }
 
-::-webkit-scrollbar-thumb:hover {
+body::-webkit-scrollbar-thumb:hover {
   background: linear-gradient(
     180deg,
-    #99999f,
-    #6f6f76
+    #a0a0a6,
+    #73737a
   );
 
   border: 2px solid transparent;
+
   background-clip: padding-box;
 }
 
-::-webkit-scrollbar-corner {
+body::-webkit-scrollbar-corner {
   background: transparent;
 }
 
-/* Code scrollbar */
-
-pre {
-  scrollbar-width: thin;
-  scrollbar-color: #55555c transparent;
-}
-
-pre::-webkit-scrollbar {
-  width: 7px;
-  height: 7px;
-}
-
-pre::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-pre::-webkit-scrollbar-thumb {
-  background: #4d4d54;
-  border-radius: 999px;
-}
-
-pre::-webkit-scrollbar-thumb:hover {
-  background: #6a6a72;
-}
-
-/* =========================
-   BACKGROUND
-========================= */
+/* =========================================
+   BACKGROUND GRID
+========================================= */
 
 body::before {
   content: "";
 
   position: fixed;
+
   inset: 0;
 
   pointer-events: none;
@@ -179,9 +157,9 @@ body::before {
     );
 }
 
-/* =========================
+/* =========================================
    CONTAINER
-========================= */
+========================================= */
 
 .container {
   width: min(860px, 100%);
@@ -193,9 +171,9 @@ body::before {
   position: relative;
 }
 
-/* =========================
+/* =========================================
    HEADER
-========================= */
+========================================= */
 
 header {
   text-align: center;
@@ -212,6 +190,7 @@ header {
   border-radius: 17px;
 
   display: grid;
+
   place-items: center;
 
   background: #111113;
@@ -231,7 +210,8 @@ header {
 }
 
 h1 {
-  font-size: clamp(2.25rem, 8vw, 4rem);
+  font-size:
+    clamp(2.25rem, 8vw, 4rem);
 
   font-weight: 700;
 
@@ -288,9 +268,9 @@ h1 {
     0 0 0 4px rgba(21,148,71,.1);
 }
 
-/* =========================
+/* =========================================
    SECTIONS
-========================= */
+========================================= */
 
 section {
   margin: 22px 0;
@@ -360,52 +340,138 @@ strong {
   font-weight: 700;
 }
 
-/* =========================
-   CODE
-========================= */
+/* =========================================
+   CODE WRAPPER
+========================================= */
 
 .code-wrapper {
   position: relative;
 
   margin: 16px 0;
+
+  /*
+    Extra bottom space on mobile makes
+    the custom horizontal scrollbar feel
+    like a proper UI element.
+  */
 }
+
+/* =========================================
+   CODE BLOCK
+========================================= */
 
 pre {
   position: relative;
 
   background: #111113;
 
-  color: #eeeeef;
+  color: var(--green-bright);
 
-  padding: 19px 48px 19px 19px;
+  padding: 19px 50px 19px 19px;
 
   border-radius: 16px;
 
   overflow-x: auto;
+  overflow-y: hidden;
 
   border: 1px solid #28282c;
 
-  /* Google Sans Code only */
-  font-family: "Google Sans Code", monospace;
+  font-family:
+    "Google Sans Code",
+    monospace;
 
   font-size: .88rem;
 
   line-height: 1.7;
 
+  white-space: pre;
+
   box-shadow:
     0 12px 30px rgba(0,0,0,.11),
     inset 0 1px 0 rgba(255,255,255,.035);
+
+  /*
+    Firefox custom scrollbar
+  */
+  scrollbar-width: thin;
+
+  scrollbar-color:
+    #3edb7b
+    #1b1b1e;
 }
 
 code {
-  font-family: "Google Sans Code", monospace;
+  font-family:
+    "Google Sans Code",
+    monospace;
 
   font-weight: 400;
+
+  color: var(--green-bright);
 }
 
-/* =========================
+/* =========================================
+   FULL CUSTOM CODE SCROLLBAR
+========================================= */
+
+/* Track */
+
+pre::-webkit-scrollbar {
+  height: 8px;
+  width: 8px;
+}
+
+/* Track background */
+
+pre::-webkit-scrollbar-track {
+  background: #1b1b1e;
+
+  border-radius: 999px;
+
+  margin: 0 12px;
+}
+
+/* Scroll thumb */
+
+pre::-webkit-scrollbar-thumb {
+  background: linear-gradient(
+    90deg,
+    #159447,
+    #38d879
+  );
+
+  border-radius: 999px;
+
+  border: 2px solid #1b1b1e;
+
+  min-width: 45px;
+}
+
+/* Hover */
+
+pre::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(
+    90deg,
+    #20b95b,
+    #58ed92
+  );
+}
+
+/* Active */
+
+pre::-webkit-scrollbar-thumb:active {
+  background: #67ef9b;
+}
+
+/* Corner */
+
+pre::-webkit-scrollbar-corner {
+  background: #111113;
+}
+
+/* =========================================
    COPY BUTTON
-========================= */
+========================================= */
 
 .copy-btn {
   position: absolute;
@@ -420,24 +486,32 @@ code {
 
   place-items: center;
 
+  padding: 0;
+
   border: 1px solid rgba(255,255,255,.12);
 
   background: rgba(255,255,255,.07);
 
-  color: #d9d9dc;
+  color: #fff;
 
   border-radius: 9px;
 
   cursor: pointer;
 
-  font-family: "Amaranth", sans-serif;
-
-  font-size: 14px;
-
   transition:
     background .18s ease,
     color .18s ease,
-    transform .18s ease;
+    transform .18s ease,
+    border-color .18s ease;
+}
+
+.copy-btn svg {
+  width: 16px;
+  height: 16px;
+
+  color: #fff;
+
+  display: block;
 }
 
 .copy-btn:hover {
@@ -445,25 +519,34 @@ code {
 
   color: white;
 
+  border-color:
+    rgba(255,255,255,.2);
+
   transform: scale(1.05);
 }
 
 .copy-btn.copied {
-  color: #5ee58b;
+  color: var(--green-bright);
 
-  background: rgba(21,148,71,.14);
+  background:
+    rgba(21,148,71,.14);
 
   border-color:
-    rgba(21,148,71,.3);
+    rgba(21,148,71,.35);
 }
 
-/* =========================
+.copy-btn.copied svg {
+  color: var(--green-bright);
+}
+
+/* =========================================
    LISTS
-========================= */
+========================================= */
 
 ol,
 ul {
-  margin: 14px 0 18px 23px;
+  margin:
+    14px 0 18px 23px;
 
   color: var(--muted);
 }
@@ -480,9 +563,9 @@ li::marker {
   font-weight: 700;
 }
 
-/* =========================
+/* =========================================
    BUTTON
-========================= */
+========================================= */
 
 .btn {
   display: inline-flex;
@@ -523,9 +606,9 @@ li::marker {
     0 12px 28px rgba(0,0,0,.18);
 }
 
-/* =========================
+/* =========================================
    FOOTER
-========================= */
+========================================= */
 
 .footer {
   text-align: center;
@@ -543,19 +626,19 @@ li::marker {
   color: var(--text);
 }
 
-/* =========================
+/* =========================================
    MOBILE
-========================= */
+========================================= */
 
 @media (max-width: 600px) {
 
-  ::-webkit-scrollbar {
+  body::-webkit-scrollbar {
     width: 7px;
-    height: 7px;
   }
 
   .container {
-    padding: 30px 14px;
+    padding:
+      30px 14px;
   }
 
   header {
@@ -600,13 +683,56 @@ li::marker {
     font-size: .9rem;
   }
 
+  /*
+    Mobile code scrollbar:
+    slightly thicker and more visible.
+  */
+
   pre {
     padding:
-      17px 43px 17px 15px;
+      17px 43px 20px 15px;
 
     font-size: .78rem;
 
     border-radius: 14px;
+
+    scrollbar-width: auto;
+
+    scrollbar-color:
+      #38d879
+      #1b1b1e;
+  }
+
+  pre::-webkit-scrollbar {
+    height: 9px;
+  }
+
+  pre::-webkit-scrollbar-track {
+    background: #1b1b1e;
+
+    border-radius: 999px;
+
+    margin:
+      0 8px;
+  }
+
+  pre::-webkit-scrollbar-thumb {
+    min-width: 50px;
+
+    background: linear-gradient(
+      90deg,
+      #159447,
+      #38d879
+    );
+
+    border-radius: 999px;
+
+    border:
+      2px solid #1b1b1e;
+  }
+
+  pre::-webkit-scrollbar-thumb:active {
+    background: #67ef9b;
   }
 
   .copy-btn {
@@ -616,17 +742,23 @@ li::marker {
     width: 28px;
     height: 28px;
   }
+
+  .copy-btn svg {
+    width: 15px;
+    height: 15px;
+  }
 }
 
-/* =========================
+/* =========================================
    SELECTION
-========================= */
+========================================= */
 
 ::selection {
   background: #111113;
 
-  color: white;
+  color: var(--green-bright);
 }
+
 </style>
 </head>
 
@@ -634,18 +766,19 @@ li::marker {
 
 <div class="container">
 
+  <!-- ================= HEADER ================= -->
+
   <header>
 
-    <!-- Ethereum SVG Icon -->
     <div class="brand-dot">
 
+      <!-- Ethereum icon -->
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="1em"
         height="1em"
         viewBox="0 0 32 32"
       >
-
         <path
           d="M0 0h32v32H0z"
           fill="none"
@@ -834,7 +967,6 @@ li::marker {
           </g>
 
         </g>
-
       </svg>
 
     </div>
@@ -846,14 +978,14 @@ li::marker {
     </div>
 
     <p class="subtitle">
-      A local EVM wallet generator with normal, vanity
-      and exclusion modes.
+      A local EVM wallet generator with normal,
+      vanity and exclusion modes.
     </p>
 
   </header>
 
 
-  <!-- QUICK START -->
+  <!-- ================= QUICK START ================= -->
 
   <section>
 
@@ -871,30 +1003,55 @@ chmod +x install.sh run.sh
         class="copy-btn"
         title="Copy code"
         aria-label="Copy code"
-      >⧉</button>
+      >
+
+        <!-- Copy icon -->
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="1em"
+          height="1em"
+          viewBox="0 0 16 16"
+        >
+          <path
+            d="M0 0h16v16H0z"
+            fill="none"
+          />
+
+          <path
+            fill="currentColor"
+            d="M5 6H4a1 1 0 0 0-1 1v5a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1h1a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h1zm7-4a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zM8 3a1 1 0 0 0-1 1v5a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1z"
+          />
+        </svg>
+
+      </button>
 
     </div>
 
     <p>
-      The installer handles compiler, build and OpenSSL prerequisites.
-      Zig installs locally in <strong>~/.local/zig</strong>.
+      The installer handles compiler, build and OpenSSL
+      prerequisites. Zig installs locally in
+      <strong>~/.local/zig</strong>.
     </p>
 
   </section>
 
 
-  <!-- MODES -->
+  <!-- ================= MODES ================= -->
 
   <section>
 
     <h2>Modes</h2>
 
     <p>
-      Each run opens an interactive menu and asks for the wallet count:
+      Each run opens an interactive menu and asks
+      for the wallet count:
     </p>
 
     <ol>
-      <li>Generate normal wallets.</li>
+
+      <li>
+        Generate normal wallets.
+      </li>
 
       <li>
         Generate vanity wallets by matching up to
@@ -902,16 +1059,17 @@ chmod +x install.sh run.sh
       </li>
 
       <li>
-        Generate wallets excluding a comma-separated list
-        of hexadecimal characters such as
+        Generate wallets excluding a comma-separated
+        list of hexadecimal characters such as
         <strong>b,6,f</strong>.
       </li>
+
     </ol>
 
     <p>
       Output is written to <strong>wallets.csv</strong>.
-      The address has no <strong>0x</strong>, while the private key
-      keeps the <strong>0x</strong> prefix.
+      The address has no <strong>0x</strong>, while the
+      private key keeps the <strong>0x</strong> prefix.
     </p>
 
     <div class="code-wrapper">
@@ -924,14 +1082,33 @@ chmod +x install.sh run.sh
         class="copy-btn"
         title="Copy code"
         aria-label="Copy code"
-      >⧉</button>
+      >
+
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="1em"
+          height="1em"
+          viewBox="0 0 16 16"
+        >
+          <path
+            d="M0 0h16v16H0z"
+            fill="none"
+          />
+
+          <path
+            fill="currentColor"
+            d="M5 6H4a1 1 0 0 0-1 1v5a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1h1a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h1zm7-4a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zM8 3a1 1 0 0 0-1 1v5a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1z"
+          />
+        </svg>
+
+      </button>
 
     </div>
 
   </section>
 
 
-  <!-- PERFORMANCE -->
+  <!-- ================= PERFORMANCE ================= -->
 
   <section>
 
@@ -951,14 +1128,33 @@ chmod +x install.sh run.sh
         class="copy-btn"
         title="Copy code"
         aria-label="Copy code"
-      >⧉</button>
+      >
+
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="1em"
+          height="1em"
+          viewBox="0 0 16 16"
+        >
+          <path
+            d="M0 0h16v16H0z"
+            fill="none"
+          />
+
+          <path
+            fill="currentColor"
+            d="M5 6H4a1 1 0 0 0-1 1v5a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1h1a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h1zm7-4a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zM8 3a1 1 0 0 0-1 1v5a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1z"
+          />
+        </svg>
+
+      </button>
 
     </div>
 
   </section>
 
 
-  <!-- MANUAL BUILD -->
+  <!-- ================= MANUAL BUILD ================= -->
 
   <section>
 
@@ -973,14 +1169,33 @@ zig build run -Doptimize=ReleaseFast -- --count 1000 --worker 400</code></pre>
         class="copy-btn"
         title="Copy code"
         aria-label="Copy code"
-      >⧉</button>
+      >
+
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="1em"
+          height="1em"
+          viewBox="0 0 16 16"
+        >
+          <path
+            d="M0 0h16v16H0z"
+            fill="none"
+          />
+
+          <path
+            fill="currentColor"
+            d="M5 6H4a1 1 0 0 0-1 1v5a1 1 0 0 0 1 1h4a2 2 0 0 0 2-2h-1a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h1zm7-4a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zM8 3a1 1 0 0 0-1 1v5a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1z"
+          />
+        </svg>
+
+      </button>
 
     </div>
 
   </section>
 
 
-  <!-- SECURITY -->
+  <!-- ================= SECURITY ================= -->
 
   <section>
 
@@ -993,12 +1208,13 @@ zig build run -Doptimize=ReleaseFast -- --count 1000 --worker 400</code></pre>
       </li>
 
       <li>
-        <strong>wallets.csv</strong> contains spendable secrets —
-        treat it like a password vault.
+        <strong>wallets.csv</strong> contains spendable
+        secrets — treat it like a password vault.
       </li>
 
       <li>
-        Never commit, upload or paste private keys to chat or issues.
+        Never commit, upload or paste private keys
+        to chat or issues.
       </li>
 
       <li>
@@ -1019,50 +1235,60 @@ zig build run -Doptimize=ReleaseFast -- --count 1000 --worker 400</code></pre>
 
 
 <script>
-document.querySelectorAll(".copy-btn").forEach(button => {
 
-  button.addEventListener("click", async () => {
+/* =========================================
+   COPY CODE
+========================================= */
 
-    const wrapper = button.closest(".code-wrapper");
+document
+  .querySelectorAll(".copy-btn")
+  .forEach(button => {
 
-    const code =
-      wrapper.querySelector("code").innerText;
+    button.addEventListener(
+      "click",
+      async () => {
 
-    try {
+        const wrapper =
+          button.closest(".code-wrapper");
 
-      await navigator.clipboard.writeText(code);
+        const code =
+          wrapper.querySelector("code").innerText;
 
-    } catch (error) {
+        try {
 
-      const textarea =
-        document.createElement("textarea");
+          await navigator.clipboard.writeText(code);
 
-      textarea.value = code;
+        } catch (error) {
 
-      document.body.appendChild(textarea);
+          const textarea =
+            document.createElement("textarea");
 
-      textarea.select();
+          textarea.value = code;
 
-      document.execCommand("copy");
+          document.body.appendChild(textarea);
 
-      textarea.remove();
-    }
+          textarea.select();
 
-    button.innerHTML = "✓";
+          document.execCommand("copy");
 
-    button.classList.add("copied");
+          textarea.remove();
+        }
 
-    setTimeout(() => {
+        /* Change icon colour */
 
-      button.innerHTML = "⧉";
+        button.classList.add("copied");
 
-      button.classList.remove("copied");
+        setTimeout(() => {
 
-    }, 1400);
+          button.classList.remove("copied");
+
+        }, 1400);
+
+      }
+    );
 
   });
 
-});
 </script>
 
 </body>
