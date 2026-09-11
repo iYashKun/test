@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>EVM Wallet Generator</title>
+  <meta
+    name="description"
+    content="A local EVM wallet generator with normal, vanity and exclusion modes."
+  />
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg: #07090d;
+      --card: #0d1118;
+      --card-hover: #111720;
+      --border: #1d2633;
+      --text: #f5f7fa;
+      --muted: #8b96a6;
+      --green: #a3ff12;
+      --green-soft: rgba(163, 255, 18, 0.1);
+      --purple: #8b5cf6;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family:
+        Inter, ui-sans-serif, system-ui, -apple-system,
+        BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at 50% -10%, rgba(163, 255, 18, 0.09), transparent 35%),
+        var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .container {
+      width: min(1080px, calc(100% - 40px));
+      margin: auto;
+    }
+
+    /* NAV */
+
+    nav {
+      height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+
+    .logo-icon {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border-radius: 10px;
+      background: var(--green);
+      color: #050505;
+      font-weight: 900;
+      box-shadow: 0 0 25px rgba(163,255,18,.18);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 26px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .nav-links a:hover {
+      color: var(--text);
+    }
+
+    .github {
+      padding: 9px 15px;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      font-size: 13px;
+      color: var(--text);
+    }
+
+    .github:hover {
+      border-color: #344152;
+      background: #0e131b;
+    }
+
+    /* HERO */
+
+    .hero {
+      text-align: center;
+      padding: 105px 0 90px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 12px;
+      border: 1px solid rgba(163,255,18,.2);
+      background: var(--green-soft);
+      color: var(--green);
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 24px;
+    }
+
+    .dot {
+      width: 6px;
+      height: 6px;
+      background: var(--green);
+      border-radius: 50%;
+      box-shadow: 0 0 10px var(--green);
+    }
+
+    h1 {
+      max-width: 850px;
+      margin: auto;
+      font-size: clamp(48px, 8vw, 88px);
+      line-height: .98;
+      letter-spacing: -5px;
+      font-weight: 850;
+    }
+
+    h1 span {
+      color: var(--green);
+    }
+
+    .hero p {
+      max-width: 650px;
+      margin: 28px auto 34px;
+      color: var(--muted);
+      font-size: 18px;
+    }
+
+    .buttons {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 12px 19px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 14px;
+      transition: .2s;
+    }
+
+    .btn-primary {
+      background: var(--green);
+      color: #050505;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(163,255,18,.15);
+    }
+
+    .btn-secondary {
+      border: 1px solid var(--border);
+      color: var(--text);
+    }
+
+    .btn-secondary:hover {
+      background: #10151d;
+    }
+
+    /* SECTIONS */
+
+    section {
+      padding: 80px 0;
+    }
+
+    .section-label {
+      color: var(--green);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-size: 11px;
+      font-weight: 800;
+      margin-bottom: 10px;
+    }
+
+    .section-title {
+      font-size: 36px;
+      letter-spacing: -1.5px;
+      margin-bottom: 12px;
+    }
+
+    .section-subtitle {
+      color: var(--muted);
+      max-width: 620px;
+      margin-bottom: 35px;
+    }
+
+    /* MODE CARDS */
+
+    .modes {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .card {
+      background: linear-gradient(145deg, #0e131a, #0a0e14);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 25px;
+      transition: .25s;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      border-color: #344152;
+      background: var(--card-hover);
+    }
+
+    .number {
+      width: 35px;
+      height: 35px;
+      display: grid;
+      place-items: center;
+      border-radius: 9px;
+      background: var(--green-soft);
+      color: var(--green);
+      font-weight: 800;
+      font-size: 13px;
+      margin-bottom: 22px;
+    }
+
+    .card h3 {
+      font-size: 19px;
+      margin-bottom: 9px;
+    }
+
+    .card p {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    /* TERMINAL */
+
+    .terminal {
+      background: #05070a;
+      border: 1px solid var(--border);
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 25px 80px rgba(0,0,0,.3);
+    }
+
+    .terminal-head {
+      height: 43px;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 0 15px;
+      border-bottom: 1px solid var(--border);
+      background: #0b0e13;
+    }
+
+    .circle {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .red { background: #ff5f57; }
+    .yellow { background: #febc2e; }
+    .green { background: #28c840; }
+
+    pre {
+      padding: 25px;
+      overflow-x: auto;
+      color: #d7dee8;
+      font-size: 14px;
+      line-height: 1.8;
+    }
+
+    .command {
+      color: var(--green);
+    }
+
+    /* PERFORMANCE */
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 30px;
+    }
+
+    .stat {
+      padding: 25px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: #0b0f15;
+    }
+
+    .stat strong {
+      display: block;
+      color: var(--green);
+      font-size: 30px;
+      margin-bottom: 4px;
+    }
+
+    .stat span {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    /* SECURITY */
+
+    .security {
+      border: 1px solid rgba(163,255,18,.16);
+      background:
+        linear-gradient(135deg, rgba(163,255,18,.06), transparent 60%),
+        #0b0f14;
+      border-radius: 18px;
+      padding: 35px;
+    }
+
+    .security h2 {
+      margin-bottom: 10px;
+    }
+
+    .security p {
+      color: var(--muted);
+      max-width: 750px;
+      font-size: 14px;
+    }
+
+    .security-list {
+      margin-top: 22px;
+      display: grid;
+      gap: 11px;
+    }
+
+    .security-list div {
+      color: #cbd3dd;
+      font-size: 14px;
+    }
+
+    .security-list div::before {
+      content: "✓";
+      color: var(--green);
+      font-weight: 900;
+      margin-right: 10px;
+    }
+
+    /* OUTPUT */
+
+    .output {
+      margin-top: 30px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+
+    .output-title {
+      padding: 13px 18px;
+      border-bottom: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .output pre {
+      background: #080b10;
+      margin: 0;
+    }
+
+    /* FOOTER */
+
+    footer {
+      margin-top: 40px;
+      padding: 35px 0;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 13px;
+      text-align: center;
+    }
+
+    footer strong {
+      color: var(--text);
+    }
+
+    /* RESPONSIVE */
+
+    @media (max-width: 760px) {
+      .container {
+        width: min(100% - 28px, 1080px);
+      }
+
+      nav {
+        height: 62px;
+      }
+
+      .nav-links {
+        display: none;
+      }
+
+      .hero {
+        padding: 75px 0 60px;
+      }
+
+      h1 {
+        font-size: clamp(45px, 15vw, 70px);
+        letter-spacing: -3px;
+      }
+
+      .hero p {
+        font-size: 16px;
+      }
+
+      section {
+        padding: 60px 0;
+      }
+
+      .modes,
+      .stats {
+        grid-template-columns: 1fr;
+      }
+
+      .section-title {
+        font-size: 30px;
+      }
+
+      .security {
+        padding: 25px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <nav class="container">
+    <a href="#" class="logo">
+      <span class="logo-icon">E</span>
+      EVM
+    </a>
+
+    <div class="nav-links">
+      <a href="#modes">Modes</a>
+      <a href="#performance">Performance</a>
+      <a href="#security">Security</a>
+    </div>
+
+    <a
+      class="github"
+      href="https://github.com/iSreyanshu/Wallets"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      GitHub ↗
+    </a>
+  </nav>
+
+  <main>
+
+    <!-- HERO -->
+
+    <header class="hero container">
+      <div class="badge">
+        <span class="dot"></span>
+        LOCAL • FAST • OPEN SOURCE
+      </div>
+
+      <h1>
+        Generate EVM wallets.<br />
+        <span>Keep it local.</span>
+      </h1>
+
+      <p>
+        A lightweight EVM wallet generator built with Zig, OpenSSL
+        secp256k1 and Ethereum Keccak-256.
+      </p>
+
+      <div class="buttons">
+        <a href="#quick-start" class="btn btn-primary">
+          Get Started
+        </a>
+
+        <a
+          href="https://github.com/iSreyanshu/Wallets"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="btn btn-secondary"
+        >
+          View on GitHub
+        </a>
+      </div>
+    </header>
+
+    <!-- MODES -->
+
+    <section id="modes">
+      <div class="container">
+        <div class="section-label">Modes</div>
+        <h2 class="section-title">Three ways to generate.</h2>
+        <p class="section-subtitle">
+          Pick the mode you need. Everything runs locally on your machine.
+        </p>
+
+        <div class="modes">
+
+          <div class="card">
+            <div class="number">01</div>
+            <h3>Normal</h3>
+            <p>
+              Generate regular EVM wallets quickly using secure
+              operating-system randomness.
+            </p>
+          </div>
+
+          <div class="card">
+            <div class="number">02</div>
+            <h3>Vanity</h3>
+            <p>
+              Generate addresses matching up to 10 hexadecimal
+              characters after <code>0x</code> or at the end.
+            </p>
+          </div>
+
+          <div class="card">
+            <div class="number">03</div>
+            <h3>Exclusion</h3>
+            <p>
+              Exclude unwanted hexadecimal characters such as
+              <code>b,6,f</code> from generated addresses.
+            </p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- QUICK START -->
+
+    <section id="quick-start">
+      <div class="container">
+        <div class="section-label">Quick Start</div>
+        <h2 class="section-title">Up and running in seconds.</h2>
+        <p class="section-subtitle">
+          Clone the project, install dependencies and start generating.
+        </p>
+
+        <div class="terminal">
+          <div class="terminal-head">
+            <span class="circle red"></span>
+            <span class="circle yellow"></span>
+            <span class="circle green"></span>
+          </div>
+
+          <pre><span class="command">$ git clone https://github.com/iSreyanshu/Wallets.git</span>
+$ cd Wallets
+$ chmod +x install.sh run.sh
+$ ./install.sh
+$ ./run.sh</pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- PERFORMANCE -->
+
+    <section id="performance">
+      <div class="container">
+        <div class="section-label">Performance</div>
+        <h2 class="section-title">Built for parallel generation.</h2>
+        <p class="section-subtitle">
+          A reusable Zig thread pool handles wallet generation efficiently.
+          Worker count can be customized when running the tool.
+        </p>
+
+        <div class="stats">
+          <div class="stat">
+            <strong>100×</strong>
+            <span>default workers per detected CPU core</span>
+          </div>
+
+          <div class="stat">
+            <strong>10</strong>
+            <span>maximum vanity hexadecimal characters</span>
+          </div>
+
+          <div class="stat">
+            <strong>Local</strong>
+            <span>no blockchain or balance checks</span>
+          </div>
+        </div>
+
+        <div class="output">
+          <div class="output-title">Custom worker count</div>
+          <pre><span class="command">$ ./run.sh --count 100000 --worker 1000</span></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- OUTPUT -->
+
+    <section>
+      <div class="container">
+        <div class="section-label">Output</div>
+        <h2 class="section-title">Simple CSV output.</h2>
+        <p class="section-subtitle">
+          Generated wallets are written to <code>wallets.csv</code>.
+        </p>
+
+        <div class="output">
+          <div class="output-title">wallets.csv</div>
+          <pre>address,private_key
+023bcd...,0x...</pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECURITY -->
+
+    <section id="security">
+      <div class="container">
+        <div class="security">
+          <div class="section-label">Security</div>
+
+          <h2 class="section-title">Your keys stay with you.</h2>
+
+          <p>
+            Private keys are generated locally using
+            <code>std.crypto.random</code>, backed by operating-system
+            randomness. The application does not connect to a blockchain
+            or check wallet balances.
+          </p>
+
+          <div class="security-list">
+            <div>Private keys are generated locally.</div>
+            <div>Uses OpenSSL secp256k1.</div>
+            <div>Uses Ethereum Keccak-256.</div>
+            <div>No blockchain connection.</div>
+            <div>No balance checking.</div>
+            <div>Treat <code>wallets.csv</code> like a password vault.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <strong>EVM Wallet Generator</strong>
+    <br />
+    Built with Zig • OpenSSL • Keccak-256
+  </footer>
+
+</body>
+</html>
