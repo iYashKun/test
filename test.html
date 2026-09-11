@@ -1,26 +1,43 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>EVM Wallet Generator</title>
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Amaranth:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+<!-- =========================
+     FONTS
+========================= -->
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Google+Sans+Code:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+
+<!-- Main UI Font -->
+<link
+  href="https://fonts.googleapis.com/css2?family=Amaranth:ital,wght@0,400;0,700;1,400;1,700&display=swap"
+  rel="stylesheet"
+>
+
+<!-- Code / Mono Font -->
+<link
+  href="https://fonts.googleapis.com/css2?family=Google+Sans+Code:ital,wght@0,300..800;1,300..800&display=swap"
+  rel="stylesheet"
+>
+
 
 <style>
+
+/* =========================================================
+   ROOT
+========================================================= */
 
 :root {
   --bg: #fafafa;
 
-  --surface: rgba(255,255,255,.82);
-  --surface-2: #111113;
+  --surface: rgba(255, 255, 255, .82);
+  --surface-solid: #ffffff;
+  --surface-2: #f4f4f5;
 
   --border: #e7e7ea;
   --border-dark: #dcdce1;
@@ -32,16 +49,22 @@
   --accent: #111113;
 
   --green: #159447;
-  --green-bright: #38d879;
-  --green-soft: #5ee58b;
   --green-light: #eaf8ef;
 
   --radius: 18px;
   --radius-lg: 24px;
 
-  --shadow-sm: 0 4px 16px rgba(0,0,0,.045);
-  --shadow: 0 14px 40px rgba(0,0,0,.07);
+  --shadow-sm:
+    0 4px 16px rgba(0, 0, 0, .045);
+
+  --shadow:
+    0 14px 40px rgba(0, 0, 0, .07);
 }
+
+
+/* =========================================================
+   RESET
+========================================================= */
 
 * {
   box-sizing: border-box;
@@ -49,16 +72,14 @@
   padding: 0;
 }
 
-/* =========================================
-   PAGE SCROLLBAR
-========================================= */
-
 html {
   scroll-behavior: smooth;
-
-  scrollbar-width: thin;
-  scrollbar-color: #a5a5ac transparent;
 }
+
+
+/* =========================================================
+   BODY
+========================================================= */
 
 body {
   font-family: "Amaranth", sans-serif;
@@ -77,59 +98,22 @@ body {
 
   min-height: 100vh;
 
+  overflow-x: hidden;
+
+  /* Firefox */
   scrollbar-width: thin;
-  scrollbar-color: #a5a5ac transparent;
+  scrollbar-color: #a8a8ae transparent;
 }
 
-/* Chrome / Edge / Safari */
 
-body::-webkit-scrollbar {
-  width: 9px;
-}
-
-body::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-body::-webkit-scrollbar-thumb {
-  background: linear-gradient(
-    180deg,
-    #c8c8cd,
-    #929299
-  );
-
-  border-radius: 999px;
-
-  border: 2px solid transparent;
-
-  background-clip: padding-box;
-}
-
-body::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(
-    180deg,
-    #a0a0a6,
-    #73737a
-  );
-
-  border: 2px solid transparent;
-
-  background-clip: padding-box;
-}
-
-body::-webkit-scrollbar-corner {
-  background: transparent;
-}
-
-/* =========================================
-   BACKGROUND GRID
-========================================= */
+/* =========================================================
+   SUBTLE BACKGROUND GRID
+========================================================= */
 
 body::before {
   content: "";
 
   position: fixed;
-
   inset: 0;
 
   pointer-events: none;
@@ -138,12 +122,12 @@ body::before {
 
   background-image:
     linear-gradient(
-      rgba(0,0,0,.018) 1px,
+      rgba(0, 0, 0, .018) 1px,
       transparent 1px
     ),
     linear-gradient(
       90deg,
-      rgba(0,0,0,.018) 1px,
+      rgba(0, 0, 0, .018) 1px,
       transparent 1px
     );
 
@@ -157,9 +141,55 @@ body::before {
     );
 }
 
-/* =========================================
+
+/* =========================================================
+   PAGE SCROLLBAR
+   Desktop
+========================================================= */
+
+::-webkit-scrollbar {
+  width: 9px;
+  height: 9px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(
+    180deg,
+    #c4c4c9,
+    #96969d
+  );
+
+  border-radius: 999px;
+
+  border: 2px solid transparent;
+
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(
+    180deg,
+    #99999f,
+    #6f6f76
+  );
+
+  border: 2px solid transparent;
+
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+
+/* =========================================================
    CONTAINER
-========================================= */
+========================================================= */
 
 .container {
   width: min(860px, 100%);
@@ -171,15 +201,21 @@ body::before {
   position: relative;
 }
 
-/* =========================================
+
+/* =========================================================
    HEADER
-========================================= */
+========================================================= */
 
 header {
   text-align: center;
 
   margin-bottom: 48px;
 }
+
+
+/* =========================================================
+   ETHEREUM ICON
+========================================================= */
 
 .brand-dot {
   width: 54px;
@@ -190,14 +226,13 @@ header {
   border-radius: 17px;
 
   display: grid;
-
   place-items: center;
 
   background: #111113;
 
   box-shadow:
-    0 12px 28px rgba(0,0,0,.16),
-    inset 0 1px 0 rgba(255,255,255,.12);
+    0 12px 28px rgba(0, 0, 0, .16),
+    inset 0 1px 0 rgba(255, 255, 255, .12);
 
   overflow: hidden;
 }
@@ -209,9 +244,13 @@ header {
   display: block;
 }
 
+
+/* =========================================================
+   TITLE
+========================================================= */
+
 h1 {
-  font-size:
-    clamp(2.25rem, 8vw, 4rem);
+  font-size: clamp(2.25rem, 8vw, 4rem);
 
   font-weight: 700;
 
@@ -219,6 +258,11 @@ h1 {
 
   line-height: 1;
 }
+
+
+/* =========================================================
+   SUBTITLE
+========================================================= */
 
 .subtitle {
   max-width: 620px;
@@ -229,6 +273,11 @@ h1 {
 
   font-size: 1rem;
 }
+
+
+/* =========================================================
+   STATUS TAG
+========================================================= */
 
 .tag {
   display: inline-flex;
@@ -265,12 +314,13 @@ h1 {
   background: var(--green);
 
   box-shadow:
-    0 0 0 4px rgba(21,148,71,.1);
+    0 0 0 4px rgba(21, 148, 71, .1);
 }
 
-/* =========================================
+
+/* =========================================================
    SECTIONS
-========================================= */
+========================================================= */
 
 section {
   margin: 22px 0;
@@ -286,6 +336,7 @@ section {
   box-shadow: var(--shadow-sm);
 
   backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 
   transition:
     transform .2s ease,
@@ -300,6 +351,11 @@ section:hover {
 
   box-shadow: var(--shadow);
 }
+
+
+/* =========================================================
+   HEADINGS
+========================================================= */
 
 h2 {
   display: flex;
@@ -326,6 +382,11 @@ h2::before {
   background: var(--text);
 }
 
+
+/* =========================================================
+   TEXT
+========================================================= */
+
 p {
   color: var(--muted);
 
@@ -340,213 +401,14 @@ strong {
   font-weight: 700;
 }
 
-/* =========================================
-   CODE WRAPPER
-========================================= */
 
-.code-wrapper {
-  position: relative;
-
-  margin: 16px 0;
-
-  /*
-    Extra bottom space on mobile makes
-    the custom horizontal scrollbar feel
-    like a proper UI element.
-  */
-}
-
-/* =========================================
-   CODE BLOCK
-========================================= */
-
-pre {
-  position: relative;
-
-  background: #111113;
-
-  color: var(--green-bright);
-
-  padding: 19px 50px 19px 19px;
-
-  border-radius: 16px;
-
-  overflow-x: auto;
-  overflow-y: hidden;
-
-  border: 1px solid #28282c;
-
-  font-family:
-    "Google Sans Code",
-    monospace;
-
-  font-size: .88rem;
-
-  line-height: 1.7;
-
-  white-space: pre;
-
-  box-shadow:
-    0 12px 30px rgba(0,0,0,.11),
-    inset 0 1px 0 rgba(255,255,255,.035);
-
-  /*
-    Firefox custom scrollbar
-  */
-  scrollbar-width: thin;
-
-  scrollbar-color:
-    #3edb7b
-    #1b1b1e;
-}
-
-code {
-  font-family:
-    "Google Sans Code",
-    monospace;
-
-  font-weight: 400;
-
-  color: var(--green-bright);
-}
-
-/* =========================================
-   FULL CUSTOM CODE SCROLLBAR
-========================================= */
-
-/* Track */
-
-pre::-webkit-scrollbar {
-  height: 8px;
-  width: 8px;
-}
-
-/* Track background */
-
-pre::-webkit-scrollbar-track {
-  background: #1b1b1e;
-
-  border-radius: 999px;
-
-  margin: 0 12px;
-}
-
-/* Scroll thumb */
-
-pre::-webkit-scrollbar-thumb {
-  background: linear-gradient(
-    90deg,
-    #159447,
-    #38d879
-  );
-
-  border-radius: 999px;
-
-  border: 2px solid #1b1b1e;
-
-  min-width: 45px;
-}
-
-/* Hover */
-
-pre::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(
-    90deg,
-    #20b95b,
-    #58ed92
-  );
-}
-
-/* Active */
-
-pre::-webkit-scrollbar-thumb:active {
-  background: #67ef9b;
-}
-
-/* Corner */
-
-pre::-webkit-scrollbar-corner {
-  background: #111113;
-}
-
-/* =========================================
-   COPY BUTTON
-========================================= */
-
-.copy-btn {
-  position: absolute;
-
-  top: 10px;
-  right: 10px;
-
-  width: 30px;
-  height: 30px;
-
-  display: grid;
-
-  place-items: center;
-
-  padding: 0;
-
-  border: 1px solid rgba(255,255,255,.12);
-
-  background: rgba(255,255,255,.07);
-
-  color: #fff;
-
-  border-radius: 9px;
-
-  cursor: pointer;
-
-  transition:
-    background .18s ease,
-    color .18s ease,
-    transform .18s ease,
-    border-color .18s ease;
-}
-
-.copy-btn svg {
-  width: 16px;
-  height: 16px;
-
-  color: #fff;
-
-  display: block;
-}
-
-.copy-btn:hover {
-  background: rgba(255,255,255,.14);
-
-  color: white;
-
-  border-color:
-    rgba(255,255,255,.2);
-
-  transform: scale(1.05);
-}
-
-.copy-btn.copied {
-  color: var(--green-bright);
-
-  background:
-    rgba(21,148,71,.14);
-
-  border-color:
-    rgba(21,148,71,.35);
-}
-
-.copy-btn.copied svg {
-  color: var(--green-bright);
-}
-
-/* =========================================
+/* =========================================================
    LISTS
-========================================= */
+========================================================= */
 
 ol,
 ul {
-  margin:
-    14px 0 18px 23px;
+  margin: 14px 0 18px 23px;
 
   color: var(--muted);
 }
@@ -563,9 +425,183 @@ li::marker {
   font-weight: 700;
 }
 
-/* =========================================
-   BUTTON
-========================================= */
+
+/* =========================================================
+   CODE WRAPPER
+========================================================= */
+
+.code-wrapper {
+  position: relative;
+
+  width: 100%;
+
+  margin: 16px 0;
+}
+
+
+/* =========================================================
+   CODE BLOCK
+========================================================= */
+
+pre {
+  position: relative;
+
+  width: 100%;
+
+  background: #111113;
+
+  color: #eeeeef;
+
+  padding: 19px 48px 19px 19px;
+
+  border-radius: 16px;
+
+  border: 1px solid #28282c;
+
+  overflow-x: auto;
+  overflow-y: hidden;
+
+  white-space: pre;
+
+  font-family:
+    "Google Sans Code",
+    monospace;
+
+  font-size: .88rem;
+
+  line-height: 1.7;
+
+  box-shadow:
+    0 12px 30px rgba(0, 0, 0, .11),
+    inset 0 1px 0 rgba(255, 255, 255, .035);
+
+  /* Desktop Firefox scrollbar */
+  scrollbar-width: thin;
+
+  scrollbar-color:
+    #55555c
+    transparent;
+
+  /* Smooth touch scrolling */
+  -webkit-overflow-scrolling: touch;
+}
+
+
+/* =========================================================
+   CODE
+========================================================= */
+
+code {
+  font-family:
+    "Google Sans Code",
+    monospace;
+
+  font-weight: 400;
+
+  white-space: pre;
+}
+
+
+/* =========================================================
+   CODE SCROLLBAR
+   Desktop
+========================================================= */
+
+pre::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+pre::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+pre::-webkit-scrollbar-thumb {
+  background: #4d4d54;
+
+  border-radius: 999px;
+}
+
+pre::-webkit-scrollbar-thumb:hover {
+  background: #6a6a72;
+}
+
+pre::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+
+/* =========================================================
+   COPY BUTTON
+========================================================= */
+
+.copy-btn {
+  position: absolute;
+
+  top: 10px;
+  right: 10px;
+
+  width: 30px;
+  height: 30px;
+
+  display: grid;
+  place-items: center;
+
+  border:
+    1px solid
+    rgba(255, 255, 255, .12);
+
+  background:
+    rgba(255, 255, 255, .07);
+
+  color: #d9d9dc;
+
+  border-radius: 9px;
+
+  cursor: pointer;
+
+  font-family: "Amaranth", sans-serif;
+
+  font-size: 14px;
+
+  line-height: 1;
+
+  z-index: 5;
+
+  transition:
+    background .18s ease,
+    color .18s ease,
+    transform .18s ease,
+    border-color .18s ease;
+}
+
+.copy-btn:hover {
+  background:
+    rgba(255, 255, 255, .14);
+
+  color: white;
+
+  transform: scale(1.05);
+}
+
+.copy-btn:active {
+  transform: scale(.94);
+}
+
+.copy-btn.copied {
+  color: #5ee58b;
+
+  background:
+    rgba(21, 148, 71, .14);
+
+  border-color:
+    rgba(21, 148, 71, .3);
+}
+
+
+/* =========================================================
+   NORMAL BUTTON
+========================================================= */
 
 .btn {
   display: inline-flex;
@@ -589,7 +625,7 @@ li::marker {
   font-size: .9rem;
 
   box-shadow:
-    0 7px 20px rgba(0,0,0,.14);
+    0 7px 20px rgba(0, 0, 0, .14);
 
   transition:
     transform .2s ease,
@@ -603,12 +639,13 @@ li::marker {
   transform: translateY(-2px);
 
   box-shadow:
-    0 12px 28px rgba(0,0,0,.18);
+    0 12px 28px rgba(0, 0, 0, .18);
 }
 
-/* =========================================
+
+/* =========================================================
    FOOTER
-========================================= */
+========================================================= */
 
 .footer {
   text-align: center;
@@ -626,24 +663,56 @@ li::marker {
   color: var(--text);
 }
 
-/* =========================================
+
+/* =========================================================
+   SELECTION
+========================================================= */
+
+::selection {
+  background: #111113;
+
+  color: white;
+}
+
+
+/* =========================================================
    MOBILE
-========================================= */
+========================================================= */
 
 @media (max-width: 600px) {
 
-  body::-webkit-scrollbar {
+  /* -------------------------
+     PAGE SCROLLBAR
+     Keep it subtle
+  ------------------------- */
+
+  ::-webkit-scrollbar {
     width: 7px;
+    height: 7px;
   }
 
+
+  /* -------------------------
+     CONTAINER
+  ------------------------- */
+
   .container {
-    padding:
-      30px 14px;
+    padding: 30px 14px;
   }
+
+
+  /* -------------------------
+     HEADER
+  ------------------------- */
 
   header {
     margin-bottom: 32px;
   }
+
+
+  /* -------------------------
+     ICON
+  ------------------------- */
 
   .brand-dot {
     width: 48px;
@@ -657,14 +726,29 @@ li::marker {
     height: 30px;
   }
 
+
+  /* -------------------------
+     TITLE
+  ------------------------- */
+
   h1 {
     font-size:
       clamp(2.1rem, 12vw, 3rem);
   }
 
+
+  /* -------------------------
+     SUBTITLE
+  ------------------------- */
+
   .subtitle {
     font-size: .9rem;
   }
+
+
+  /* -------------------------
+     SECTIONS
+  ------------------------- */
 
   section {
     padding: 19px;
@@ -674,66 +758,77 @@ li::marker {
     border-radius: 20px;
   }
 
+
+  /* -------------------------
+     HEADINGS
+  ------------------------- */
+
   h2 {
     font-size: 1.3rem;
   }
+
+
+  /* -------------------------
+     TEXT
+  ------------------------- */
 
   p,
   li {
     font-size: .9rem;
   }
 
-  /*
-    Mobile code scrollbar:
-    slightly thicker and more visible.
-  */
+
+  /* =======================================================
+     MOBILE CODE SCROLL
+
+     IMPORTANT:
+     Scrollbar completely hidden,
+     but horizontal scrolling still works.
+  ======================================================= */
 
   pre {
     padding:
-      17px 43px 20px 15px;
+      17px 43px 17px 15px;
 
     font-size: .78rem;
 
     border-radius: 14px;
 
-    scrollbar-width: auto;
+    overflow-x: auto;
+    overflow-y: hidden;
 
-    scrollbar-color:
-      #38d879
-      #1b1b1e;
+    /* Firefox */
+    scrollbar-width: none;
+
+    /* iOS momentum scrolling */
+    -webkit-overflow-scrolling: touch;
+
+    /* Prevent wrapping */
+    white-space: pre;
   }
 
+
+  /* Chrome / Safari / Edge */
+
   pre::-webkit-scrollbar {
-    height: 9px;
+    display: none;
+
+    width: 0;
+    height: 0;
   }
 
   pre::-webkit-scrollbar-track {
-    background: #1b1b1e;
-
-    border-radius: 999px;
-
-    margin:
-      0 8px;
+    display: none;
   }
 
   pre::-webkit-scrollbar-thumb {
-    min-width: 50px;
-
-    background: linear-gradient(
-      90deg,
-      #159447,
-      #38d879
-    );
-
-    border-radius: 999px;
-
-    border:
-      2px solid #1b1b1e;
+    display: none;
   }
 
-  pre::-webkit-scrollbar-thumb:active {
-    background: #67ef9b;
-  }
+
+  /* -------------------------
+     COPY BUTTON
+  ------------------------- */
 
   .copy-btn {
     top: 8px;
@@ -741,44 +836,80 @@ li::marker {
 
     width: 28px;
     height: 28px;
+
+    font-size: 13px;
   }
 
-  .copy-btn svg {
-    width: 15px;
-    height: 15px;
-  }
 }
 
-/* =========================================
-   SELECTION
-========================================= */
 
-::selection {
-  background: #111113;
+/* =========================================================
+   EXTRA SMALL DEVICES
+========================================================= */
 
-  color: var(--green-bright);
+@media (max-width: 380px) {
+
+  .container {
+    padding-left: 11px;
+    padding-right: 11px;
+  }
+
+  section {
+    padding: 17px;
+  }
+
+  pre {
+    font-size: .74rem;
+
+    padding-left: 13px;
+    padding-right: 40px;
+  }
+
+}
+
+
+/* =========================================================
+   REDUCE MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+  html {
+    scroll-behavior: auto;
+  }
+
+  section,
+  .btn,
+  .copy-btn {
+    transition: none;
+  }
 }
 
 </style>
 </head>
 
+
 <body>
 
 <div class="container">
 
-  <!-- ================= HEADER ================= -->
+
+  <!-- =====================================================
+       HEADER
+  ====================================================== -->
 
   <header>
 
     <div class="brand-dot">
 
-      <!-- Ethereum icon -->
+      <!-- Ethereum SVG -->
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="1em"
         height="1em"
         viewBox="0 0 32 32"
       >
+
         <path
           d="M0 0h32v32H0z"
           fill="none"
@@ -794,6 +925,7 @@ li::marker {
             y="-4.2%"
             filterUnits="objectBoundingBox"
           >
+
             <feOffset
               dy=".5"
               in="SourceAlpha"
@@ -817,7 +949,9 @@ li::marker {
               in="shadowBlurOuter1"
               values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.199473505 0"
             />
+
           </filter>
+
 
           <filter
             id="SVGw0qHYdBn"
@@ -827,6 +961,7 @@ li::marker {
             y="-5.2%"
             filterUnits="objectBoundingBox"
           >
+
             <feOffset
               dy=".5"
               in="SourceAlpha"
@@ -834,7 +969,7 @@ li::marker {
             />
 
             <feGaussianBlur
-              in="shadowOffsetOuter1"
+              in="shadowBlurOuter1"
               result="shadowBlurOuter1"
               stdDeviation=".5"
             />
@@ -850,7 +985,9 @@ li::marker {
               in="shadowBlurOuter1"
               values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.204257246 0"
             />
+
           </filter>
+
 
           <linearGradient
             id="SVGxjwWZbcU"
@@ -859,6 +996,7 @@ li::marker {
             y1="0%"
             y2="100%"
           >
+
             <stop
               offset="0%"
               stop-color="#fff"
@@ -869,7 +1007,9 @@ li::marker {
               offset="100%"
               stop-opacity=".5"
             />
+
           </linearGradient>
+
 
           <circle
             id="SVGMSOqEeDZ"
@@ -878,12 +1018,14 @@ li::marker {
             r="15"
           />
 
+
           <path
             id="SVG7k6gtcQy"
             d="M16.498 20.968L24 16.616l-7.502 10.379L9 16.615zm0-17.968l7.497 12.22l-7.497 4.353L9 15.22z"
           />
 
         </defs>
+
 
         <g
           fill="none"
@@ -914,6 +1056,7 @@ li::marker {
             stroke-opacity=".097"
           />
 
+
           <g fill-rule="nonzero">
 
             <use
@@ -930,6 +1073,7 @@ li::marker {
             />
 
           </g>
+
 
           <g
             fill="#fff"
@@ -967,29 +1111,36 @@ li::marker {
           </g>
 
         </g>
+
       </svg>
 
     </div>
 
+
     <h1>Wallet Generator</h1>
+
 
     <div class="tag">
       Local • Fast • Private
     </div>
 
+
     <p class="subtitle">
-      A local EVM wallet generator with normal,
-      vanity and exclusion modes.
+      A local EVM wallet generator with normal, vanity
+      and exclusion modes.
     </p>
 
   </header>
 
 
-  <!-- ================= QUICK START ================= -->
+  <!-- =====================================================
+       QUICK START
+  ====================================================== -->
 
   <section>
 
     <h2>Quick Start</h2>
+
 
     <div class="code-wrapper">
 
@@ -999,53 +1150,41 @@ chmod +x install.sh run.sh
 ./install.sh
 ./run.sh</code></pre>
 
+
       <button
         class="copy-btn"
+        type="button"
         title="Copy code"
         aria-label="Copy code"
       >
-
-        <!-- Copy icon -->
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="1em"
-          height="1em"
-          viewBox="0 0 16 16"
-        >
-          <path
-            d="M0 0h16v16H0z"
-            fill="none"
-          />
-
-          <path
-            fill="currentColor"
-            d="M5 6H4a1 1 0 0 0-1 1v5a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1h1a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h1zm7-4a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zM8 3a1 1 0 0 0-1 1v5a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1z"
-          />
-        </svg>
-
+        ⧉
       </button>
 
     </div>
 
+
     <p>
-      The installer handles compiler, build and OpenSSL
-      prerequisites. Zig installs locally in
+      The installer handles compiler, build and OpenSSL prerequisites.
+      Zig installs locally in
       <strong>~/.local/zig</strong>.
     </p>
 
   </section>
 
 
-  <!-- ================= MODES ================= -->
+  <!-- =====================================================
+       MODES
+  ====================================================== -->
 
   <section>
 
     <h2>Modes</h2>
 
+
     <p>
-      Each run opens an interactive menu and asks
-      for the wallet count:
+      Each run opens an interactive menu and asks for the wallet count:
     </p>
+
 
     <ol>
 
@@ -1059,18 +1198,22 @@ chmod +x install.sh run.sh
       </li>
 
       <li>
-        Generate wallets excluding a comma-separated
-        list of hexadecimal characters such as
+        Generate wallets excluding a comma-separated list
+        of hexadecimal characters such as
         <strong>b,6,f</strong>.
       </li>
 
     </ol>
 
+
     <p>
-      Output is written to <strong>wallets.csv</strong>.
-      The address has no <strong>0x</strong>, while the
-      private key keeps the <strong>0x</strong> prefix.
+      Output is written to
+      <strong>wallets.csv</strong>.
+      The address has no <strong>0x</strong>,
+      while the private key keeps the
+      <strong>0x</strong> prefix.
     </p>
+
 
     <div class="code-wrapper">
 
@@ -1078,29 +1221,14 @@ chmod +x install.sh run.sh
 023bcd...,0x...
 8fa21e...,0x...</code></pre>
 
+
       <button
         class="copy-btn"
+        type="button"
         title="Copy code"
         aria-label="Copy code"
       >
-
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="1em"
-          height="1em"
-          viewBox="0 0 16 16"
-        >
-          <path
-            d="M0 0h16v16H0z"
-            fill="none"
-          />
-
-          <path
-            fill="currentColor"
-            d="M5 6H4a1 1 0 0 0-1 1v5a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1h1a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h1zm7-4a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zM8 3a1 1 0 0 0-1 1v5a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1z"
-          />
-        </svg>
-
+        ⧉
       </button>
 
     </div>
@@ -1108,11 +1236,14 @@ chmod +x install.sh run.sh
   </section>
 
 
-  <!-- ================= PERFORMANCE ================= -->
+  <!-- =====================================================
+       PERFORMANCE
+  ====================================================== -->
 
   <section>
 
     <h2>Performance</h2>
+
 
     <p>
       Default pool size:
@@ -1120,33 +1251,19 @@ chmod +x install.sh run.sh
       capped by wallet count.
     </p>
 
+
     <div class="code-wrapper">
 
       <pre><code>./run.sh --count 100000 --worker 1000</code></pre>
 
+
       <button
         class="copy-btn"
+        type="button"
         title="Copy code"
         aria-label="Copy code"
       >
-
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="1em"
-          height="1em"
-          viewBox="0 0 16 16"
-        >
-          <path
-            d="M0 0h16v16H0z"
-            fill="none"
-          />
-
-          <path
-            fill="currentColor"
-            d="M5 6H4a1 1 0 0 0-1 1v5a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1h1a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h1zm7-4a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zM8 3a1 1 0 0 0-1 1v5a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1z"
-          />
-        </svg>
-
+        ⧉
       </button>
 
     </div>
@@ -1154,40 +1271,28 @@ chmod +x install.sh run.sh
   </section>
 
 
-  <!-- ================= MANUAL BUILD ================= -->
+  <!-- =====================================================
+       MANUAL BUILD
+  ====================================================== -->
 
   <section>
 
     <h2>Manual Build</h2>
+
 
     <div class="code-wrapper">
 
       <pre><code>zig build -Doptimize=ReleaseFast
 zig build run -Doptimize=ReleaseFast -- --count 1000 --worker 400</code></pre>
 
+
       <button
         class="copy-btn"
+        type="button"
         title="Copy code"
         aria-label="Copy code"
       >
-
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="1em"
-          height="1em"
-          viewBox="0 0 16 16"
-        >
-          <path
-            d="M0 0h16v16H0z"
-            fill="none"
-          />
-
-          <path
-            fill="currentColor"
-            d="M5 6H4a1 1 0 0 0-1 1v5a1 1 0 0 0 1 1h4a2 2 0 0 0 2-2h-1a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h1zm7-4a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zM8 3a1 1 0 0 0-1 1v5a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1z"
-          />
-        </svg>
-
+        ⧉
       </button>
 
     </div>
@@ -1195,11 +1300,14 @@ zig build run -Doptimize=ReleaseFast -- --count 1000 --worker 400</code></pre>
   </section>
 
 
-  <!-- ================= SECURITY ================= -->
+  <!-- =====================================================
+       SECURITY
+  ====================================================== -->
 
   <section>
 
     <h2>Security</h2>
+
 
     <ul>
 
@@ -1208,13 +1316,12 @@ zig build run -Doptimize=ReleaseFast -- --count 1000 --worker 400</code></pre>
       </li>
 
       <li>
-        <strong>wallets.csv</strong> contains spendable
-        secrets — treat it like a password vault.
+        <strong>wallets.csv</strong> contains spendable secrets —
+        treat it like a password vault.
       </li>
 
       <li>
-        Never commit, upload or paste private keys
-        to chat or issues.
+        Never commit, upload or paste private keys to chat or issues.
       </li>
 
       <li>
@@ -1226,19 +1333,25 @@ zig build run -Doptimize=ReleaseFast -- --count 1000 --worker 400</code></pre>
   </section>
 
 
+  <!-- =====================================================
+       FOOTER
+  ====================================================== -->
+
   <div class="footer">
+
     Built for local use •
     <span>Keep your keys private.</span>
+
   </div>
 
 </div>
 
 
-<script>
+<!-- =========================================================
+     COPY SCRIPT
+========================================================= -->
 
-/* =========================================
-   COPY CODE
-========================================= */
+<script>
 
 document
   .querySelectorAll(".copy-btn")
@@ -1254,6 +1367,7 @@ document
         const code =
           wrapper.querySelector("code").innerText;
 
+
         try {
 
           await navigator.clipboard.writeText(code);
@@ -1265,8 +1379,12 @@ document
 
           textarea.value = code;
 
+          textarea.style.position = "fixed";
+          textarea.style.opacity = "0";
+
           document.body.appendChild(textarea);
 
+          textarea.focus();
           textarea.select();
 
           document.execCommand("copy");
@@ -1274,11 +1392,19 @@ document
           textarea.remove();
         }
 
-        /* Change icon colour */
+
+        /* Success state */
+
+        button.innerHTML = "✓";
 
         button.classList.add("copied");
 
+
+        /* Reset */
+
         setTimeout(() => {
+
+          button.innerHTML = "⧉";
 
           button.classList.remove("copied");
 
