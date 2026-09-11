@@ -4,72 +4,257 @@
 <meta charset="UTF-8">
 <title>EVM Wallet Generator</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Caacupe+One&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+
 <style>
 :root {
-  --bg:#ffffff; --surface:#ffffff; --surface-2:#f6f6f7; --border:#e8e8eb;
-  --text:#171719; --muted:#73737b; --muted-2:#9a9aa2; --accent:#111113;
-  --green:#159447; --radius:16px; --radius-lg:20px;
+  --bg:#ffffff;
+  --surface:#ffffff;
+  --surface-2:#f6f6f7;
+  --border:#e8e8eb;
+  --text:#171719;
+  --muted:#73737b;
+  --muted-2:#9a9aa2;
+  --accent:#111113;
+  --green:#159447;
+  --radius:16px;
+  --radius-lg:20px;
 }
-* {box-sizing:border-box;margin:0;padding:0;}
-body {font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);line-height:1.65;}
-.container {max-width:820px;margin:0 auto;padding:40px 20px;}
-header {text-align:center;margin-bottom:50px;}
-h1 {font-family:'Caacupe One', cursive; font-size:clamp(2.3rem,8vw,3.8rem);letter-spacing:-.08em;font-weight:800;line-height:1.05;color:var(--text);}
-.tag {display:inline-block;background:var(--green);color:white;padding:6px 14px;border-radius:999px;font-size:13px;font-weight:700;margin-top:10px;}
-img {max-width:100%;height:auto;border-radius:16px;margin:25px 0;box-shadow:0 15px 30px rgba(0,0,0,0.08);}
-section {margin:45px 0;}
-h2 {font-size:1.65rem;margin-bottom:12px;color:var(--text);font-weight:700;border-bottom:1px solid var(--border);padding-bottom:8px;}
-p {font-size:1.02rem;margin-bottom:18px;color:var(--muted);}
-pre {background:var(--surface-2);color:#3f3f44;padding:20px;border-radius:16px;overflow-x:auto;font-size:0.90rem;line-height:1.6;border:1px solid var(--border);}
-.btn {display:inline-block;background:var(--accent);color:white;padding:13px 28px;border-radius:999px;text-decoration:none;font-weight:600;font-size:0.95rem;box-shadow:0 6px 20px rgba(0,0,0,0.15);transition:0.2s;}
-.btn:hover {background:#2b2b2d;transform:translateY(-2px);box-shadow:0 10px 25px rgba(0,0,0,0.2);}
-.footer {text-align:center;margin-top:60px;color:var(--muted-2);font-size:0.82rem;}
-.mobile-menu {display:none;position:fixed;top:15px;right:15px;z-index:100;background:var(--surface);border:1px solid var(--border);width:36px;height:36px;border-radius:10px;cursor:pointer;font-size:24px;box-shadow:0 4px 15px rgba(0,0,0,0.2);}
-.logo {width:72px;height:72px;margin:0 auto 15px;display:block;}
+
+* {
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+body {
+  font-family:'Pacifico', cursive;
+  background:var(--bg);
+  color:var(--text);
+  line-height:1.55;
+}
+
+.container {
+  max-width:820px;
+  margin:0 auto;
+  padding:35px 20px;
+}
+
+header {
+  text-align:center;
+  margin-bottom:45px;
+}
+
+h1 {
+  font-family:'Pacifico', cursive;
+  font-size:clamp(2rem,7vw,3.2rem);
+  letter-spacing:-.03em;
+  font-weight:400;
+  line-height:1.1;
+  color:var(--text);
+}
+
+.tag {
+  display:inline-block;
+  background:var(--green);
+  color:white;
+  padding:5px 12px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:700;
+  margin-top:10px;
+}
+
+img {
+  max-width:100%;
+  height:auto;
+  border-radius:16px;
+  margin:22px 0;
+  box-shadow:0 15px 30px rgba(0,0,0,0.08);
+}
+
+section {
+  margin:40px 0;
+}
+
+h2 {
+  font-family:'Pacifico', cursive;
+  font-size:1.45rem;
+  margin-bottom:10px;
+  color:var(--text);
+  font-weight:400;
+  border-bottom:1px solid var(--border);
+  padding-bottom:7px;
+}
+
+p {
+  font-size:0.92rem;
+  margin-bottom:16px;
+  color:var(--muted);
+}
+
+pre {
+  background:var(--surface-2);
+  color:#3f3f44;
+  padding:17px;
+  border-radius:16px;
+  overflow-x:auto;
+  font-family:monospace;
+  font-size:0.82rem;
+  line-height:1.55;
+  border:1px solid var(--border);
+}
+
+.btn {
+  display:inline-block;
+  background:var(--accent);
+  color:white;
+  padding:11px 25px;
+  border-radius:999px;
+  text-decoration:none;
+  font-weight:600;
+  font-size:0.9rem;
+  box-shadow:0 6px 20px rgba(0,0,0,0.15);
+  transition:0.2s;
+}
+
+.btn:hover {
+  background:#2b2b2d;
+  transform:translateY(-2px);
+  box-shadow:0 10px 25px rgba(0,0,0,0.2);
+}
+
+.footer {
+  text-align:center;
+  margin-top:55px;
+  color:var(--muted-2);
+  font-size:0.75rem;
+}
+
+.mobile-menu {
+  display:none;
+  position:fixed;
+  top:15px;
+  right:15px;
+  z-index:100;
+  background:var(--surface);
+  border:1px solid var(--border);
+  width:36px;
+  height:36px;
+  border-radius:10px;
+  cursor:pointer;
+  font-size:22px;
+  box-shadow:0 4px 15px rgba(0,0,0,0.2);
+}
+
+.logo {
+  width:65px;
+  height:65px;
+  margin:0 auto 13px;
+  display:block;
+}
+
 @media (max-width:600px) {
-  .mobile-menu {display:grid;place-items:center;}
-  .container {padding:20px;}
-  h1 {font-size:clamp(2rem,8vw,3.2rem);}
-  h2 {font-size:1.45rem;}
-  p {font-size:0.98rem;}
-  pre {font-size:0.87rem;padding:16px;}
-  .logo {width:60px;height:60px;}
+  .mobile-menu {
+    display:grid;
+    place-items:center;
+  }
+
+  .container {
+    padding:18px;
+  }
+
+  h1 {
+    font-size:clamp(1.8rem,7vw,2.8rem);
+  }
+
+  h2 {
+    font-size:1.3rem;
+  }
+
+  p {
+    font-size:0.88rem;
+  }
+
+  pre {
+    font-size:0.78rem;
+    padding:14px;
+  }
+
+  .logo {
+    width:55px;
+    height:55px;
+  }
 }
 </style>
 </head>
+
 <body>
+
 <div class="mobile-menu">☰</div>
+
 <div class="container">
+
   <header>
     <h1>Wallet Generator</h1>
-    <img class="logo" src="https://upload.wikimedia.org/wikipedia/commons/f/fd/Ethereum_Logo.png" alt="Ethereum">
-    <img src="https://camo.githubusercontent.com/d76765c2b9b969ac751fd3327d8e5105f5ad248438194717fce38c025a90e5d8/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f5a69672d302e31332e302d6637613431643f6c6f676f3d7a6967266c6f676f436f6c6f723d7768697465" alt="Zig">
-    <img src="https://camo.githubusercontent.com/b78f744e5f520e134d15e1ea7176c8bc5c666bafbdb52f5981e54d8f61f7c448/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f43727970746f2d736563703235366b312532302532422532304b656363616b2d326561303433" alt="Crypto">
-    <p><strong>A local evm wallet generator with normal, vanity and exclusion modes.</strong></p>
+
+    <img
+      class="logo"
+      src="https://upload.wikimedia.org/wikipedia/commons/f/fd/Ethereum_Logo.png"
+      alt="Ethereum"
+    >
+
+    <img
+      src="https://camo.githubusercontent.com/d76765c2b9b969ac751fd3327d8e5105f5ad248438194717fce38c025a90e5d8/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f5a69672d302e31332e302d6637613431643f6c6f676f3d7a6967266c6f676f436f6c6f723d7768697465"
+      alt="Zig"
+    >
+
+    <img
+      src="https://camo.githubusercontent.com/b78f744e5f520e134d15e1ea7176c8bc5c666bafbdb52f5981e54d8f61f7c448/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f43727970746f2d736563703235366b312532302532422532304b656363616b2d326561303433"
+      alt="Crypto"
+    >
+
+    <p>
+      <strong>A local evm wallet generator with normal, vanity and exclusion modes.</strong>
+    </p>
   </header>
 
   <section>
     <h2>Quick Start</h2>
+
     <pre><code>git clone https://github.com/iSreyanshu/Wallets.git
 cd Wallets
 chmod +x install.sh run.sh
 ./install.sh
 ./run.sh</code></pre>
-    <p>The installer handles compiler, build and OpenSSL prerequisites. Zig installs locally in ~/.local/zig.</p>
+
+    <p>
+      The installer handles compiler, build and OpenSSL prerequisites.
+      Zig installs locally in ~/.local/zig.
+    </p>
   </section>
 
   <section>
     <h2>Modes</h2>
-    <p>Each run opens an interactive menu and asks for the wallet count:</p>
-    <ol style="margin-left:20px;font-size:1.02rem;">
+
+    <p>
+      Each run opens an interactive menu and asks for the wallet count:
+    </p>
+
+    <ol style="margin-left:20px;font-size:0.92rem;">
       <li>Generate normal wallets.</li>
       <li>Generate vanity wallets by matching up to 10 hexadecimal characters.</li>
       <li>Generate wallets excluding a comma-separated list of hexadecimal characters (e.g. b,6,f).</li>
     </ol>
-    <p>Output written to <strong>wallets.csv</strong> (address has no 0x; private key keeps 0x prefix):</p>
+
+    <p>
+      Output written to <strong>wallets.csv</strong>
+      (address has no 0x; private key keeps 0x prefix):
+    </p>
+
     <pre><code>address,private_key
 023bcd...,0x...
 8fa21e...,0x...</code></pre>
@@ -77,19 +262,27 @@ chmod +x install.sh run.sh
 
   <section>
     <h2>Performance</h2>
-    <p>Default pool size: <strong>100 workers per detected CPU core</strong> (capped by wallet count).</p>
+
+    <p>
+      Default pool size:
+      <strong>100 workers per detected CPU core</strong>
+      (capped by wallet count).
+    </p>
+
     <pre><code>./run.sh --count 100000 --worker 1000</code></pre>
   </section>
 
   <section>
     <h2>Manual Build</h2>
+
     <pre><code>zig build -Doptimize=ReleaseFast
 zig build run -Doptimize=ReleaseFast -- --count 1000 --worker 400</code></pre>
   </section>
 
   <section>
     <h2>Security</h2>
-    <ul style="line-height:1.75;">
+
+    <ul style="line-height:1.7;font-size:0.92rem;">
       <li>Private keys from std.crypto.random (OS backed).</li>
       <li>wallets.csv contains spendable secrets — treat like a password vault.</li>
       <li>Never commit, upload or paste private keys to chat or issues.</li>
@@ -100,13 +293,17 @@ zig build run -Doptimize=ReleaseFast -- --count 1000 --worker 400</code></pre>
   <div class="footer">
     <p>Local • Fast • Private</p>
   </div>
+
 </div>
 
 <script>
   document.querySelector('.mobile-menu').addEventListener('click', () => {
-    document.querySelector('.container').style.transform = 
-      document.querySelector('.container').style.transform === 'translateX(-100%)' ? '' : 'translateX(-100%)';
+    document.querySelector('.container').style.transform =
+      document.querySelector('.container').style.transform === 'translateX(-100%)'
+        ? ''
+        : 'translateX(-100%)';
   });
 </script>
+
 </body>
 </html>
